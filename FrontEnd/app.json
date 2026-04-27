@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "TruScan",
+    "slug": "truscan",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "platforms": ["ios", "android", "web"],
+    "sdkVersion": "54.0.0",
+    "android": {
+      "package": "com.nexusdev.truscan"
+    },
+    "ios": {
+      "bundleIdentifier": "com.nexusdev.truscan"
+    }
+  }
+}
