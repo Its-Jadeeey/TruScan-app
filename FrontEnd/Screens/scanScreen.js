@@ -1,52 +1,52 @@
 // TruScan/FrontEnd/Screens/scanScreen.js
-// Main scan screen — user pastes SMS/email/URL and gets a risk assessment
+// Main scan screen — hero header, message/email/link tabs, big CTA, "How it works"
+// Re-themes to light or dark based on Light Mode.
 
 import React, { useState, useRef } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
-  StyleSheet, ActivityIndicator, Animated, Alert, Platform,
+  StyleSheet, ActivityIndicator, Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp }           from '../Context/AppContext';
 import { analyzeText }      from '../Service/analyzeService';
 import { addReport }        from '../Service/firestoreService';
-import { COLORS, RADIUS, SPACING, SHADOW, getRiskColors } from '../Service/theme';
+import { getTheme, RADIUS, SPACING, SHADOW, getRiskColors } from '../Service/theme';
 
-// ─── SAMPLE MESSAGES ──────────────────────────────────────────────────────────
-const SAMPLES = [
-  {
-    label: 'GCash Scam',
-    type: 'danger',
-    text: 'GCASH NOTICE: Mahal na GCash user, NANALO ka ng P50,000.00 sa aming Anniversary Promo! I-CLAIM na agad bago pa mag-EXPIRE bukas! Pumunta sa: gcash-winner.xyz/claim — URGENT: 24 hours ka lang!',
-  },
-  {
-    label: 'SSS Phish',
-    type: 'danger',
-    text: 'SSS OFFICIAL: Ang iyong SSS account ay naka-HOLD. I-update AGAD sa: sss-update-ph.com/verify — Kapag hindi ma-update sa 24 hours, PERMANENT matatapos ang iyong benepisyo.',
-  },
-  {
-    label: 'LBC Parcel',
-    type: 'danger',
-    text: 'LBC Express Alert: Package (Tracking #PH8472019) naka-hold sa customs. Bayaran ang P150 customs fee: lbc-parcel-ph.net/pay — Valid 48hrs only.',
-  },
-  {
-    label: 'Safe Message',
-    type: 'safe',
-    text: 'Hi! Kumain ka na ba? Haha anyway, huwag kalimutan yung meeting natin bukas 3pm sa Starbucks BGC. Dalhin mo yung mga docs. See you!',
-  },
+// ─── INPUT TYPE TABS ──────────────────────────────────────────────────────────
+
+const INPUT_TABS = [
+  { key: 'message', label: 'Message', icon: '💬' },
+  { key: 'email',   label: 'Email',   icon: '✉️' },
+  { key: 'link',    label: 'Link',    icon: '🔗' },
 ];
 
-// ─── SUB-COMPONENTS ───────────────────────────────────────────────────────────
+const PLACEHOLDERS = {
+  message: 'Paste your message here...',
+  email:   'Paste the email content here...',
+  link:    'Paste the suspicious link here...',
+};
 
-function RiskBanner({ result, fontSize }) {
+const MAX_CHARS = 5000;
+
+// ─── HOW IT WORKS ─────────────────────────────────────────────────────────────
+
+const STEPS = [
+  { num: '1', title: 'Analyze', icon: '🤖', desc: 'We scan content using AI and rule-based engine.' },
+  { num: '2', title: 'Detect',  icon: '🚩', desc: 'We identify scam patterns and risk indicators.' },
+  { num: '3', title: 'Explain', icon: '🛡️', desc: 'You get a clear result with explanation and tips.' },
+];
+
+// ─── RESULT BANNER ─────────────────────────────────────────────────────────────
+
+function RiskBanner({ result, fontSize, COLORS, styles }) {
   if (!result) return null;
-  const risk = getRiskColors(result.prediction);
+  const risk = getRiskColors(result.prediction, COLORS);
   const icons = { scam: '⚠', suspicious: '!', safe: '✓' };
   const labels = { scam: 'SCAM DETECTED', suspicious: 'SUSPICIOUS', safe: 'LOOKS SAFE' };
 
   return (
     <View style={[styles.riskBanner, { backgroundColor: risk.bg, borderColor: risk.border }]}>
-      {/* Risk Header */}
       <View style={styles.riskHeader}>
         <View style={[styles.riskIcon, { backgroundColor: risk.bg, borderColor: risk.border }]}>
           <Text style={[styles.riskIconText, { color: risk.text, fontSize: fontSize.md }]}>
@@ -67,47 +67,37 @@ function RiskBanner({ result, fontSize }) {
         </View>
       </View>
 
-      {/* Confidence Bar */}
       <View style={styles.confTrack}>
-        <View
-          style={[styles.confFill, {
-            width: `${result.confidence}%`,
-            backgroundColor: risk.text,
-          }]}
-        />
+        <View style={[styles.confFill, { width: `${result.confidence}%`, backgroundColor: risk.text }]} />
       </View>
 
-      {/* Indicators */}
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { fontSize: fontSize.xs }]}>Detected Indicators</Text>
         {result.indicators?.domains?.map((d, i) => (
-          <IndicatorRow key={i} text={`Phishing domain: "${d}"`} dot="red" tag="phishing" />
+          <IndicatorRow key={`d${i}`} text={`Phishing domain: "${d}"`} dot="red" tag="phishing" COLORS={COLORS} styles={styles} />
         ))}
         {result.indicators?.urgency?.map((w, i) => (
-          <IndicatorRow key={i} text={`Urgency word: "${w}"`} dot="red" tag="urgency" />
+          <IndicatorRow key={`u${i}`} text={`Urgency word: "${w}"`} dot="red" tag="urgency" COLORS={COLORS} styles={styles} />
         ))}
         {result.indicators?.keywords?.slice(0, 4).map((w, i) => (
-          <IndicatorRow key={i} text={`Keyword: "${w}"`} dot="amber" tag="keyword" />
+          <IndicatorRow key={`k${i}`} text={`Keyword: "${w}"`} dot="amber" tag="keyword" COLORS={COLORS} styles={styles} />
         ))}
         {result.prediction === 'safe' && (
-          <IndicatorRow text="Walang suspicious na indicators" dot="green" />
+          <IndicatorRow text="Walang suspicious na indicators" dot="green" COLORS={COLORS} styles={styles} />
         )}
       </View>
 
-      {/* Explanation */}
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { fontSize: fontSize.xs }]}>Bakit Scam Ito?</Text>
         <View style={styles.whyBox}>
-          <Text style={[styles.whyText, { fontSize: fontSize.sm }]}>
-            {buildWhyText(result)}
-          </Text>
+          <Text style={[styles.whyText, { fontSize: fontSize.sm }]}>{buildWhyText(result)}</Text>
         </View>
       </View>
     </View>
   );
 }
 
-function IndicatorRow({ text, dot, tag }) {
+function IndicatorRow({ text, dot, tag, COLORS, styles }) {
   const dotColor = { red: COLORS.scam, amber: COLORS.suspicious, green: COLORS.safe }[dot];
   const tagColors = {
     phishing: { bg: COLORS.scamBg, text: COLORS.scam },
@@ -142,8 +132,12 @@ function buildWhyText(result) {
 
 // ─── MAIN SCREEN ──────────────────────────────────────────────────────────────
 
-export default function ScanScreen() {
-  const { simpleMode, fontSize } = useApp();
+export default function ScanScreen({ navigation }) {
+  const { fontSize, simpleMode, lightMode } = useApp();
+  const COLORS = getTheme(simpleMode, lightMode);
+  const styles = makeStyles(COLORS);
+
+  const [activeTab, setActiveTab]   = useState('message');
   const [inputText, setInputText]   = useState('');
   const [result, setResult]         = useState(null);
   const [loading, setLoading]       = useState(false);
@@ -169,19 +163,11 @@ export default function ScanScreen() {
     }
   };
 
-  const handleClear = () => {
-    setInputText('');
-    setResult(null);
-    setReported(false);
-  };
-
   const handleReport = async () => {
     if (!result || reported) return;
     const res = await addReport({
-      text:         inputText,
-      category:     result.prediction,
-      source:       'mobile_scan',
-      mlPrediction: result,
+      text: inputText, category: result.prediction,
+      source: 'mobile_scan', mlPrediction: result,
     });
     if (res.success) {
       setReported(true);
@@ -191,8 +177,8 @@ export default function ScanScreen() {
     }
   };
 
-  const loadSample = (sample) => {
-    setInputText(sample.text);
+  const changeTab = (key) => {
+    setActiveTab(key);
     setResult(null);
     setReported(false);
   };
@@ -201,103 +187,82 @@ export default function ScanScreen() {
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView
         ref={scrollRef}
-        style={styles.scroll}
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={[styles.brandName, { fontSize: fontSize.xl }]}>
-            Tru<Text style={styles.brandAccent}>Scan</Text>
-          </Text>
-          <Text style={[styles.tagline, { fontSize: fontSize.xs }]}>
-            Filipino Scam Detector
-          </Text>
+        {/* Top bar */}
+        <View style={styles.topBar}>
+          <TouchableOpacity onPress={() => navigation?.openDrawer?.()} activeOpacity={0.7} hitSlop={10}>
+            <Text style={styles.menuIcon}>☰</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Simple Mode Banner */}
-        {simpleMode && result && (
-          <View style={[styles.simpleBanner, {
-            backgroundColor: getRiskColors(result.prediction).bg,
-            borderColor: getRiskColors(result.prediction).border,
-          }]}>
-            <Text style={[styles.simpleBannerText, {
-              color: getRiskColors(result.prediction).text,
-              fontSize: fontSize.md,
-            }]}>
-              {result.prediction === 'scam'
-                ? '⚠ SCAM ITO! Huwag tumugon!'
-                : result.prediction === 'suspicious'
-                ? '⚡ Mag-ingat sa mensaheng ito.'
-                : '✓ Mukhang ligtas ang mensahe.'}
-            </Text>
-          </View>
-        )}
-
-        {/* Input Label */}
-        <Text style={[styles.inputLabel, { fontSize: fontSize.xs }]}>
-          I-PASTE ANG SMS, EMAIL, O URL
+        {/* Headline */}
+        <Text style={[styles.headline, { fontSize: fontSize.xxl }]}>
+          Detect Scams.{'\n'}Protect Yourself.
+        </Text>
+        <Text style={[styles.subhead, { fontSize: fontSize.sm }]}>
+          Paste any suspicious message, email or link and let TruScan analyze it for you.
         </Text>
 
-        {/* Text Input */}
-        <TextInput
-          style={[styles.textInput, { fontSize: fontSize.base }]}
-          multiline
-          placeholder="I-paste ang kahina-hinalang mensahe dito..."
-          placeholderTextColor={COLORS.hint}
-          value={inputText}
-          onChangeText={setInputText}
-          textAlignVertical="top"
-        />
-
-        {/* Action Buttons */}
-        <View style={styles.btnRow}>
-          <TouchableOpacity
-            style={[styles.btnPrimary, loading && styles.btnDisabled]}
-            onPress={handleScan}
-            disabled={loading}
-            activeOpacity={0.85}
-          >
-            {loading
-              ? <ActivityIndicator color="#FFFFFF" size="small" />
-              : <Text style={[styles.btnPrimaryText, { fontSize: fontSize.base }]}>
-                  Scan Now
+        {/* Input type tabs */}
+        <View style={styles.tabRow}>
+          {INPUT_TABS.map(t => {
+            const active = activeTab === t.key;
+            return (
+              <TouchableOpacity
+                key={t.key}
+                style={[styles.tabBtn, active && styles.tabBtnActive]}
+                onPress={() => changeTab(t.key)}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.tabIcon}>{t.icon}</Text>
+                <Text style={[styles.tabLabel, { color: active ? COLORS.primary : COLORS.muted }]}>
+                  {t.label}
                 </Text>
-            }
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnGhost} onPress={handleClear} activeOpacity={0.7}>
-            <Text style={[styles.btnGhostText, { fontSize: fontSize.base }]}>Clear</Text>
-          </TouchableOpacity>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
-        {/* Sample Chips — hidden in Simple Mode */}
-        {!simpleMode && (
-          <View style={styles.samplesSection}>
-            <Text style={[styles.inputLabel, { fontSize: fontSize.xs }]}>SUBUKAN ANG SAMPLE</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipsRow}>
-              {SAMPLES.map((s, i) => (
-                <TouchableOpacity
-                  key={i}
-                  style={[styles.chip, s.type === 'danger' ? styles.chipDanger : styles.chipSafe]}
-                  onPress={() => loadSample(s)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={[styles.chipText,
-                    { color: s.type === 'danger' ? COLORS.scam : COLORS.safe }
-                  ]}>
-                    {s.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        )}
+        {/* Text Input */}
+        <View style={styles.inputWrap}>
+          <TextInput
+            style={[styles.textInput, { fontSize: fontSize.base }]}
+            multiline
+            maxLength={MAX_CHARS}
+            placeholder={PLACEHOLDERS[activeTab]}
+            placeholderTextColor={COLORS.hint}
+            value={inputText}
+            onChangeText={setInputText}
+            textAlignVertical="top"
+          />
+          <Text style={[styles.charCount, { fontSize: fontSize.xs }]}>
+            {inputText.length}/{MAX_CHARS}
+          </Text>
+        </View>
 
-        {/* Result Card */}
-        <RiskBanner result={result} fontSize={fontSize} />
+        {/* Scan Now button */}
+        <TouchableOpacity
+          style={[styles.scanBtn, loading && styles.scanBtnDisabled]}
+          onPress={handleScan}
+          disabled={loading}
+          activeOpacity={0.85}
+        >
+          {loading
+            ? <ActivityIndicator color="#FFFFFF" size="small" />
+            : (
+              <>
+                <Text style={styles.scanBtnIcon}>🛡️</Text>
+                <Text style={[styles.scanBtnText, { fontSize: fontSize.base }]}>SCAN NOW</Text>
+              </>
+            )
+          }
+        </TouchableOpacity>
 
-        {/* Report Button */}
+        {/* Result */}
+        <RiskBanner result={result} fontSize={fontSize} COLORS={COLORS} styles={styles} />
         {result && (
           <TouchableOpacity
             style={[styles.reportBtn, reported && styles.reportBtnDone]}
@@ -306,12 +271,24 @@ export default function ScanScreen() {
             activeOpacity={0.8}
           >
             <Text style={[styles.reportBtnText, { fontSize: fontSize.sm }]}>
-              {reported
-                ? '✓ Nai-report na! Salamat.'
-                : 'I-report sa Community Database'}
+              {reported ? '✓ Nai-report na! Salamat.' : 'I-report sa Community Database'}
             </Text>
           </TouchableOpacity>
         )}
+
+        {/* How it works */}
+        <Text style={[styles.howTitle, { fontSize: fontSize.sm }]}>How it works</Text>
+        <View style={styles.stepsRow}>
+          {STEPS.map(s => (
+            <View key={s.num} style={styles.stepCard}>
+              <View style={styles.stepIconWrap}>
+                <Text style={styles.stepIcon}>{s.icon}</Text>
+              </View>
+              <Text style={[styles.stepTitle, { fontSize: fontSize.xs }]}>{s.num}. {s.title}</Text>
+              <Text style={[styles.stepDesc, { fontSize: 10 }]}>{s.desc}</Text>
+            </View>
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -319,128 +296,87 @@ export default function ScanScreen() {
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS) => StyleSheet.create({
   safe:    { flex: 1, backgroundColor: COLORS.background },
-  scroll:  { flex: 1 },
   content: { padding: SPACING.lg, paddingBottom: SPACING.xxl },
 
-  header:      { marginBottom: SPACING.lg },
-  brandName:   { fontWeight: '800', color: COLORS.ink, letterSpacing: -0.5 },
-  brandAccent: { color: COLORS.primary },
-  tagline:     { color: COLORS.muted, marginTop: 2, fontWeight: '500', letterSpacing: 0.5 },
+  topBar:   { marginBottom: SPACING.md },
+  menuIcon: { fontSize: 22, color: COLORS.ink, fontWeight: '700' },
 
-  simpleBanner: {
-    padding: SPACING.md,
-    borderRadius: RADIUS.md,
-    borderWidth: 1.5,
-    marginBottom: SPACING.md,
-    alignItems: 'center',
-  },
-  simpleBannerText: { fontWeight: '700', textAlign: 'center' },
+  headline: { fontWeight: '800', color: COLORS.ink, lineHeight: 34, letterSpacing: -0.5 },
+  subhead:  { color: COLORS.muted, marginTop: SPACING.sm, lineHeight: 20, marginBottom: SPACING.xl },
 
-  inputLabel: {
-    fontWeight: '700',
-    color: COLORS.muted,
-    letterSpacing: 0.5,
-    marginBottom: SPACING.sm,
-    textTransform: 'uppercase',
+  tabRow: { flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.md },
+  tabBtn: {
+    flexDirection: 'row', alignItems: 'center', gap: 6,
+    paddingHorizontal: 12, paddingVertical: 8,
+    borderRadius: RADIUS.pill, borderWidth: 1.5, borderColor: COLORS.border,
+    backgroundColor: COLORS.surface,
   },
+  tabBtnActive: { borderColor: COLORS.primary, backgroundColor: COLORS.infoBg },
+  tabIcon:      { fontSize: 13 },
+  tabLabel:     { fontSize: 12, fontWeight: '700' },
+
+  inputWrap: { marginBottom: SPACING.md },
   textInput: {
-    backgroundColor: COLORS.surface,
-    borderWidth: 1.5,
-    borderColor: COLORS.border,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
-    minHeight: 110,
-    color: COLORS.ink,
-    lineHeight: 22,
-    ...SHADOW.card,
+    backgroundColor: COLORS.surface, borderWidth: 1.5, borderColor: COLORS.border,
+    borderRadius: RADIUS.lg, padding: SPACING.md, minHeight: 180,
+    color: COLORS.ink, lineHeight: 22, ...SHADOW.card,
   },
-  btnRow:        { flexDirection: 'row', gap: 10, marginTop: SPACING.sm },
-  btnPrimary:    {
-    flex: 1,
-    backgroundColor: COLORS.primary,
-    borderRadius: RADIUS.md,
-    paddingVertical: 13,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...SHADOW.card,
-  },
-  btnPrimaryText: { color: '#FFFFFF', fontWeight: '700' },
-  btnDisabled:   { backgroundColor: COLORS.border2 },
-  btnGhost:      {
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: 13,
-    borderRadius: RADIUS.md,
-    borderWidth: 1.5,
-    borderColor: COLORS.border2,
-    backgroundColor: COLORS.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  btnGhostText: { color: COLORS.muted, fontWeight: '600' },
+  charCount: { color: COLORS.hint, textAlign: 'right', marginTop: 6 },
 
-  samplesSection: { marginTop: SPACING.md },
-  chipsRow:       { marginTop: SPACING.sm },
-  chip:           {
-    paddingHorizontal: 13,
-    paddingVertical: 6,
-    borderRadius: RADIUS.pill,
-    borderWidth: 1.5,
-    marginRight: SPACING.sm,
+  scanBtn: {
+    flexDirection: 'row', gap: 8, backgroundColor: COLORS.primary,
+    borderRadius: RADIUS.md, paddingVertical: 15,
+    alignItems: 'center', justifyContent: 'center',
+    marginBottom: SPACING.lg, ...SHADOW.card,
   },
-  chipDanger: { backgroundColor: COLORS.scamBg, borderColor: COLORS.scamBorder },
-  chipSafe:   { backgroundColor: COLORS.safeBg, borderColor: COLORS.safeBorder },
-  chipText:   { fontSize: 11, fontWeight: '700' },
+  scanBtnDisabled: { backgroundColor: COLORS.border2 },
+  scanBtnIcon:     { fontSize: 16 },
+  scanBtnText:     { color: '#FFFFFF', fontWeight: '800', letterSpacing: 0.5 },
 
   // Result Card
   riskBanner: {
-    marginTop: SPACING.md,
-    borderRadius: RADIUS.lg,
-    borderWidth: 1.5,
-    overflow: 'hidden',
-    ...SHADOW.card,
+    marginBottom: SPACING.md, borderRadius: RADIUS.lg, borderWidth: 1.5, overflow: 'hidden', ...SHADOW.card,
   },
   riskHeader:   { flexDirection: 'row', gap: 12, alignItems: 'center', padding: SPACING.md },
-  riskIcon:     {
-    width: 46, height: 46, borderRadius: 12,
-    borderWidth: 1.5, alignItems: 'center', justifyContent: 'center',
-  },
+  riskIcon:     { width: 46, height: 46, borderRadius: 12, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
   riskIconText: { fontWeight: '800' },
   riskLabel:    { fontWeight: '700', letterSpacing: 0.5, textTransform: 'uppercase' },
   riskVerdict:  { fontWeight: '800', marginTop: 1 },
   riskSub:      { color: COLORS.muted, marginTop: 2 },
-
-  confTrack: { height: 4, backgroundColor: 'rgba(0,0,0,0.08)', marginHorizontal: SPACING.md },
-  confFill:  { height: 4, borderRadius: 4 },
-
+  confTrack:    { height: 4, backgroundColor: 'rgba(120,120,120,0.15)', marginHorizontal: SPACING.md },
+  confFill:     { height: 4, borderRadius: 4 },
   section:      { padding: SPACING.md, paddingTop: SPACING.sm },
-  sectionTitle: {
-    fontWeight: '700', color: COLORS.muted, letterSpacing: 0.5,
-    textTransform: 'uppercase', marginBottom: SPACING.sm,
-  },
-  indRow:     { flexDirection: 'row', alignItems: 'flex-start', gap: 8, marginBottom: 6 },
-  indDot:     { width: 7, height: 7, borderRadius: 4, marginTop: 5 },
-  indText:    { flex: 1, fontSize: 13, color: COLORS.ink, lineHeight: 20 },
-  indTag:     { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, marginLeft: 4 },
-  indTagText: { fontSize: 9, fontWeight: '700' },
-
-  whyBox:  {
-    backgroundColor: COLORS.card,
-    borderWidth: 1, borderColor: COLORS.border,
-    borderRadius: RADIUS.sm, padding: SPACING.sm + 2,
-  },
-  whyText: { color: COLORS.muted, lineHeight: 20 },
+  sectionTitle: { fontWeight: '700', color: COLORS.muted, letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: SPACING.sm },
+  indRow:       { flexDirection: 'row', alignItems: 'flex-start', gap: 8, marginBottom: 6 },
+  indDot:       { width: 7, height: 7, borderRadius: 4, marginTop: 5 },
+  indText:      { flex: 1, fontSize: 13, color: COLORS.ink, lineHeight: 20 },
+  indTag:       { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, marginLeft: 4 },
+  indTagText:   { fontSize: 9, fontWeight: '700' },
+  whyBox:       { backgroundColor: COLORS.card, borderWidth: 1, borderColor: COLORS.border, borderRadius: RADIUS.sm, padding: SPACING.sm + 2 },
+  whyText:      { color: COLORS.muted, lineHeight: 20 },
 
   reportBtn: {
-    marginTop: SPACING.md,
-    padding: SPACING.md,
-    borderRadius: RADIUS.md,
-    borderWidth: 1.5,
-    borderColor: COLORS.border2,
-    backgroundColor: COLORS.surface,
-    alignItems: 'center',
+    padding: SPACING.md, borderRadius: RADIUS.md, borderWidth: 1.5,
+    borderColor: COLORS.border2, backgroundColor: COLORS.surface,
+    alignItems: 'center', marginBottom: SPACING.lg,
   },
   reportBtnDone: { borderColor: COLORS.safeBorder, backgroundColor: COLORS.safeBg },
   reportBtnText: { color: COLORS.muted, fontWeight: '600' },
+
+  // How it works
+  howTitle: { color: COLORS.muted, fontWeight: '700', marginBottom: SPACING.sm },
+  stepsRow: { flexDirection: 'row', gap: SPACING.sm },
+  stepCard: {
+    flex: 1, backgroundColor: COLORS.surface, borderRadius: RADIUS.md,
+    borderWidth: 1.5, borderColor: COLORS.border, padding: SPACING.sm,
+  },
+  stepIconWrap: {
+    width: 28, height: 28, borderRadius: 8, backgroundColor: COLORS.infoBg,
+    alignItems: 'center', justifyContent: 'center', marginBottom: 6,
+  },
+  stepIcon:  { fontSize: 14 },
+  stepTitle: { color: COLORS.ink, fontWeight: '700', marginBottom: 3 },
+  stepDesc:  { color: COLORS.muted, lineHeight: 13 },
 });
