@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Reports · TruScan{% endblock %}
+{% block body_class %}app-body{% endblock %}
+{% block content %}
+<div class="app-shell">
+  {% include "_sidebar.html" with context %}
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1>System Overview</h1>
+        <p>Monitor threat response performance and platform trends</p>
+      </div>
+      <button class="icon-btn" title="Notifications" aria-label="Notifications">
+        <svg viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6-1-1v-4.5C18 7.36 15.86 5 13 4.58V4a1 1 0 0 0-2 0v.58C8.14 5 6 7.36 6 10.5V15l-1 1v1h14v-1Z" fill="currentColor"/></svg>
+      </button>
+    </header>
+
+    <section class="content">
+      <h2 class="section-label">Overview of Scam, Phishing, Smishing</h2>
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-head"><span>Total New Cases</span></div>
+          <div class="metric-value red" id="totalNewCases">&mdash;</div>
+          <div class="metric-trend danger" id="totalNewCasesTrend"></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-head"><span>Ready for Training</span></div>
+          <div class="metric-value green" id="readyForTraining">&mdash;</div>
+          <div class="metric-trend" id="readyForTrainingTrend"></div>
+        </div>
+      </div>
+
+      <h2 class="section-label">New Cases of Intrusion</h2>
+      <div class="panel table-panel">
+        <table class="cases-table">
+          <thead>
+            <tr>
+              <th>Case ID</th>
+              <th>Source</th>
+              <th>Type</th>
+              <th>Detected</th>
+              <th>Risk</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="casesBody"></tbody>
+        </table>
+      </div>
+
+      <h2 class="section-label">Scam Checker</h2>
+      <div class="panel scam-checker">
+        <textarea id="scamInput" placeholder="Paste a suspicious message, link, or phone number to analyze&hellip;"></textarea>
+        <div id="scamResult" class="scam-result" hidden></div>
+        <div class="scam-actions">
+          <button id="checkBtn" class="btn btn-blue">Check</button>
+          <button id="clearBtn" class="btn btn-red">Clear</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="/static/js/common.js"></script>
+<script type="module" src="/static/js/reports.js"></script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}TruScan{% endblock %}
+{% block body_class %}hero-body{% endblock %}
+{% block content %}
+<div class="hero-screen">
+  <div class="hero-grid"></div>
+  <div class="hero-particles">
+    {% for i in range(24) %}<span class="p p{{ i }}"></span>{% endfor %}
+  </div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">TRUSCAN</h1>
+
+    <div class="hero-figure">
+      {% include "_logo.html" with context %}
+    </div>
+
+    <div class="hero-loading">
+      <span class="hero-dot"></span>
+      <div class="hero-bar"><div id="heroFill" class="hero-fill"></div></div>
+      <span class="hero-loading-label">LOADING&hellip;</span>
+    </div>
+
+    <div class="hero-check">
+      <svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z" fill="currentColor"/></svg>
+    </div>
+  </div>
+</div>
+<script src="/static/js/hero.js"></script>
+{% endblock %}

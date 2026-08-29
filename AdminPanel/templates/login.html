@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Admin Login · TruScan{% endblock %}
+{% block body_class %}hero-body{% endblock %}
+{% block content %}
+<div class="hero-screen">
+  <div class="hero-grid"></div>
+  <div class="hero-particles">
+    {% for i in range(24) %}<span class="p p{{ i }}"></span>{% endfor %}
+  </div>
+
+  <div class="login-card">
+    <div class="login-logo">{% include "_logo.html" with context %}</div>
+    <h1 class="login-title">ADMIN LOGIN</h1>
+    <p class="login-sub">Detect Scams and Protect Yourself</p>
+
+    <form id="loginForm" class="login-form" autocomplete="off">
+      <label class="field">
+        <svg class="field-ico" viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.2-8 5v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1c0-2.8-3.6-5-8-5Z" fill="currentColor"/></svg>
+        <input id="username" type="text" placeholder="Username" required />
+      </label>
+      <label class="field">
+        <svg class="field-ico" viewBox="0 0 24 24"><path d="M6 10V8a6 6 0 1 1 12 0v2h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1Zm2 0h8V8a4 4 0 1 0-8 0v2Z" fill="currentColor"/></svg>
+        <input id="password" type="password" placeholder="Password" required />
+      </label>
+
+      <p id="loginError" class="login-error" hidden>Invalid username or password.</p>
+
+      <button type="submit" class="login-btn" id="loginBtn">Login</button>
+    </form>
+
+    <p class="login-hint">Demo credentials: <strong>admin</strong> / <strong>admin123</strong></p>
+  </div>
+</div>
+<script src="/static/js/login.js"></script>
+{% endblock %}

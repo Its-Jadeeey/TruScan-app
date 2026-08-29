@@ -35,3 +35,9 @@ android/build/
 
 # VS Code
 .vscode/
+
+# Python (AdminPanel)
+AdminPanel/venv/
+AdminPanel/__pycache__/
+AdminPanel/**/__pycache__/
+*.pyc
