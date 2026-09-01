@@ -5,12 +5,12 @@ import { getFirestore } from 'firebase/firestore';
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDT6A56DW7Ccqr6LbORH2ivRsmIloJnoIs",
-  authDomain: "truscan-148e4.firebaseapp.com",
-  projectId: "truscan-148e4",
-  storageBucket: "truscan-148e4.firebasestorage.app",
-  messagingSenderId: "1064305616846",
-  appId: "1:1064305616846:web:98462fd3b683a981752d9f"
+  apiKey: "AIzaSyBe9A6isnUsoVJZVpFxaEQpc9Eccz2oeI0",
+  authDomain: "truscanv1.firebaseapp.com",
+  projectId: "truscanv1",
+  storageBucket: "truscanv1.firebasestorage.app",
+  messagingSenderId: "544639973606",
+  appId: "1:544639973606:web:8dc7bc38fe4bac921c2327"
 };
 
 const app = initializeApp(firebaseConfig);

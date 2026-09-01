@@ -1,16 +1,16 @@
 // Shared Firestore path constants + tiny helpers, used by dashboard.js,
-// reports.js and settings.js. Keeping the collection/doc names in one place
-// avoids typos across files.
+// reports.js, settings.js and login.js.
 export const PATHS = {
-  metricsDoc: ["metrics", "system"],
-  flaggedScams: "flaggedScams",
-  riskIndicators: "riskIndicators",
-  reportsOverviewDoc: ["reportsOverview", "summary"],
-  intrusionCases: "intrusionCases",
-  scamChecks: "scamChecks",
-  adminProfileDoc: ["adminProfile", "main"],
-  adminPreferencesDoc: ["adminPreferences", "main"],
+  reportedScams: "reported_scams", // written by the mobile app (Service/firestoreService.js)
+  scamChecks: "scamChecks",         // logged by the admin panel's own Scam Checker
+  admins: "admins",
 };
+
+// Each admin is one doc in the `admins` collection, keyed by username:
+// admins/{username} = { password, fullName, email, phone, role, lightMode, language }
+export function adminDoc(username) {
+  return ["admins", username];
+}
 
 export function timeAgo(timestamp) {
   if (!timestamp || !timestamp.toDate) return "";
@@ -39,4 +39,14 @@ export function escapeHtml(str) {
   const div = document.createElement("div");
   div.textContent = str ?? "";
   return div.innerHTML;
+}
+
+export function capitalize(str) {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function truncate(str, max = 90) {
+  if (!str) return "";
+  return str.length > max ? str.slice(0, max).trim() + "\u2026" : str;
 }

@@ -427,6 +427,30 @@ input, select, textarea { font-family: inherit; }
   text-align: left; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
   color: var(--text-faint); padding: 12px 16px; border-bottom: 1px solid var(--card-border);
 }
+
+.status-pill.status-verified { color: #63e0a6; font-weight: 600; }
+.status-pill.status-rejected { color: #ff8a83; font-weight: 600; }
+
+.btn-link {
+  background: none; border: none; padding: 0; color: var(--accent-blue);
+  font-size: 0.8rem; font-weight: 600; text-decoration: underline; cursor: pointer;
+}
+.btn-link:hover { color: #6bb4ef; }
+
+.risk-tag.safe { background: rgba(53,212,136,0.18); color: #63e0a6; }
+.severity-pill.safe { background: rgba(53,212,136,0.18); color: #63e0a6; }
+
+.review-banner {
+  background: rgba(47,143,232,0.12);
+  border: 1px solid rgba(47,143,232,0.35);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+
+.scam-result-actions { display: flex; gap: 10px; margin-top: 10px; }
 .cases-table td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-primary); }
 .cases-table tr:last-child td { border-bottom: none; }
 .risk-tag { padding: 3px 10px; border-radius: 999px; font-size: 0.68rem; font-weight: 700; }

@@ -14,3 +14,13 @@ class LoginRequest(BaseModel):
 class LoginResponse(BaseModel):
     success: bool
     message: str
+
+
+class SessionRequest(BaseModel):
+    """Used to establish a FastAPI session for an admin who was already
+    verified against the Firestore `admins` collection in the browser."""
+    username: str
+
+
+class MeResponse(BaseModel):
+    username: str

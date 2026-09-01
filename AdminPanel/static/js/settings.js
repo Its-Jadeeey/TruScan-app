@@ -4,11 +4,18 @@ import {
   setDoc,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { db } from "./firebase-config.js";
-import { PATHS } from "./firestore-helpers.js";
+import { adminDoc } from "./firestore-helpers.js";
+
+let currentUsername = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    await Promise.all([loadProfile(), loadPreferences()]);
+    currentUsername = await getCurrentUsername();
+    if (!currentUsername) {
+      window.location.href = "/login";
+      return;
+    }
+    await loadAdmin(currentUsername);
   } catch (err) {
     console.error("Failed to load settings from Firestore:", err);
     showToast("Couldn't load settings \u2014 check the console.");
@@ -19,25 +26,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("languageSelect").addEventListener("change", savePreferences);
 });
 
-async function loadProfile() {
-  const snap = await getDoc(doc(db, ...PATHS.adminProfileDoc));
-  const profile = snap.exists()
-    ? snap.data()
-    : { fullName: "Admin User", email: "", phone: "", role: "Administrator" };
-
-  document.getElementById("fullName").value = profile.fullName || "";
-  document.getElementById("email").value = profile.email || "";
-  document.getElementById("phone").value = profile.phone || "";
-  document.getElementById("role").value = profile.role || "Administrator";
-  document.querySelector(".avatar").textContent = (profile.fullName || "A").charAt(0).toUpperCase();
+async function getCurrentUsername() {
+  const res = await fetch("/api/auth/me", { credentials: "same-origin" });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.username;
 }
 
-async function loadPreferences() {
-  const snap = await getDoc(doc(db, ...PATHS.adminPreferencesDoc));
-  const prefs = snap.exists() ? snap.data() : { lightMode: false, language: "English" };
+async function loadAdmin(username) {
+  const snap = await getDoc(doc(db, ...adminDoc(username)));
+  const admin = snap.exists()
+    ? snap.data()
+    : { fullName: username, email: "", phone: "", role: "Administrator", lightMode: false, language: "English" };
 
-  document.getElementById("lightModeToggle").checked = !!prefs.lightMode;
-  document.getElementById("languageSelect").value = prefs.language || "English";
+  document.getElementById("fullName").value = admin.fullName || "";
+  document.getElementById("email").value = admin.email || "";
+  document.getElementById("phone").value = admin.phone || "";
+  document.getElementById("role").value = admin.role || "Administrator";
+  document.querySelector(".avatar").textContent = (admin.fullName || username).charAt(0).toUpperCase();
+
+  document.getElementById("lightModeToggle").checked = !!admin.lightMode;
+  document.getElementById("languageSelect").value = admin.language || "English";
 }
 
 async function saveProfile(e) {
@@ -50,8 +59,8 @@ async function saveProfile(e) {
   };
 
   try {
-    await setDoc(doc(db, ...PATHS.adminProfileDoc), payload, { merge: true });
-    document.querySelector(".avatar").textContent = (payload.fullName || "A").charAt(0).toUpperCase();
+    await setDoc(doc(db, ...adminDoc(currentUsername)), payload, { merge: true });
+    document.querySelector(".avatar").textContent = (payload.fullName || currentUsername).charAt(0).toUpperCase();
     const savedMsg = document.getElementById("profileSavedMsg");
     savedMsg.hidden = false;
     setTimeout(() => (savedMsg.hidden = true), 2000);
@@ -68,7 +77,7 @@ async function savePreferences() {
     language: document.getElementById("languageSelect").value,
   };
   try {
-    await setDoc(doc(db, ...PATHS.adminPreferencesDoc), payload, { merge: true });
+    await setDoc(doc(db, ...adminDoc(currentUsername)), payload, { merge: true });
     showToast("Preferences updated");
   } catch (err) {
     console.error("Failed to save preferences:", err);

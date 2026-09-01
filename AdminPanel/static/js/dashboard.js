@@ -1,6 +1,4 @@
 import {
-  doc,
-  getDoc,
   collection,
   getDocs,
   query,
@@ -8,71 +6,101 @@ import {
   limit,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { db } from "./firebase-config.js";
-import { PATHS, timeAgo, escapeHtml } from "./firestore-helpers.js";
+import { PATHS, timeAgo, escapeHtml, capitalize, truncate } from "./firestore-helpers.js";
+
+// How many recent scans to pull for computing dashboard stats. Reading a
+// bounded recent window (instead of the whole collection) keeps this fast
+// and avoids needing composite Firestore indexes. Fine while scan volume is
+// low; swap for aggregation queries / a scheduled rollup doc once it grows.
+const SAMPLE_SIZE = 300;
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    await Promise.all([loadMetrics(), loadFlaggedScams(), loadRiskIndicators()]);
+    const scans = await loadRecentScans();
+    renderMetrics(scans);
+    renderFlaggedScams(scans);
+    renderRiskIndicators(scans);
   } catch (err) {
     console.error("Failed to load dashboard data from Firestore:", err);
     showToast("Couldn't load dashboard data \u2014 check the console.");
   }
 });
 
-async function loadMetrics() {
-  const snap = await getDoc(doc(db, ...PATHS.metricsDoc));
-  if (!snap.exists()) return;
-  const m = snap.data();
-  document.getElementById("detectionRate").textContent = `${m.detectionRate}%`;
-  document.getElementById("detectionTrend").textContent = m.detectionRateTrend || "";
-  document.getElementById("activeThreats").textContent = m.activeThreats;
-  document.getElementById("activeThreatsTrend").textContent = m.activeThreatsTrend || "";
+async function loadRecentScans() {
+  const q = query(collection(db, PATHS.reportedScams), orderBy("timestamp", "desc"), limit(SAMPLE_SIZE));
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-async function loadFlaggedScams() {
-  const q = query(collection(db, PATHS.flaggedScams), orderBy("reportedAt", "desc"), limit(5));
-  const snap = await getDocs(q);
-  const flaggedList = document.getElementById("flaggedList");
+function renderMetrics(scans) {
+  const total = scans.length;
+  const flagged = scans.filter((s) => s.category !== "safe");
+  const detectionRate = total > 0 ? ((flagged.length / total) * 100).toFixed(1) : "0.0";
+  const activeThreats = scans.filter((s) => s.category !== "safe" && s.status === "pending").length;
 
-  if (snap.empty) {
+  document.getElementById("detectionRate").textContent = `${detectionRate}%`;
+  document.getElementById("detectionTrend").textContent =
+    total > 0 ? `${flagged.length} of ${total} recent scans flagged` : "No scans yet";
+  document.getElementById("activeThreats").textContent = activeThreats;
+  document.getElementById("activeThreatsTrend").textContent = "Pending review";
+}
+
+function renderFlaggedScams(scans) {
+  const flaggedList = document.getElementById("flaggedList");
+  const flagged = scans.filter((s) => s.category !== "safe").slice(0, 5);
+
+  if (flagged.length === 0) {
     flaggedList.innerHTML = `<p class="empty-note">No flagged scams yet.</p>`;
     return;
   }
 
-  flaggedList.innerHTML = snap.docs
-    .map((d) => {
-      const item = d.data();
+  flaggedList.innerHTML = flagged
+    .map((s) => {
+      const risk = s.mlPrediction?.riskLevel || "medium";
+      const title = `${capitalize(s.category)} \u00b7 ${capitalize(s.channel || "unknown")}`;
       return `
         <div class="flagged-item">
           <div class="flagged-head">
-            <span class="flagged-title">${escapeHtml(item.title)}</span>
-            <span class="severity-pill ${escapeHtml(item.severity)}">${escapeHtml(item.severity)}</span>
+            <span class="flagged-title">${escapeHtml(title)}</span>
+            <span class="severity-pill ${escapeHtml(risk)}">${escapeHtml(risk)}</span>
           </div>
-          <div class="flagged-desc">${escapeHtml(item.description)}</div>
-          <div class="flagged-time">${timeAgo(item.reportedAt)}</div>
+          <div class="flagged-desc">${escapeHtml(truncate(s.text))}</div>
+          <div class="flagged-time">${timeAgo(s.timestamp)}</div>
         </div>`;
     })
     .join("");
 }
 
-async function loadRiskIndicators() {
-  const q = query(collection(db, PATHS.riskIndicators), orderBy("score", "desc"), limit(6));
-  const snap = await getDocs(q);
+function renderRiskIndicators(scans) {
   const riskList = document.getElementById("riskList");
+  const flagged = scans.filter((s) => s.category !== "safe");
 
-  if (snap.empty) {
+  const tally = {};
+  for (const s of flagged) {
+    const reasons = s.mlPrediction?.reasons || [];
+    for (const reason of reasons) {
+      tally[reason] = (tally[reason] || 0) + 1;
+    }
+  }
+
+  const ranked = Object.entries(tally)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6);
+
+  if (ranked.length === 0) {
     riskList.innerHTML = `<li class="empty-note">No risk indicators yet.</li>`;
     return;
   }
 
-  riskList.innerHTML = snap.docs
-    .map((d) => {
-      const r = d.data();
+  const maxCount = ranked[0][1];
+  riskList.innerHTML = ranked
+    .map(([label, count]) => {
+      const pct = Math.round((count / maxCount) * 100);
       return `
         <li>
-          <span class="risk-label">${escapeHtml(r.label)}</span>
-          <span class="risk-bar-track"><span class="risk-bar-fill" style="width:${r.score}%"></span></span>
-          <span class="risk-score">${r.score}</span>
+          <span class="risk-label">${escapeHtml(label)}</span>
+          <span class="risk-bar-track"><span class="risk-bar-fill" style="width:${pct}%"></span></span>
+          <span class="risk-score">${count}</span>
         </li>`;
     })
     .join("");
