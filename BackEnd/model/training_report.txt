@@ -1,0 +1,33 @@
+
+TRUSCAN MACHINE LEARNING REPORT
+================================
+
+Generated:
+2026-09-13 23:31:28
+
+Model:
+Support Vector Machine (SVM)
+
+Class Weight:
+balanced
+
+Vectorizer:
+TF-IDF
+
+Accuracy:
+98.02%
+
+Precision:
+97.95%
+
+Recall:
+98.02%
+
+F1 Score:
+97.95%
+
+Test Samples:
+202
+
+Classes:
+not scam, scam

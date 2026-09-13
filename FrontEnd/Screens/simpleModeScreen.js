@@ -21,10 +21,12 @@ function BigResultBanner({ result }) {
   if (!result) return null;
   const risk = getRiskColors(result.prediction);
   const config = {
-    scam:       { emoji: '⚠️', headline: 'SCAM ITO!',   detail: 'Huwag tumugon. Huwag mag-click ng link. Huwag magpadala ng pera.' },
-    suspicious: { emoji: '⚡', headline: 'MAG-INGAT!',   detail: 'Ang mensaheng ito ay kahina-hinala. Huwag magbigay ng impormasyon.' },
-    safe:       { emoji: '✅', headline: 'LIGTAS ITO',   detail: 'Ang mensaheng ito ay mukhang lehitimo. Palaging mag-ingat pa rin.' },
-  }[result.prediction];
+    scam:       { emoji: '⚠️', headline: 'SCAM ITO!',    detail: 'Huwag tumugon. Huwag mag-click ng link. Huwag magpadala ng pera.' },
+    phishing:   { emoji: '⚠️', headline: 'PHISHING ITO!', detail: 'Huwag tumugon. Huwag mag-click ng link. Huwag magpadala ng pera.' },
+    smishing:   { emoji: '⚠️', headline: 'SMISHING ITO!', detail: 'Huwag tumugon. Huwag mag-click ng link. Huwag magpadala ng pera.' },
+    suspicious: { emoji: '⚡', headline: 'MAG-INGAT!',    detail: 'Ang mensaheng ito ay kahina-hinala. Huwag magbigay ng impormasyon.' },
+    safe:       { emoji: '✅', headline: 'LIGTAS ITO',    detail: 'Ang mensaheng ito ay mukhang lehitimo. Palaging mag-ingat pa rin.' },
+  }[result.prediction] || { emoji: '❓', headline: 'HINDI SIGURADO', detail: 'Hindi natukoy ang klase ng mensaheng ito.' };
 
   return (
     <View style={[styles.bigBanner, { backgroundColor: risk.bg, borderColor: risk.border }]}>
@@ -76,13 +78,25 @@ export default function SimpleModeScreen({ navigation }) {
 
   const handleReport = async () => {
     if (!result || reported) return;
+    const channelMap = { message: 'sms', email: 'email', link: 'link' };
+
     const res = await addReport({
-      text: inputText, category: result.prediction,
-      source: 'simple_mode_screen', mlPrediction: result,
+      text: inputText,
+      category: result.prediction,
+      channel: channelMap[selectedType] || 'sms',
+      mode: 'simple',
+      source: 'mobile_app',
+      mlPrediction: {
+        riskLevel: (result.risk_level || 'medium').toLowerCase(),
+        confidence: result.confidence,
+        reasons: result.indicators?.top_features || result.indicators?.keywords || [],
+      },
     });
     if (res.success) {
       setReported(true);
       Alert.alert('Salamat!', 'Nai-report na ang mensahe.');
+    } else {
+      Alert.alert('Error', 'Hindi ma-save ang report. Subukan ulit.');
     }
   };
 

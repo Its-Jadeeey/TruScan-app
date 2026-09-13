@@ -1,9 +1,7 @@
 # TruScan/BackEnd/models/schema.py
 
-from pydantic import BaseModel
-from typing import Optional, Dict, List
-
-# ── Request Models ──────────────────────────────────────────
+from pydantic import BaseModel, Field
+from typing import Optional, Dict, Any
 
 class ScanRequest(BaseModel):
     text:    str
@@ -11,9 +9,14 @@ class ScanRequest(BaseModel):
 
 class ReportRequest(BaseModel):
     text:          str
-    category:      str   # 'scam' | 'suspicious' | 'safe'
+    category:      str
+    channel:       Optional[str] = "sms"
+    mode:          Optional[str] = "normal"
     source:        Optional[str] = "mobile_app"
-    ml_prediction: Optional[dict] = None
+    ml_prediction: Optional[Dict[str, Any]] = Field(default=None, alias="mlPrediction")
+
+    class Config:
+        populate_by_name = True
 
 # ── Response Models ─────────────────────────────────────────
 

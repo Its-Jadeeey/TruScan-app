@@ -68,6 +68,8 @@ export const SHADOW = {
 export function getRiskColors(category, themeColors = COLORS) {
   switch (category) {
     case 'scam':
+    case 'phishing':
+    case 'smishing':
       return { bg: themeColors.scamBg, border: themeColors.scamBorder, text: themeColors.scam };
     case 'suspicious':
       return { bg: themeColors.suspBg, border: themeColors.suspBorder, text: themeColors.suspicious };

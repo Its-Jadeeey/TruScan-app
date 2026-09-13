@@ -41,16 +41,16 @@ const STEPS = [
 
 function RiskBanner({ result, fontSize, COLORS, styles }) {
   if (!result) return null;
-  const risk = getRiskColors(result.prediction, COLORS);
-  const icons = { scam: '⚠', suspicious: '!', safe: '✓' };
-  const labels = { scam: 'SCAM DETECTED', suspicious: 'SUSPICIOUS', safe: 'LOOKS SAFE' };
+
+  const isScam = result.prediction === 'scam';
+  const risk = getRiskColors(isScam ? 'scam' : 'safe', COLORS);
 
   return (
     <View style={[styles.riskBanner, { backgroundColor: risk.bg, borderColor: risk.border }]}>
       <View style={styles.riskHeader}>
         <View style={[styles.riskIcon, { backgroundColor: risk.bg, borderColor: risk.border }]}>
           <Text style={[styles.riskIconText, { color: risk.text, fontSize: fontSize.md }]}>
-            {icons[result.prediction]}
+            {isScam ? '⚠️' : '✓'}
           </Text>
         </View>
         <View style={{ flex: 1 }}>
@@ -58,11 +58,10 @@ function RiskBanner({ result, fontSize, COLORS, styles }) {
             Analysis Result
           </Text>
           <Text style={[styles.riskVerdict, { color: risk.text, fontSize: fontSize.lg }]}>
-            {labels[result.prediction]}
+            {isScam ? 'SCAM DETECTED' : 'LOOKS SAFE'}
           </Text>
           <Text style={[styles.riskSub, { fontSize: fontSize.xs }]}>
-            Confidence: {result.confidence}% •{' '}
-            {result.source === 'ml_model' ? 'ML Model' : 'Keyword Engine'}
+            Confidence: {result.confidence}% • ML Model (SVM)
           </Text>
         </View>
       </View>
@@ -73,24 +72,19 @@ function RiskBanner({ result, fontSize, COLORS, styles }) {
 
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { fontSize: fontSize.xs }]}>Detected Indicators</Text>
-        {result.indicators?.domains?.map((d, i) => (
-          <IndicatorRow key={`d${i}`} text={`Phishing domain: "${d}"`} dot="red" tag="phishing" COLORS={COLORS} styles={styles} />
-        ))}
-        {result.indicators?.urgency?.map((w, i) => (
-          <IndicatorRow key={`u${i}`} text={`Urgency word: "${w}"`} dot="red" tag="urgency" COLORS={COLORS} styles={styles} />
-        ))}
-        {result.indicators?.keywords?.slice(0, 4).map((w, i) => (
-          <IndicatorRow key={`k${i}`} text={`Keyword: "${w}"`} dot="amber" tag="keyword" COLORS={COLORS} styles={styles} />
-        ))}
-        {result.prediction === 'safe' && (
-          <IndicatorRow text="Walang suspicious na indicators" dot="green" COLORS={COLORS} styles={styles} />
+        {result.indicators?.top_features?.length > 0 ? (
+          result.indicators.top_features.map((label, i) => (
+            <IndicatorRow key={`f${i}`} text={label} dot={isScam ? 'red' : 'green'} COLORS={COLORS} styles={styles} />
+          ))
+        ) : (
+          <IndicatorRow text={isScam ? "Suspicious scam patterns detected" : "Walang suspicious na indicators"} dot={isScam ? 'red' : 'green'} COLORS={COLORS} styles={styles} />
         )}
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { fontSize: fontSize.xs }]}>Bakit Scam Ito?</Text>
+        <Text style={[styles.sectionTitle, { fontSize: fontSize.xs }]}>Bakit {isScam ? 'Scam' : 'Ligtas'} Ito?</Text>
         <View style={styles.whyBox}>
-          <Text style={[styles.whyText, { fontSize: fontSize.sm }]}>{buildWhyText(result)}</Text>
+          <Text style={[styles.whyText, { fontSize: fontSize.sm }]}>{result.explanation}</Text>
         </View>
       </View>
     </View>
@@ -118,6 +112,9 @@ function IndicatorRow({ text, dot, tag, COLORS, styles }) {
 }
 
 function buildWhyText(result) {
+  if (result.source === 'ml_model' && result.explanation) {
+    return result.explanation;
+  }
   if (result.prediction === 'safe') {
     return 'Walang suspicious na pattern ang nakita. Ang mensaheng ito ay mukhang lehitimo. Palaging mag-ingat — kapag may duda, makipag-ugnayan sa opisyal na channel.';
   }
@@ -165,9 +162,19 @@ export default function ScanScreen({ navigation }) {
 
   const handleReport = async () => {
     if (!result || reported) return;
+    const channelMap = { message: 'sms', email: 'email', link: 'link' };
+
     const res = await addReport({
-      text: inputText, category: result.prediction,
-      source: 'mobile_scan', mlPrediction: result,
+      text: inputText,
+      category: result.prediction,
+      channel: channelMap[activeTab] || 'sms',
+      mode: 'normal',
+      source: 'mobile_app',
+      mlPrediction: {
+        riskLevel: (result.risk_level || 'medium').toLowerCase(),
+        confidence: result.confidence,
+        reasons: result.indicators?.top_features || result.indicators?.keywords || [],
+      },
     });
     if (res.success) {
       setReported(true);

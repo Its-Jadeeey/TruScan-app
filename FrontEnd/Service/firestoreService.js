@@ -12,17 +12,26 @@ const COLLECTION = 'reported_scams';
 
 // ─── CREATE ──────────────────────────────────────────────────────────────────
 
-export async function addReport({ text, category, source = 'mobile_app', mlPrediction = null }) {
+export async function addReport({
+  text,
+  category,
+  channel = 'sms',
+  mode = 'normal',
+  source = 'mobile_app',
+  mlPrediction = null,
+}) {
   try {
     const data = {
-      text:           text.trim(),
+      text: text.trim(),
       category,
+      channel,
+      mode,
       source,
       mlPrediction,
-      status:         'pending',
+      status: 'pending',
       usedInTraining: false,
-      timestamp:      serverTimestamp(),
-      reportedBy:     'anonymous',
+      timestamp: serverTimestamp(),
+      reportedBy: 'anonymous',
     };
     const ref = await addDoc(collection(db, COLLECTION), data);
     return { success: true, id: ref.id };

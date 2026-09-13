@@ -1,0 +1,11 @@
+{
+    "accuracy": 0.9801980198019802,
+    "precision": 0.9795292687163454,
+    "recall": 0.9801980198019802,
+    "f1_score": 0.9794887913699794,
+    "test_samples": 202,
+    "classes": [
+        "not scam",
+        "scam"
+    ]
+}
