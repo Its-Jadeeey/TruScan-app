@@ -946,7 +946,7 @@ Hello Customer,
 Your online banking account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -954,7 +954,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -962,7 +962,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -970,7 +970,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -978,7 +978,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -986,7 +986,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -994,7 +994,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1002,7 +1002,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1010,7 +1010,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1018,7 +1018,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1026,7 +1026,7 @@ Hello Customer,
 Your shopping account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1034,7 +1034,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1042,7 +1042,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1050,7 +1050,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1058,7 +1058,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1066,7 +1066,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1074,7 +1074,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1082,7 +1082,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1090,7 +1090,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1098,7 +1098,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1106,7 +1106,7 @@ Hello Customer,
 Your social media account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1114,7 +1114,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1122,7 +1122,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1130,7 +1130,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1138,7 +1138,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -1146,7 +1146,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1154,7 +1154,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1162,7 +1162,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1170,7 +1170,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1178,7 +1178,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1186,7 +1186,7 @@ Hello Customer,
 Your streaming account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1194,7 +1194,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1202,7 +1202,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1210,7 +1210,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1218,7 +1218,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -1226,7 +1226,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1234,7 +1234,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1242,7 +1242,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1250,7 +1250,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1258,7 +1258,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1266,7 +1266,7 @@ Hello Customer,
 Your online banking account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1274,7 +1274,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1282,7 +1282,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1290,7 +1290,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1298,7 +1298,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -1306,7 +1306,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1314,7 +1314,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1322,7 +1322,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1330,7 +1330,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1338,7 +1338,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1346,7 +1346,7 @@ Hello Customer,
 Your shopping account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1354,7 +1354,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1362,7 +1362,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1370,7 +1370,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1378,7 +1378,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -1386,7 +1386,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1394,7 +1394,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1402,7 +1402,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1410,7 +1410,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "emailSubject: Action required today
 
 Hello Customer,
@@ -1418,7 +1418,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1426,7 +1426,7 @@ Hello Customer,
 Your social media account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1434,7 +1434,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1442,7 +1442,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1450,7 +1450,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1458,7 +1458,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -1466,7 +1466,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1474,7 +1474,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1482,7 +1482,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1490,7 +1490,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1498,7 +1498,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1506,7 +1506,7 @@ Hello Customer,
 Your streaming account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1514,7 +1514,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1522,7 +1522,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1530,7 +1530,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1538,7 +1538,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -1546,7 +1546,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1554,7 +1554,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1562,7 +1562,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1570,7 +1570,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1578,7 +1578,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1586,7 +1586,7 @@ Hello Customer,
 Your online banking account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1594,7 +1594,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1602,7 +1602,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1610,7 +1610,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1618,7 +1618,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -1626,7 +1626,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1634,7 +1634,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1642,7 +1642,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1650,7 +1650,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1658,7 +1658,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1666,7 +1666,7 @@ Hello Customer,
 Your shopping account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1674,7 +1674,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1682,7 +1682,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1690,7 +1690,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1698,7 +1698,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -1706,7 +1706,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1714,7 +1714,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1722,7 +1722,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1730,7 +1730,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1738,7 +1738,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1746,7 +1746,7 @@ Hello Customer,
 Your social media account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1754,7 +1754,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1762,7 +1762,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1770,7 +1770,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1778,7 +1778,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -1786,7 +1786,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1794,7 +1794,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1802,7 +1802,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1810,7 +1810,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1818,7 +1818,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1826,7 +1826,7 @@ Hello Customer,
 Your streaming account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1834,7 +1834,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1842,7 +1842,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1850,7 +1850,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1858,7 +1858,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -1866,7 +1866,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1874,7 +1874,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1882,7 +1882,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1890,7 +1890,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1898,7 +1898,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1906,7 +1906,7 @@ Hello Customer,
 Your online banking account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1914,7 +1914,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -1922,7 +1922,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -1930,7 +1930,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -1938,7 +1938,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -1946,7 +1946,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -1954,7 +1954,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -1962,7 +1962,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -1970,7 +1970,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -1978,7 +1978,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -1986,7 +1986,7 @@ Hello Customer,
 Your shopping account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -1994,7 +1994,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -2002,7 +2002,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -2010,7 +2010,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -2018,7 +2018,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -2026,7 +2026,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -2034,7 +2034,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -2042,7 +2042,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -2050,7 +2050,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -2058,7 +2058,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "emailSubject: Urgent account verification required
 
 Hello Customer,
@@ -2066,7 +2066,7 @@ Hello Customer,
 Your social media account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -2074,7 +2074,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -2082,7 +2082,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -2090,7 +2090,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -2098,7 +2098,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -2106,7 +2106,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -2114,7 +2114,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -2122,7 +2122,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -2130,7 +2130,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -2138,7 +2138,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -2146,7 +2146,7 @@ Hello Customer,
 Your streaming account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -2154,7 +2154,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -2162,7 +2162,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -2170,7 +2170,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -2178,7 +2178,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -2186,7 +2186,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -2194,7 +2194,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -2202,7 +2202,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -2210,7 +2210,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -2218,7 +2218,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -2226,7 +2226,7 @@ Hello Customer,
 Your online banking account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -2234,7 +2234,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -2242,7 +2242,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -2250,7 +2250,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -2258,7 +2258,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -2266,7 +2266,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -2274,7 +2274,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -2282,7 +2282,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -2290,7 +2290,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -2298,7 +2298,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -2306,7 +2306,7 @@ Hello Customer,
 Your shopping account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -2314,7 +2314,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -2322,7 +2322,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -2330,7 +2330,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -2338,7 +2338,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -2346,7 +2346,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -2354,7 +2354,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -2362,7 +2362,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -2370,7 +2370,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -2378,7 +2378,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -2386,7 +2386,7 @@ Hello Customer,
 Your social media account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -2394,7 +2394,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -2402,7 +2402,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -2410,7 +2410,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -2418,7 +2418,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -2426,7 +2426,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -2434,7 +2434,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -2442,7 +2442,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -2450,7 +2450,7 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -2458,7 +2458,7 @@ Hello Customer,
 Your subscription payment could not be processed. Update your billing information to prevent service interruption.
 
 Regards,
-Customer Support Team",email,scam,Scam,Subscription Scam,Verified
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
 "Subject: Urgent account verification required
 
 Hello Customer,
@@ -2466,7 +2466,7 @@ Hello Customer,
 Your streaming account needs verification. Sign in through the provided verification page within 24 hours to avoid temporary suspension. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Credential Phishing,Verified
+Customer Support Team",email,emails,Scam,Credential Phishing,Verified
 "Subject: Security alert: action needed
 
 Hello Customer,
@@ -2474,7 +2474,7 @@ Hello Customer,
 Congratulations! Your account has been selected for a special reward. Confirm your details to claim the prize before the offer expires. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Prize Scam,Verified
+Customer Support Team",email,emails,Scam,Prize Scam,Verified
 "Subject: Your reward is waiting
 
 Hello Customer,
@@ -2482,7 +2482,7 @@ Hello Customer,
 A security review was triggered for your banking profile. Confirm your account information immediately to prevent access restrictions. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Banking Scam,Verified
+Customer Support Team",email,emails,Scam,Banking Scam,Verified
 "Subject: Delivery confirmation required
 
 Hello Customer,
@@ -2490,7 +2490,7 @@ Hello Customer,
 Your package could not be delivered because additional confirmation is required. Review the delivery information to reschedule. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Delivery Scam,Verified
+Customer Support Team",email,emails,Scam,Delivery Scam,Verified
 "Subject: Payment notice
 
 Hello Customer,
@@ -2498,7 +2498,7 @@ Hello Customer,
 An invoice is awaiting your confirmation. Review the attached billing notice and verify the payment details if the charge is unfamiliar.
 
 Regards,
-Customer Support Team",email,scam,Scam,Invoice Scam,Verified
+Customer Support Team",email,emails,Scam,Invoice Scam,Verified
 "Subject: Important account notice
 
 Hello Customer,
@@ -2506,7 +2506,7 @@ Hello Customer,
 We detected unusual activity on your account. Complete the security check to restore normal access. Do not ignore this message.
 
 Regards,
-Customer Support Team",email,scam,Scam,Account Suspension,Verified
+Customer Support Team",email,emails,Scam,Account Suspension,Verified
 "Subject: Final reminder
 
 Hello Customer,
@@ -2514,7 +2514,7 @@ Hello Customer,
 Your application has been shortlisted for a remote position. Submit the requested personal information to continue with onboarding. Please complete the request as soon as possible.
 
 Regards,
-Customer Support Team",email,scam,Scam,Job Scam,Verified
+Customer Support Team",email,emails,Scam,Job Scam,Verified
 "Subject: Unusual activity detected
 
 Hello Customer,
@@ -2522,7 +2522,7 @@ Hello Customer,
 A tax-related notice requires your attention. Confirm your taxpayer information to avoid processing delays. Failure to respond may result in account restrictions.
 
 Regards,
-Customer Support Team",email,scam,Scam,Tax Scam,Verified
+Customer Support Team",email,emails,Scam,Tax Scam,Verified
 "Subject: Immediate verification requested
 
 Hello Customer,
@@ -2530,7 +2530,115 @@ Hello Customer,
 Your social media profile has received a security warning. Verify your identity to keep the account active. This notice will expire soon.
 
 Regards,
-Customer Support Team",email,scam,Scam,Social Media Phishing,Verified
+Customer Support Team",email,emails,Scam,Social Media Phishing,Verified
+"Subject: Action required today
+
+Hello Customer,
+
+Your subscription payment could not be processed. Update your billing information to prevent service interruption.
+
+Regards,
+Customer Support Team",email,emails,Scam,Subscription Scam,Verified
+http://chase-secure-account-update-login.com/auth,web,URL,Scam,Banking Scam,Verified
+http://bofa-verify-identity-suspended.net/login,web,URL,Scam,Banking Scam,Verified
+http://wellsfargo-unlock-account-notice.org/verify,web,URL,Scam,Banking Scam,Verified
+http://citi-update-kyc-profile-required.com/portal,web,URL,Scam,Banking Scam,Verified
+http://bpi-online-security-update-portal.com/login,web,URL,Scam,Banking Scam,Verified
+http://bdo-activation-alert-ph.net/update,web,URL,Scam,Banking Scam,Verified
+http://hsbc-fraud-prevention-secure-link.com/auth,web,URL,Scam,Banking Scam,Verified
+http://barclays-security-token-reset.co.uk/verify,web,URL,Scam,Banking Scam,Verified
+http://capitalone-card-reactivation-center.com/login,web,URL,Scam,Banking Scam,Verified
+http://td-bank-online-security-verification.org/auth,web,URL,Scam,Banking Scam,Verified
+http://paypal-resolution-center-limited-account.com/login,web,URL,Scam,Phishing,Verified
+http://venmo-claim-free-cash-bonus.net/claim,web,URL,Scam,Phishing,Verified
+http://cashapp-support-verification-bonus.org/portal,web,URL,Scam,Phishing,Verified
+http://gcash-update-kyc-verification-link.com/login,web,URL,Scam,Phishing,Verified
+http://maya-wallet-security-upgrade-ph.net/auth,web,URL,Scam,Phishing,Verified
+http://stripe-merchant-payout-verification.com/login,web,URL,Scam,Phishing,Verified
+http://zelle-incoming-fund-release-portal.org/claim,web,URL,Scam,Phishing,Verified
+http://revolut-security-lock-release-portal.com/auth,web,URL,Scam,Phishing,Verified
+http://skrill-account-reactivation-form.net/login,web,URL,Scam,Phishing,Verified
+http://neteller-vip-reward-claim-portal.com/claim,web,URL,Scam,Phishing,Verified
+http://fedex-package-customs-duty-payment.com/track,web,URL,Scam,Courier/Delivery Scam,Verified
+http://ups-redelivery-address-confirmation.net/update,web,URL,Scam,Courier/Delivery Scam,Verified
+http://dhl-express-package-holding-fee.org/pay,web,URL,Scam,Courier/Delivery Scam,Verified
+http://usps-package-redirection-fee-portal.com/track,web,URL,Scam,Courier/Delivery Scam,Verified
+http://jtexpress-parcel-pending-delivery.net/claim,web,URL,Scam,Courier/Delivery Scam,Verified
+http://ninjavan-package-customs-clearance.org/pay,web,URL,Scam,Courier/Delivery Scam,Verified
+http://phlpost-parcels-awaiting-delivery-fee.com/track,web,URL,Scam,Courier/Delivery Scam,Verified
+http://dpd-package-reschedule-fee.co.uk/update,web,URL,Scam,Courier/Delivery Scam,Verified
+http://royalmail-shipping-fee-settlement.com/pay,web,URL,Scam,Courier/Delivery Scam,Verified
+http://sfexpress-international-parcel-hold.com/track,web,URL,Scam,Courier/Delivery Scam,Verified
+http://powerball-jackpot-winner-claim-prize.com/claim,web,URL,Scam,Lottery/Prize Scam,Verified
+http://megamillions-winner-payout-portal.net/verify,web,URL,Scam,Lottery/Prize Scam,Verified
+http://uk-lottery-winner-cash-prize-claim.co.uk/claim,web,URL,Scam,Lottery/Prize Scam,Verified
+http://pcso-charity-sweepstakes-winner-portal.com/claim,web,URL,Scam,Lottery/Prize Scam,Verified
+http://thelott-winner-payout-verification.com/claim,web,URL,Scam,Lottery/Prize Scam,Verified
+http://international-lotto-prize-claim-center.org/claim,web,URL,Scam,Lottery/Prize Scam,Verified
+http://lucky-winner-apple-iphone-prize.net/claim,web,URL,Scam,Lottery/Prize Scam,Verified
+http://holiday-trip-sweepstakes-reward-claim.com/claim,web,URL,Scam,Lottery/Prize Scam,Verified
+http://daily-cash-draw-winner-portal.org/claim,web,URL,Scam,Lottery/Prize Scam,Verified
+http://mega-jackpot-prize-collection-center.com/claim,web,URL,Scam,Lottery/Prize Scam,Verified
+http://bet365-free-bet-bonus-deposit-claim.com/login,web,URL,Scam,Gambling/Betting Scam,Verified
+http://draftkings-free-credits-deposit-portal.net/claim,web,URL,Scam,Gambling/Betting Scam,Verified
+http://fanduel-account-verification-bonus.org/auth,web,URL,Scam,Gambling/Betting Scam,Verified
+http://pagcor-online-casino-apk-download.net/download,web,URL,Scam,Gambling/Betting Scam,Verified
+http://betway-security-verification-portal.com/login,web,URL,Scam,Gambling/Betting Scam,Verified
+http://caesars-rewards-point-redemption.com/claim,web,URL,Scam,Gambling/Betting Scam,Verified
+http://mgm-resorts-free-play-bonus-claim.org/claim,web,URL,Scam,Gambling/Betting Scam,Verified
+http://rigged-online-casino-login-portal.com/auth,web,URL,Scam,Gambling/Betting Scam,Verified
+http://vip-sports-betting-account-update.net/login,web,URL,Scam,Gambling/Betting Scam,Verified
+http://betting-app-withdrawal-fee-portal.com/pay,web,URL,Scam,Gambling/Betting Scam,Verified
+http://instant-preapproved-loan-no-credit-check.com/apply,web,URL,Scam,Loan Scam,Verified
+http://prosper-loan-processing-fee-portal.net/apply,web,URL,Scam,Loan Scam,Verified
+http://sofi-loan-approval-verification.org/login,web,URL,Scam,Loan Scam,Verified
+http://upstart-fast-cash-loan-approval.com/apply,web,URL,Scam,Loan Scam,Verified
+http://homecredit-loan-activation-fee.net/pay,web,URL,Scam,Loan Scam,Verified
+http://tala-mobile-loan-disbursement-portal.com/claim,web,URL,Scam,Loan Scam,Verified
+http://seedin-business-loan-funding-portal.org/apply,web,URL,Scam,Loan Scam,Verified
+http://avant-personal-loan-activation.com/verify,web,URL,Scam,Loan Scam,Verified
+http://emergency-payday-loan-instant-approval.net/apply,web,URL,Scam,Loan Scam,Verified
+http://free-credit-score-report-login.com/auth,web,URL,Scam,Loan Scam,Verified
+http://ssa-gov-cola-benefit-increase-claim.com/verify,web,URL,Scam,Impersonation Scam,Verified
+http://irs-gov-tax-refund-status-portal.net/claim,web,URL,Scam,Impersonation Scam,Verified
+http://gov-uk-energy-bill-support-grant.co.uk/claim,web,URL,Scam,Impersonation Scam,Verified
+http://sss-gov-member-loan-payout-portal.com/claim,web,URL,Scam,Impersonation Scam,Verified
+http://philhealth-financial-assistance-claim.net/claim,web,URL,Scam,Impersonation Scam,Verified
+http://pagibig-fund-cash-aid-portal.org/claim,web,URL,Scam,Impersonation Scam,Verified
+http://usa-gov-federal-grants-payout-center.com/claim,web,URL,Scam,Impersonation Scam,Verified
+http://medicare-card-replacement-verification.org/auth,web,URL,Scam,Impersonation Scam,Verified
+http://centrelink-australia-disaster-relief.com/claim,web,URL,Scam,Impersonation Scam,Verified
+http://canada-revenue-agency-tax-rebate-portal.com/claim,web,URL,Scam,Impersonation Scam,Verified
+http://remote-task-optimizer-job-earn-daily.com/register,web,URL,Scam,Job Scam,Verified
+http://linkedin-secure-job-application-portal.net/login,web,URL,Scam,Job Scam,Verified
+http://indeed-employer-verification-portal.org/auth,web,URL,Scam,Job Scam,Verified
+http://glassdoor-paid-task-employment-portal.com/register,web,URL,Scam,Job Scam,Verified
+http://online-data-entry-job-registration-fee.net/apply,web,URL,Scam,Job Scam,Verified
+http://jobstreet-hiring-manager-verification.com/login,web,URL,Scam,Job Scam,Verified
+http://work-from-home-typing-job-payout.org/claim,web,URL,Scam,Job Scam,Verified
+http://va-crypto-task-earning-platform.com/register,web,URL,Scam,Job Scam,Verified
+http://international-recruitment-agency-portal.net/apply,web,URL,Scam,Job Scam,Verified
+http://exec-assistant-remote-job-offer.com/verify,web,URL,Scam,Job Scam,Verified
+http://high-yield-crypto-arbitrage-trading-bot.com/invest,web,URL,Scam,Investment Scam,Verified
+http://vanguard-investment-portfolio-login.net/auth,web,URL,Scam,Investment Scam,Verified
+http://fidelity-wealth-management-secure-login.org/auth,web,URL,Scam,Investment Scam,Verified
+http://schwab-brokerage-account-verification.com/login,web,URL,Scam,Investment Scam,Verified
+http://blackrock-fund-investment-portal.net/invest,web,URL,Scam,Investment Scam,Verified
+http://robinhood-crypto-wallet-unlock-portal.com/auth,web,URL,Scam,Investment Scam,Verified
+http://etrade-account-security-lock-portal.org/login,web,URL,Scam,Investment Scam,Verified
+http://coinbase-wallet-security-restore-portal.com/auth,web,URL,Scam,Investment Scam,Verified
+http://binance-security-verification-withdrawal.net/login,web,URL,Scam,Investment Scam,Verified
+http://global-forex-investment-high-return.com/invest,web,URL,Scam,Investment Scam,Verified
+http://marriott-bonvoy-expiring-points-redemption.com/claim,web,URL,Scam,Impersonation Scam,Verified
+http://hilton-honors-free-night-reward-claim.net/claim,web,URL,Scam,Impersonation Scam,Verified
+http://delta-skymiles-mileage-redemption-portal.org/claim,web,URL,Scam,Impersonation Scam,Verified
+http://aa-advantage-frequent-flyer-reward.com/claim,web,URL,Scam,Impersonation Scam,Verified
+http://starbucks-rewards-free-drink-load.net/claim,web,URL,Scam,Impersonation Scam,Verified
+http://ihg-one-rewards-point-transfer-portal.com/claim,web,URL,Scam,Impersonation Scam,Verified
+http://rakuten-cash-back-bonus-payout-portal.org/claim,web,URL,Scam,Impersonation Scam,Verified
+http://fetch-rewards-gift-card-redemption.com/claim,web,URL,Scam,Impersonation Scam,Verified
+http://microsoft-rewards-gift-card-claim.net/claim,web,URL,Scam,Impersonation Scam,Verified
+http://shell-goplust-fuel-reward-voucher.com/claim,web,URL,Scam,Impersonation Scam,Verified
 "Subject: Action required today
 
 Hello Customer,
@@ -2608,3 +2716,103 @@ Good luck sa board exam mo! Alam kong kaya mo yan.,SMS,Message,Not Scam,,Verifie
 "Halika sa amin mamaya, may lechon manok tayo for dinner.",SMS,Message,Not Scam,,Verified
 Sino may available bukas? Gusto ko sana mag-inuman tayo sa may Lacson.,SMS,Message,Not Scam,,Verified
 "Uy pare, may laro ba tayo basketball mamaya sa barangay court?",SMS,Message,Not Scam,,Verified
+https://www.chase.com,web,URL,Not Scam,,Verified
+https://www.bankofamerica.com,web,URL,Not Scam,,Verified
+https://www.wellsfargo.com,web,URL,Not Scam,,Verified
+https://www.citi.com,web,URL,Not Scam,,Verified
+https://www.bpi.com.ph,web,URL,Not Scam,,Verified
+https://www.bdo.com.ph,web,URL,Not Scam,,Verified
+https://www.hsbc.com,web,URL,Not Scam,,Verified
+https://www.barclays.co.uk,web,URL,Not Scam,,Verified
+https://www.capitalone.com,web,URL,Not Scam,,Verified
+https://www.td.com,web,URL,Not Scam,,Verified
+https://www.paypal.com,web,URL,Not Scam,,Verified
+https://venmo.com,web,URL,Not Scam,,Verified
+https://cash.app,web,URL,Not Scam,,Verified
+https://www.gcash.com,web,URL,Not Scam,,Verified
+https://www.maya.ph,web,URL,Not Scam,,Verified
+https://stripe.com,web,URL,Not Scam,,Verified
+https://www.zellepay.com,web,URL,Not Scam,,Verified
+https://www.revolut.com,web,URL,Not Scam,,Verified
+https://www.skrill.com,web,URL,Not Scam,,Verified
+https://www.neteller.com,web,URL,Not Scam,,Verified
+https://www.fedex.com,web,URL,Not Scam,,Verified
+https://www.ups.com,web,URL,Not Scam,,Verified
+https://www.dhl.com,web,URL,Not Scam,,Verified
+https://www.usps.com,web,URL,Not Scam,,Verified
+https://www.jtexpress.ph,web,URL,Not Scam,,Verified
+https://www.ninjavan.co,web,URL,Not Scam,,Verified
+https://phlpost.gov.ph,web,URL,Not Scam,,Verified
+https://www.dpd.com,web,URL,Not Scam,,Verified
+https://www.royalmail.com,web,URL,Not Scam,,Verified
+https://www.sf-express.com,web,URL,Not Scam,,Verified
+https://www.powerball.com,web,URL,Not Scam,,Verified
+https://www.megamillions.com,web,URL,Not Scam,,Verified
+https://www.national-lottery.co.uk,web,URL,Not Scam,,Verified
+https://www.pcso.gov.ph,web,URL,Not Scam,,Verified
+https://www.thelott.com,web,URL,Not Scam,,Verified
+https://www.loterie-nationale.fr,web,URL,Not Scam,,Verified
+https://www.calottery.com,web,URL,Not Scam,,Verified
+https://nylottery.ny.gov,web,URL,Not Scam,,Verified
+https://www.olg.ca,web,URL,Not Scam,,Verified
+https://mylotto.co.nz,web,URL,Not Scam,,Verified
+https://www.bet365.com,web,URL,Not Scam,,Verified
+https://www.draftkings.com,web,URL,Not Scam,,Verified
+https://www.fanduel.com,web,URL,Not Scam,,Verified
+https://www.pagcor.ph,web,URL,Not Scam,,Verified
+https://www.flutter.com,web,URL,Not Scam,,Verified
+https://betway.com,web,URL,Not Scam,,Verified
+https://www.caesars.com,web,URL,Not Scam,,Verified
+https://www.mgmresorts.com,web,URL,Not Scam,,Verified
+https://www.kindredgroup.com,web,URL,Not Scam,,Verified
+https://www.entaingroup.com,web,URL,Not Scam,,Verified
+https://www.lendingclub.com,web,URL,Not Scam,,Verified
+https://www.prosper.com,web,URL,Not Scam,,Verified
+https://www.sofi.com,web,URL,Not Scam,,Verified
+https://www.creditkarma.com,web,URL,Not Scam,,Verified
+https://www.upstart.com,web,URL,Not Scam,,Verified
+https://www.homecredit.net,web,URL,Not Scam,,Verified
+https://tala.co,web,URL,Not Scam,,Verified
+https://www.seedin.tech,web,URL,Not Scam,,Verified
+https://www.avant.com,web,URL,Not Scam,,Verified
+https://www.marcus.com,web,URL,Not Scam,,Verified
+https://www.ssa.gov,web,URL,Not Scam,,Verified
+https://www.irs.gov,web,URL,Not Scam,,Verified
+https://www.gov.uk,web,URL,Not Scam,,Verified
+https://www.sss.gov.ph,web,URL,Not Scam,,Verified
+https://www.philhealth.gov.ph,web,URL,Not Scam,,Verified
+https://www.pagibigfund.gov.ph,web,URL,Not Scam,,Verified
+https://www.usa.gov,web,URL,Not Scam,,Verified
+https://www.medicare.gov,web,URL,Not Scam,,Verified
+https://www.servicesaustralia.gov.au,web,URL,Not Scam,,Verified
+https://www.canada.ca/en/revenue-agency.html,web,URL,Not Scam,,Verified
+https://www.linkedin.com,web,URL,Not Scam,,Verified
+https://www.indeed.com,web,URL,Not Scam,,Verified
+https://www.glassdoor.com,web,URL,Not Scam,,Verified
+https://www.monster.com,web,URL,Not Scam,,Verified
+https://www.ziprecruiter.com,web,URL,Not Scam,,Verified
+https://www.jobstreet.com.ph,web,URL,Not Scam,,Verified
+https://www.workday.com,web,URL,Not Scam,,Verified
+https://www.simplyhired.com,web,URL,Not Scam,,Verified
+https://www.flexjobs.com,web,URL,Not Scam,,Verified
+https://www.governmentjobs.com,web,URL,Not Scam,,Verified
+https://investor.vanguard.com,web,URL,Not Scam,,Verified
+https://www.fidelity.com,web,URL,Not Scam,,Verified
+https://www.schwab.com,web,URL,Not Scam,,Verified
+https://www.blackRock.com,web,URL,Not Scam,,Verified
+https://robinhood.com,web,URL,Not Scam,,Verified
+https://us.etrade.com,web,URL,Not Scam,,Verified
+https://www.interactivebrokers.com,web,URL,Not Scam,,Verified
+https://www.tdameritrade.com,web,URL,Not Scam,,Verified
+https://www.coinbase.com,web,URL,Not Scam,,Verified
+https://www.binance.com,web,URL,Not Scam,,Verified
+https://www.marriott.com,web,URL,Not Scam,,Verified
+https://www.hilton.com,web,URL,Not Scam,,Verified
+https://www.delta.com,web,URL,Not Scam,,Verified
+https://www.aa.com,web,URL,Not Scam,,Verified
+https://www.starbucks.com/rewards,web,URL,Not Scam,,Verified
+https://www.ihg.com,web,URL,Not Scam,,Verified
+https://www.rakuten.com,web,URL,Not Scam,,Verified
+https://www.fetch.com,web,URL,Not Scam,,Verified
+https://rewards.microsoft.com,web,URL,Not Scam,,Verified
+https://www.shell.com,web,URL,Not Scam,,Verified

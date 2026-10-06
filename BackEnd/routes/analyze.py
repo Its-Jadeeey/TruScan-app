@@ -37,7 +37,7 @@ def get_risk_level(prediction: str, confidence: int) -> str:
         return "SAFE"
     if confidence >= 75:
         return "HIGH"
-    elif confidence >= 45:
+    elif confidence >= 50:
         return "MEDIUM"
     return "LOW"
 
