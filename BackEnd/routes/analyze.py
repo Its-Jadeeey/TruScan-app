@@ -1,8 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from models.schema import ScanRequest, ScanResponse
-from service.machineLearning import predict
+from service.machineLearning import (
+    predict,
+    HIGH_RISK_THRESHOLD,
+    LOW_RISK_THRESHOLD,
+)
 
 router = APIRouter()
+
 
 @router.post("/", response_model=ScanResponse)
 async def analyze(request: ScanRequest):
@@ -19,36 +24,45 @@ async def analyze(request: ScanRequest):
             detail="ML model not yet trained. Please train and export the model first."
         )
 
-    raw_pred = str(result["prediction"]).lower().strip()
-    prediction = "safe" if raw_pred in ["safe", "not scam", "not_scam"] else "scam"
+    scam_probability = result["scam_probability"]
+    prediction, risk_level = get_tier(scam_probability)
+    risk_score = round(scam_probability * 100)
 
     return ScanResponse(
         prediction  = prediction,
         confidence  = result["confidence"],
-        risk_level  = get_risk_level(prediction, result["confidence"]),
+        risk_score  = risk_score,
+        risk_level  = risk_level,
         scam_type   = result.get("scam_type", "Scam Threat"),
         indicators  = result.get("indicators", {}),
         source      = "ml_model",
-        explanation = build_explanation(prediction, result["confidence"]),
+        explanation = build_explanation(prediction, risk_score),
     )
 
-def get_risk_level(prediction: str, confidence: int) -> str:
-    if prediction == "safe":
-        return "SAFE"
-    if confidence >= 75:
-        return "HIGH"
-    elif confidence >= 50:
-        return "MEDIUM"
-    return "LOW"
 
-def build_explanation(prediction: str, confidence: int) -> str:
+def get_tier(scam_probability: float):
+    """Map the model's scam probability (0-1) to (prediction, risk_level)."""
+    if scam_probability >= HIGH_RISK_THRESHOLD:
+        return "scam", "HIGH"
+    if scam_probability >= LOW_RISK_THRESHOLD:
+        return "suspicious", "MEDIUM"
+    return "safe", "LOW"
+
+
+def build_explanation(prediction: str, risk_score: int) -> str:
     if prediction == "safe":
         return (
-            f"Walang scam pattern ang natukoy ng aming ML model. "
-            f"Ang mensaheng ito ay mukhang lehitimo ({confidence}% confidence)."
+            f"Walang malinaw na scam pattern ang natukoy ng aming ML model "
+            f"({risk_score}% scam risk). Ang mensaheng ito ay mukhang lehitimo."
+        )
+    if prediction == "suspicious":
+        return (
+            f"Hindi tiyak ang resulta ng aming ML model ({risk_score}% scam risk). "
+            f"Mag-ingat: huwag mag-click ng links o magbahagi ng personal na "
+            f"impormasyon hangga't hindi mo na-verify ang nagpadala."
         )
     return (
         f"Ang aming ML model ay natukoy na ito ay isang SCAM "
-        f"({confidence}% confidence). Huwag tumugon, mag-click ng links, "
+        f"({risk_score}% scam risk). Huwag tumugon, mag-click ng links, "
         f"o magbahagi ng personal na impormasyon."
     )

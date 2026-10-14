@@ -98,6 +98,9 @@ export const SIMPLE_COLORS = {
   primary: COLORS.primary,   // keep the same blue accent for active states
 
   navCard: '#1B1D4A',        // the dark "NORMAL MODE" card sitting on the purple bg
+  accentGreen: '#4ADE80',    // "SIMPLE MODE" label color
+
+  navCard: '#1B1D4A',        // the dark "NORMAL MODE" card sitting on the purple bg
 };
 
 // Big scan-type buttons on the Simple Mode home screen.
@@ -153,10 +156,27 @@ export const LIGHT_COLORS = {
   navCard: '#111827',
 };
 
-// Returns the active palette. Simple Mode (purple) takes priority; otherwise
-// picks light or dark. Use this instead of importing COLORS directly in
-// screens/nav files that need to react to either setting.
+export const SIMPLE_LIGHT_COLORS = {
+  background: '#EEF0FF',
+  surface:    '#FFFFFF',
+  card:       '#F5F6FF',
+  border:     '#D3D7F5',
+  border2:    '#B4B9EC',
+
+  ink:   '#1E1F4B',
+  muted: '#585C99',
+  hint:  '#8A8EC2',
+
+  primary: '#3D6FEB',
+  navCard: '#2E2F72',      // stays dark so its white text is readable
+  accentGreen: '#15803D',
+};
+
 export function getTheme(simpleMode, lightMode) {
-  if (simpleMode) return { ...COLORS, ...SIMPLE_COLORS };
+  if (simpleMode) {
+    return lightMode
+      ? { ...LIGHT_COLORS, ...SIMPLE_LIGHT_COLORS }
+      : { ...COLORS, ...SIMPLE_COLORS };
+  }
   return lightMode ? LIGHT_COLORS : COLORS;
 }

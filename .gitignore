@@ -41,3 +41,6 @@ AdminPanel/venv/
 AdminPanel/__pycache__/
 AdminPanel/**/__pycache__/
 *.pyc
+
+venv/
+.venv/

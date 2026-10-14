@@ -5,23 +5,33 @@
 <div class="app-shell">
   {% include "_sidebar.html" with context %}
 
-  <main class="main">
+  <main class="main" id="mainContent">
     <header class="topbar">
       <div>
-        <h1>System Overview</h1>
-        <p>Monitor threat response performance and platform trends</p>
+        <h1 data-i18n="System Overview">System Overview</h1>
+        <p data-i18n="Monitor threat response performance and platform trends">Monitor threat response performance and platform trends</p>
       </div>
-      <button class="icon-btn" title="Notifications" aria-label="Notifications">
-        <svg viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6-1-1v-4.5C18 7.36 15.86 5 13 4.58V4a1 1 0 0 0-2 0v.58C8.14 5 6 7.36 6 10.5V15l-1 1v1h14v-1Z" fill="currentColor"/></svg>
-      </button>
+      {% include "_bell.html" %}
     </header>
 
-    <section class="content" id="dashboardContent">
-      <h2 class="section-label">System Metrics</h2>
+    <section class="content content-wide" id="dashboardContent">
+      <div class="section-row">
+        <h2 class="section-label" data-i18n="System Metrics">System Metrics</h2>
+        <div class="toolbar">
+          <div class="range-switch" role="group" aria-label="Time range" id="rangeSwitch">
+            <button type="button" data-range="7" data-i18n="7 days">7 days</button>
+            <button type="button" data-range="30" data-i18n="30 days">30 days</button>
+            <button type="button" data-range="all" data-i18n="All time">All time</button>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" id="refreshBtn" data-i18n="Refresh">Refresh</button>
+          <span class="muted-note" id="lastUpdated" aria-live="polite"></span>
+        </div>
+      </div>
+
       <div class="metric-grid">
         <div class="metric-card">
           <div class="metric-head">
-            <span>Detection Rate</span>
+            <span data-i18n="Detection Rate">Detection Rate</span>
             <span class="dot dot-green"></span>
           </div>
           <div class="metric-value green" id="detectionRate">&mdash;</div>
@@ -29,24 +39,63 @@
         </div>
         <div class="metric-card">
           <div class="metric-head">
-            <span>Active Threats</span>
+            <span data-i18n="Active Threats">Active Threats</span>
             <span class="dot dot-red"></span>
           </div>
           <div class="metric-value red" id="activeThreats">&mdash;</div>
           <div class="metric-trend danger" id="activeThreatsTrend"></div>
         </div>
+        <div class="metric-card">
+          <div class="metric-head">
+            <span data-i18n="Total Reports">Total Reports</span>
+          </div>
+          <div class="metric-value" id="totalReports">&mdash;</div>
+          <div class="metric-trend" id="totalReportsTrend"></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-head">
+            <span data-i18n="Model Agreement">Model Agreement</span>
+          </div>
+          <div class="metric-value blue" id="modelAgreement">&mdash;</div>
+          <div class="metric-trend" id="modelAgreementTrend"></div>
+        </div>
       </div>
+
+      <div class="two-col two-col-even">
+        <div>
+          <h2 class="section-label" data-i18n="Reports Over Time">Reports Over Time</h2>
+          <div class="panel chart-panel">
+            <div class="legend" aria-hidden="true">
+              <span><i class="swatch swatch-bad"></i><span data-i18n="Flagged">Flagged</span></span>
+              <span><i class="swatch swatch-good"></i><span data-i18n="Safe">Safe</span></span>
+            </div>
+            <div id="timelineChart" class="timeline" role="img" aria-label="Reports per day"></div>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-label" data-i18n="Breakdown">Breakdown</h2>
+          <div class="panel breakdown-panel">
+            <h3 class="mini-title" data-i18n="By channel">By channel</h3>
+            <div id="channelBars" class="dist"></div>
+            <h3 class="mini-title" data-i18n="By risk level">By risk level</h3>
+            <div id="riskBars" class="dist"></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-label" data-i18n="Model Performance">Model Performance</h2>
+      <div class="panel" id="modelPanel"><p class="empty-note">&hellip;</p></div>
 
       <div class="two-col">
         <div>
-          <h2 class="section-label">Recent Flagged Scams</h2>
+          <h2 class="section-label" data-i18n="Recent Flagged Scams">Recent Flagged Scams</h2>
           <div id="flaggedList" class="flagged-list"></div>
         </div>
         <div>
-          <h2 class="section-label">Top Risk Indicators</h2>
+          <h2 class="section-label" data-i18n="Top Risk Indicators">Top Risk Indicators</h2>
           <div class="panel">
             <div class="risk-head">
-              <span>Indicator</span><span>Score</span>
+              <span data-i18n="Indicator">Indicator</span><span data-i18n="Score">Score</span>
             </div>
             <ul id="riskList" class="risk-list"></ul>
           </div>

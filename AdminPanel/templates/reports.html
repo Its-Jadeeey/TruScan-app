@@ -5,56 +5,116 @@
 <div class="app-shell">
   {% include "_sidebar.html" with context %}
 
-  <main class="main">
+  <main class="main" id="mainContent">
     <header class="topbar">
       <div>
-        <h1>System Overview</h1>
-        <p>Monitor threat response performance and platform trends</p>
+        <h1 data-i18n="Reports">Reports</h1>
+        <p data-i18n="Review community reports and prepare training data">Review community reports and prepare training data</p>
       </div>
-      <button class="icon-btn" title="Notifications" aria-label="Notifications">
-        <svg viewBox="0 0 24 24"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6-1-1v-4.5C18 7.36 15.86 5 13 4.58V4a1 1 0 0 0-2 0v.58C8.14 5 6 7.36 6 10.5V15l-1 1v1h14v-1Z" fill="currentColor"/></svg>
-      </button>
+      {% include "_bell.html" %}
     </header>
 
-    <section class="content">
-      <h2 class="section-label">Overview of Scam, Phishing, Smishing</h2>
+    <section class="content content-wide">
+      <h2 class="section-label" data-i18n="Overview of Scam, Phishing, Smishing">Overview of Scam, Phishing, Smishing</h2>
       <div class="metric-grid">
         <div class="metric-card">
-          <div class="metric-head"><span>Total New Cases</span></div>
+          <div class="metric-head"><span data-i18n="Pending Review">Pending Review</span></div>
           <div class="metric-value red" id="totalNewCases">&mdash;</div>
           <div class="metric-trend danger" id="totalNewCasesTrend"></div>
         </div>
         <div class="metric-card">
-          <div class="metric-head"><span>Ready for Training</span></div>
+          <div class="metric-head"><span data-i18n="Ready for Training">Ready for Training</span></div>
           <div class="metric-value green" id="readyForTraining">&mdash;</div>
           <div class="metric-trend" id="readyForTrainingTrend"></div>
         </div>
+        <div class="metric-card">
+          <div class="metric-head"><span data-i18n="Rejected">Rejected</span></div>
+          <div class="metric-value" id="rejectedCount">&mdash;</div>
+          <div class="metric-trend" id="rejectedTrend"></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-head"><span data-i18n="Model Corrections">Model Corrections</span></div>
+          <div class="metric-value blue" id="correctionCount">&mdash;</div>
+          <div class="metric-trend" id="correctionTrend"></div>
+        </div>
       </div>
 
-      <h2 class="section-label">New Cases of Intrusion</h2>
+      <div class="section-row">
+        <h2 class="section-label" data-i18n="Community Reports">Community Reports</h2>
+        <div class="toolbar">
+          <button type="button" class="btn btn-ghost btn-sm" id="exportViewBtn" data-i18n="Export view (CSV)">Export view (CSV)</button>
+          <button type="button" class="btn btn-blue btn-sm" id="exportTrainBtn" data-i18n="Export training CSV">Export training CSV</button>
+        </div>
+      </div>
+
+      <div class="filters" role="search">
+        <input id="fSearch" class="input" type="search" placeholder="Search text or case ID…" data-i18n-placeholder="Search text or case ID…" aria-label="Search" />
+        <select id="fStatus" class="input" aria-label="Status">
+          <option value="all" data-i18n="All statuses">All statuses</option>
+          <option value="pending" data-i18n="Pending">Pending</option>
+          <option value="verified" data-i18n="Verified">Verified</option>
+          <option value="rejected" data-i18n="Rejected">Rejected</option>
+        </select>
+        <select id="fChannel" class="input" aria-label="Channel">
+          <option value="all" data-i18n="All channels">All channels</option>
+          <option value="sms">SMS</option>
+          <option value="email">Email</option>
+          <option value="link">Link</option>
+        </select>
+        <select id="fRisk" class="input" aria-label="Risk">
+          <option value="all" data-i18n="All risks">All risks</option>
+          <option value="high" data-i18n="High">High</option>
+          <option value="medium" data-i18n="Medium">Medium</option>
+          <option value="low" data-i18n="Low">Low</option>
+        </select>
+        <select id="fSort" class="input" aria-label="Sort">
+          <option value="new" data-i18n="Newest first">Newest first</option>
+          <option value="old" data-i18n="Oldest first">Oldest first</option>
+        </select>
+      </div>
+
       <div class="panel table-panel">
         <table class="cases-table">
           <thead>
             <tr>
-              <th>Case ID</th>
-              <th>Source</th>
-              <th>Type</th>
-              <th>Detected</th>
-              <th>Risk</th>
-              <th>Action</th>
+              <th scope="col" data-i18n="Case ID">Case ID</th>
+              <th scope="col" data-i18n="Message">Message</th>
+              <th scope="col" data-i18n="Source">Source</th>
+              <th scope="col" data-i18n="Type">Type</th>
+              <th scope="col" data-i18n="Detected">Detected</th>
+              <th scope="col" data-i18n="Risk">Risk</th>
+              <th scope="col" data-i18n="Status">Status</th>
+              <th scope="col" data-i18n="Action">Action</th>
             </tr>
           </thead>
           <tbody id="casesBody"></tbody>
         </table>
       </div>
+      <div class="pager" id="pager">
+        <span class="muted-note" id="pagerInfo" aria-live="polite"></span>
+        <div class="pager-btns">
+          <button type="button" class="btn btn-ghost btn-sm" id="prevBtn" data-i18n="Previous">Previous</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="nextBtn" data-i18n="Next">Next</button>
+        </div>
+      </div>
 
-      <h2 class="section-label">Scam Checker</h2>
-      <div class="panel scam-checker">
-        <textarea id="scamInput" placeholder="Paste a suspicious message, link, or phone number to analyze&hellip;"></textarea>
-        <div id="scamResult" class="scam-result" hidden></div>
-        <div class="scam-actions">
-          <button id="checkBtn" class="btn btn-blue">Check</button>
-          <button id="clearBtn" class="btn btn-red">Clear</button>
+      <div class="two-col two-col-even">
+        <div>
+          <h2 class="section-label" data-i18n="Scam Checker">Scam Checker</h2>
+          <div class="panel scam-checker">
+            <textarea id="scamInput" aria-label="Scam Checker" placeholder="Paste a suspicious message, link, or phone number to analyze…" data-i18n-placeholder="Paste a suspicious message, link, or phone number to analyze…"></textarea>
+            <div id="scamResult" class="scam-result" hidden aria-live="polite"></div>
+            <div class="scam-actions">
+              <button id="checkBtn" class="btn btn-blue" type="button" data-i18n="Check">Check</button>
+              <button id="clearBtn" class="btn btn-red" type="button" data-i18n="Clear">Clear</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-label" data-i18n="Activity Log">Activity Log</h2>
+          <div class="panel">
+            <ul id="logList" class="log-list"></ul>
+          </div>
         </div>
       </div>
     </section>

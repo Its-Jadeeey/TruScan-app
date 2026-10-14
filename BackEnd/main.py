@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes.analyze import router as analyze_router
 from routes.report import router as report_router
+from routes.model_info import router as model_router
 from database.firebase import initialize_firebase
 
 initialize_firebase()
@@ -24,6 +25,7 @@ app.add_middleware(
 
 app.include_router(analyze_router, prefix="/analyze", tags=["Analysis"])
 app.include_router(report_router,  prefix="/report",  tags=["Reports"])
+app.include_router(model_router,   prefix="/model",   tags=["Model"])
 
 @app.get("/")
 def root():

@@ -2,7 +2,7 @@
 // Simple Mode home screen — big colorful Message/Email/Link scan buttons,
 // purple theme. Rendered as the "Home" tab whenever Simple Mode is on.
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
   StyleSheet, ActivityIndicator, Alert,
@@ -11,15 +11,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp }          from '../Context/AppContext';
 import { analyzeText }     from '../Service/analyzeService';
 import { addReport }       from '../Service/firestoreService';
-import { SIMPLE_COLORS, SIMPLE_SCAN_BUTTONS, RADIUS, SPACING, SHADOW, getRiskColors } from '../Service/theme';
+import { getTheme, SIMPLE_SCAN_BUTTONS, RADIUS, SPACING, SHADOW, getRiskColors } from '../Service/theme';
 
 const SCAN_TYPES = ['message', 'email', 'link'];
 
 // ─── BIG RESULT BANNER ────────────────────────────────────────────────────────
 
-function BigResultBanner({ result }) {
+function BigResultBanner({ result, styles, COLORS }) {
   if (!result) return null;
-  const risk = getRiskColors(result.prediction);
+  const risk = getRiskColors(result.prediction, COLORS);
   const config = {
     scam:       { emoji: '⚠️', headline: 'SCAM ITO!',    detail: 'Huwag tumugon. Huwag mag-click ng link. Huwag magpadala ng pera.' },
     phishing:   { emoji: '⚠️', headline: 'PHISHING ITO!', detail: 'Huwag tumugon. Huwag mag-click ng link. Huwag magpadala ng pera.' },
@@ -49,6 +49,12 @@ export default function SimpleModeScreen({ navigation }) {
   const [result, setResult]             = useState(null);
   const [loading, setLoading]           = useState(false);
   const [reported, setReported]         = useState(false);
+
+  // Theme: follows Light Mode even while Simple Mode is on
+  const { lightMode } = useApp();
+  const COLORS        = getTheme(true, lightMode);
+  const SIMPLE_COLORS = COLORS;
+  const styles        = useMemo(() => makeStyles(SIMPLE_COLORS), [lightMode]);
 
   const BIG = { xs: 15, sm: 18, base: 20, md: 23, lg: 28, xl: 34, xxl: 40 };
 
@@ -150,7 +156,7 @@ export default function SimpleModeScreen({ navigation }) {
               textAlignVertical="top"
             />
 
-            <BigResultBanner result={result} />
+            <BigResultBanner result={result} styles={styles} COLORS={COLORS} />
 
             <TouchableOpacity
               style={[styles.bigScanBtn, loading && styles.bigScanBtnDisabled]}
@@ -194,12 +200,12 @@ export default function SimpleModeScreen({ navigation }) {
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 
-const styles = StyleSheet.create({
+const makeStyles = (SIMPLE_COLORS) => StyleSheet.create({
   safe:    { flex: 1, backgroundColor: SIMPLE_COLORS.background },
   content: { padding: SPACING.lg, paddingBottom: 80 },
 
   menuBtn:  { marginBottom: SPACING.md },
-  menuIcon: { fontSize: 22, color: '#FFFFFF', fontWeight: '700' },
+  menuIcon: { fontSize: 22, color: SIMPLE_COLORS.ink, fontWeight: '700' },
 
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: 4 },
   brandBadge: {
@@ -207,8 +213,8 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   brandBadgeIcon: { fontSize: 16 },
-  brand:       { color: '#FFFFFF', fontWeight: '800', letterSpacing: 1 },
-  simpleLabel: { color: '#4ADE80', fontWeight: '800', marginBottom: SPACING.lg, letterSpacing: 0.5 },
+  brand:       { color: SIMPLE_COLORS.ink, fontWeight: '800', letterSpacing: 1 },
+  simpleLabel: { color: SIMPLE_COLORS.accentGreen, fontWeight: '800', marginBottom: SPACING.lg, letterSpacing: 0.5 },
 
   btnStack: { gap: SPACING.sm, marginBottom: SPACING.lg },
   scanTypeBtn: {
@@ -216,7 +222,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.lg, paddingVertical: SPACING.md, paddingHorizontal: SPACING.lg,
     ...SHADOW.card,
   },
-  scanTypeBtnActive: { borderWidth: 2, borderColor: '#FFFFFF' },
+  scanTypeBtnActive: { borderWidth: 2, borderColor: SIMPLE_COLORS.ink },
   scanTypeIcon:  { fontSize: 20 },
   scanTypeLabel: { color: '#FFFFFF', fontWeight: '800', letterSpacing: 0.5 },
 

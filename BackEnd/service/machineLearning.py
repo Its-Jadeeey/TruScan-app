@@ -20,6 +20,11 @@ LABEL_PATH = os.path.join(MODEL_DIR, "label_encoder.pkl")
 # Labels the training data uses for a legitimate message
 SAFE_LABELS = {"safe", "not scam"}
 
+# Risk tiers, based on the model's probability that the text is a scam (0-1).
+# Starting values: tune them on your validation data.
+HIGH_RISK_THRESHOLD = 0.80   # >= this        -> HIGH   (scam)
+LOW_RISK_THRESHOLD  = 0.35   # below this      -> LOW    (safe); in between -> MEDIUM
+
 
 # ============================================================
 # EXACT PREPROCESSING MATCH WITH 01_preprocess.py
@@ -79,21 +84,32 @@ def predict(text: str) -> dict | None:
 
     label = model.predict(features)[0]
     proba = model.predict_proba(features)[0]
-    confidence = int(max(proba) * 100)
+    confidence = int(max(proba) * 100)          # confidence in the model's top class
 
+    # Class names in the same order as `proba`
     if label_encoder:
+        class_names = [str(c) for c in label_encoder.inverse_transform(model.classes_)]
         prediction = label_encoder.inverse_transform([label])[0]
     else:
+        class_names = [str(c) for c in model.classes_]
         prediction = str(label)
 
-    is_safe = str(prediction).strip().lower() in SAFE_LABELS
+    # Probability that the text is a scam = 1 - probability of the safe class(es)
+    safe_prob = sum(
+        p for name, p in zip(class_names, proba)
+        if name.strip().lower() in SAFE_LABELS
+    )
+    scam_probability = float(max(0.0, min(1.0, 1.0 - safe_prob)))
 
-    indicators = extract_indicators(features, vectorizer, is_safe)
+    # Explain anything that is not clearly safe
+    is_clearly_safe = scam_probability < LOW_RISK_THRESHOLD
+    indicators = extract_indicators(features, vectorizer, is_clearly_safe)
 
     return {
         "prediction": prediction,
         "confidence": confidence,
-        "scam_type": "safe" if is_safe else str(prediction).capitalize(),
+        "scam_probability": scam_probability,
+        "scam_type":  "safe" if is_clearly_safe else "Scam",
         "indicators": indicators,
     }
 
