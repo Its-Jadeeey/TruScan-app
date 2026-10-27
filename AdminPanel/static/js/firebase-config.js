@@ -6,12 +6,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/fireba
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBe9A6isnUsoVJZVpFxaEQpc9Eccz2oeI0",
-  authDomain: "truscanv1.firebaseapp.com",
-  projectId: "truscanv1",
-  storageBucket: "truscanv1.firebasestorage.app",
-  messagingSenderId: "544639973606",
-  appId: "1:544639973606:web:8dc7bc38fe4bac921c2327",
+  apiKey: "AIzaSyBByUnFiVg7or2e98uA5BIg_TpBPWEN5nk",
+  authDomain: "truscanv2.firebaseapp.com",
+  projectId: "truscanv2",
+  storageBucket: "truscanv2.firebasestorage.app",
+  messagingSenderId: "148816061446",
+  appId: "1:148816061446:web:9ed6cb169b10802b034f87",
+  measurementId: "G-JB609SZB7H"
 };
 
 const app = initializeApp(firebaseConfig);
