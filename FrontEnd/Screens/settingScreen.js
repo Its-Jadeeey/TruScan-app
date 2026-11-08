@@ -10,6 +10,8 @@ import {
   Switch, StyleSheet, Modal, FlatList,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ScreenHeader from '../Components/ScreenHeader';
+import Chevron from '../Components/Chevron';
 import { useApp } from '../Context/AppContext';
 import { getTheme, RADIUS, SPACING, SHADOW } from '../Service/theme';
 
@@ -114,7 +116,7 @@ function FaqModal({ visible, onClose, COLORS, fontSize }) {
               >
                 <View style={styles.faqQRow}>
                   <Text style={[styles.faqQ, { fontSize: fontSize.sm }]}>{item.q}</Text>
-                  <Text style={styles.faqChevron}>{open ? '⌄' : '›'}</Text>
+                  <Chevron direction={open ? 'down' : 'right'} color={COLORS.muted} />
                 </View>
                 {open && <Text style={[styles.faqA, { fontSize: fontSize.sm }]}>{item.a}</Text>}
               </TouchableOpacity>
@@ -153,7 +155,7 @@ function LanguageModal({ visible, onClose, value, onSelect, COLORS, fontSize }) 
                 ]}>
                   {item.label}
                 </Text>
-                {value === item.code && <Text style={{ color: COLORS.primary }}>✓</Text>}
+                {value === item.code && <Text style={{ color: COLORS.primary, fontWeight: '800' }}>✓</Text>}
               </TouchableOpacity>
             )}
           />
@@ -187,7 +189,7 @@ function SettingRow({ icon, label, sub, right, onPress, fontSize, showBorder, st
 
 export default function SettingsScreen({ navigation }) {
   const {
-    fontSize, simpleMode,
+    fontSize, simpleMode, toggleSimpleMode,
     lightMode, toggleLightMode,
     language, setLanguage,
     scanAlerts, toggleScanAlerts,
@@ -208,21 +210,20 @@ export default function SettingsScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       {/* Header */}
-      <View style={styles.header}>
-        {navigation?.canGoBack?.() && (
-          <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.7} hitSlop={10}>
-            <Text style={styles.backArrow}>←</Text>
-          </TouchableOpacity>
-        )}
-        <Text style={[styles.headerTitle, { fontSize: fontSize.sm }]}>SETTINGS</Text>
-        <View style={{ width: 20 }} />
-      </View>
+      <ScreenHeader title="SETTINGS" navigation={navigation} COLORS={COLORS} fontSize={fontSize} />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
 
         {/* ── APP PREFERENCES ── */}
         <Text style={[styles.sectionHeader, { fontSize: fontSize.xs }]}>APP PREFERENCES</Text>
         <View style={styles.card}>
+          <SettingRow
+            icon="🛡️" label={simpleMode ? 'Normal Mode' : 'Simple Mode'}
+            sub={simpleMode ? 'Advance view for everyone...' : 'Easy view for everyone...'}
+            fontSize={fontSize} showBorder styles={styles}
+            onPress={() => { toggleSimpleMode(); navigation?.navigate?.('Home'); }}
+            right={<Chevron color={COLORS.muted} />}
+          />
           <SettingRow
             icon="🌓" label="Light Mode" fontSize={fontSize} showBorder styles={styles}
             right={
@@ -238,7 +239,7 @@ export default function SettingsScreen({ navigation }) {
           <SettingRow
             icon="🌐" label="Language" sub={currentLangLabel} fontSize={fontSize} styles={styles}
             onPress={() => setShowLanguage(true)}
-            right={<Text style={styles.chevron}>›</Text>}
+            right={<Chevron color={COLORS.muted} />}
           />
         </View>
 
@@ -286,17 +287,17 @@ export default function SettingsScreen({ navigation }) {
           <SettingRow
             icon="🎧" label="Help Center" sub="FAQs and how-tos" fontSize={fontSize} styles={styles}
             onPress={() => setShowHelp(true)}
-            right={<Text style={styles.chevron}>›</Text>}
+            right={<Chevron color={COLORS.muted} />}
           />
           <SettingRow
             icon="🔒" label="Privacy Policy" fontSize={fontSize} styles={styles}
             onPress={() => setShowPrivacy(true)}
-            right={<Text style={styles.chevron}>›</Text>}
+            right={<Chevron color={COLORS.muted} />}
           />
           <SettingRow
             icon="📄" label="Terms of Service" fontSize={fontSize} styles={styles}
             onPress={() => setShowTerms(true)}
-            right={<Text style={styles.chevron}>›</Text>}
+            right={<Chevron color={COLORS.muted} />}
           />
         </View>
 
@@ -343,7 +344,7 @@ const makeStyles = (COLORS) => StyleSheet.create({
   backArrow:   { color: COLORS.ink, fontSize: 20, fontWeight: '700' },
   headerTitle: { color: COLORS.ink, fontWeight: '800', letterSpacing: 1 },
 
-  content: { padding: SPACING.lg, paddingBottom: 80 },
+  content: { padding: SPACING.lg, paddingBottom: SPACING.xl },
 
   sectionHeader: {
     color: COLORS.muted, fontWeight: '700', letterSpacing: 0.5,
@@ -400,10 +401,10 @@ const makeModalStyles = (COLORS) => StyleSheet.create({
   faqFooter: { color: COLORS.hint, textAlign: 'center', marginTop: SPACING.lg, lineHeight: 18 },
 
   // Language sheet
-  sheetOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
+  sheetOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', paddingHorizontal: SPACING.lg },
   sheet: {
-    backgroundColor: COLORS.surface, borderTopLeftRadius: RADIUS.lg, borderTopRightRadius: RADIUS.lg,
-    borderTopWidth: 1.5, borderColor: COLORS.border, padding: SPACING.lg,
+    backgroundColor: COLORS.surface, borderRadius: RADIUS.lg,
+    borderWidth: 1.5, borderColor: COLORS.border, padding: SPACING.lg,
   },
   sheetTitle: {
     color: COLORS.muted, fontWeight: '700', letterSpacing: 0.5,

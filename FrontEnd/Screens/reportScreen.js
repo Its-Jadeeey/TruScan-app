@@ -1,25 +1,22 @@
-// TruScan/FrontEnd/Screens/reportScreen.js
 // "Report a Scam" form — type + category dropdowns, message field, submit toast.
 // Re-themes to light or dark based on Light Mode.
-
 import React, { useState, useRef } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
-  StyleSheet, Modal, FlatList, Animated, ActivityIndicator,
+  StyleSheet, Modal, FlatList, Animated, ActivityIndicator, Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ScreenHeader from '../Components/ScreenHeader';
+import Chevron from '../Components/Chevron';
 import { useApp }    from '../Context/AppContext';
 import { addReport } from '../Service/firestoreService';
 import { getTheme, RADIUS, SPACING, SHADOW } from '../Service/theme';
-
 const MAX_CHARS = 5000;
-
 const TYPES = [
   { key: 'sms',   label: 'SMS Messages' },
   { key: 'email', label: 'Email Extensions' },
   { key: 'url',   label: 'URL/ Website Links' },
 ];
-
 const CATEGORIES = [
   { key: 'financial',    label: 'Financial & eWallet' },
   { key: 'government',   label: 'Government Impersonation' },
@@ -37,13 +34,10 @@ const CATEGORIES = [
   { key: 'simswap',      label: 'SIM Swap' },
   { key: 'charity',      label: 'Charity Donations' },
 ];
-
 // ─── DROPDOWN ─────────────────────────────────────────────────────────────────
-
 function Dropdown({ label, placeholder, value, options, onSelect, fontSize, COLORS, styles }) {
   const [open, setOpen] = useState(false);
   const selected = options.find(o => o.key === value);
-
   return (
     <View style={styles.fieldWrap}>
       <Text style={[styles.fieldLabel, { fontSize: fontSize.xs }]}>{label}</Text>
@@ -58,9 +52,8 @@ function Dropdown({ label, placeholder, value, options, onSelect, fontSize, COLO
         ]}>
           {selected ? selected.label : placeholder}
         </Text>
-        <Text style={styles.dropdownChevron}>⌄</Text>
+        <Chevron direction="down" color={COLORS.muted} />
       </TouchableOpacity>
-
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
         <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setOpen(false)}>
           <View style={styles.modalSheet}>
@@ -89,39 +82,31 @@ function Dropdown({ label, placeholder, value, options, onSelect, fontSize, COLO
     </View>
   );
 }
-
 // ─── SUBMIT TOAST ─────────────────────────────────────────────────────────────
-
 function useToast() {
   const opacity = useRef(new Animated.Value(0)).current;
   const [visible, setVisible] = useState(false);
-
   const show = () => {
     setVisible(true);
     Animated.sequence([
       Animated.timing(opacity, { toValue: 1, duration: 200, useNativeDriver: true }),
-      Animated.delay(1600),
+      Animated.delay(2000),
       Animated.timing(opacity, { toValue: 0, duration: 250, useNativeDriver: true }),
     ]).start(() => setVisible(false));
   };
-
   return { visible, opacity, show };
 }
-
 // ─── MAIN SCREEN ──────────────────────────────────────────────────────────────
-
 export default function ReportScreen({ navigation }) {
   const { fontSize, simpleMode, lightMode } = useApp();
   const COLORS = getTheme(simpleMode, lightMode);
   const styles = makeStyles(COLORS);
-
   const [type, setType]         = useState(null);
   const [category, setCategory] = useState(null);
   const [text, setText]         = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors]     = useState({});
   const toast = useToast();
-
   const validate = () => {
     const e = {};
     if (!type) e.type = true;
@@ -130,7 +115,6 @@ export default function ReportScreen({ navigation }) {
     setErrors(e);
     return Object.keys(e).length === 0;
   };
-
   const handleSubmit = async () => {
     if (!validate()) return;
     setSubmitting(true);
@@ -148,22 +132,14 @@ export default function ReportScreen({ navigation }) {
       setCategory(null);
       setText('');
       setErrors({});
+    } else {
+      Alert.alert('Error', 'Could not submit the report. Please try again.');
     }
   };
-
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       {/* Header */}
-      <View style={styles.header}>
-        {navigation?.canGoBack?.() && (
-          <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.7} hitSlop={10}>
-            <Text style={styles.backArrow}>←</Text>
-          </TouchableOpacity>
-        )}
-        <Text style={[styles.headerTitle, { fontSize: fontSize.sm }]}>REPORT A SCAM</Text>
-        <View style={{ width: 20 }} />
-      </View>
-
+      <ScreenHeader title="REPORT A SCAM" navigation={navigation} COLORS={COLORS} fontSize={fontSize} />
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
@@ -181,7 +157,6 @@ export default function ReportScreen({ navigation }) {
           styles={styles}
         />
         {errors.type && <Text style={styles.errorText}>Please select a type.</Text>}
-
         {/* Message */}
         <View style={styles.fieldWrap}>
           <Text style={[styles.fieldLabel, { fontSize: fontSize.xs }]}>MESSAGE/CONTENT</Text>
@@ -202,7 +177,6 @@ export default function ReportScreen({ navigation }) {
           </View>
           {errors.text && <Text style={styles.errorText}>Message can't be empty.</Text>}
         </View>
-
         {/* Category */}
         <Dropdown
           label="CATEGORY"
@@ -215,7 +189,6 @@ export default function ReportScreen({ navigation }) {
           styles={styles}
         />
         {errors.category && <Text style={styles.errorText}>Please select a category.</Text>}
-
         {/* Submit */}
         <TouchableOpacity
           style={[styles.submitBtn, submitting && styles.submitBtnDisabled]}
@@ -228,7 +201,6 @@ export default function ReportScreen({ navigation }) {
             : <Text style={[styles.submitBtnText, { fontSize: fontSize.base }]}>SUBMIT REPORT</Text>
           }
         </TouchableOpacity>
-
         {/* Footer note */}
         <View style={styles.footerNote}>
           <View style={styles.footerIconWrap}>
@@ -239,22 +211,22 @@ export default function ReportScreen({ navigation }) {
           </Text>
         </View>
       </ScrollView>
-
       {/* Submit toast */}
       {toast.visible && (
-        <Animated.View style={[styles.toast, { opacity: toast.opacity }]}>
-          <Text style={[styles.toastText, { fontSize: fontSize.sm }]}>REPORT SUBMITTED!</Text>
+        <Animated.View pointerEvents="none" style={[styles.toastOverlay, { opacity: toast.opacity }]}>
+          <View style={styles.toast}>
+            <View style={styles.toastCheck}><Text style={styles.toastCheckText}>✓</Text></View>
+            <Text style={[styles.toastText, { fontSize: fontSize.base }]}>REPORT SUBMITTED!</Text>
+            <Text style={[styles.toastSub, { fontSize: fontSize.xs }]}>Thank you for helping keep others safe.</Text>
+          </View>
         </Animated.View>
       )}
     </SafeAreaView>
   );
 }
-
 // ─── STYLES ───────────────────────────────────────────────────────────────────
-
 const makeStyles = (COLORS) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: COLORS.background },
-
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: SPACING.lg, paddingVertical: SPACING.md,
@@ -262,15 +234,12 @@ const makeStyles = (COLORS) => StyleSheet.create({
   },
   backArrow:   { color: COLORS.ink, fontSize: 20, fontWeight: '700' },
   headerTitle: { color: COLORS.ink, fontWeight: '800', letterSpacing: 1 },
-
   content: { padding: SPACING.lg, paddingBottom: SPACING.xxl },
-
   fieldWrap:  { marginBottom: SPACING.md },
   fieldLabel: {
     color: COLORS.muted, fontWeight: '700', letterSpacing: 0.5,
     textTransform: 'uppercase', marginBottom: SPACING.sm,
   },
-
   dropdownBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     backgroundColor: COLORS.surface, borderWidth: 1.5, borderColor: COLORS.border,
@@ -278,11 +247,10 @@ const makeStyles = (COLORS) => StyleSheet.create({
   },
   dropdownText:    { fontWeight: '500' },
   dropdownChevron: { color: COLORS.muted, fontSize: 18, fontWeight: '700' },
-
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'flex-end' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', paddingHorizontal: SPACING.lg },
   modalSheet: {
-    backgroundColor: COLORS.surface, borderTopLeftRadius: RADIUS.lg, borderTopRightRadius: RADIUS.lg,
-    borderTopWidth: 1.5, borderColor: COLORS.border, padding: SPACING.lg, maxHeight: '75%',
+    backgroundColor: COLORS.surface, borderRadius: RADIUS.lg,
+    borderWidth: 1.5, borderColor: COLORS.border, padding: SPACING.lg, maxHeight: '70%',
   },
   modalTitle: {
     color: COLORS.muted, fontWeight: '700', letterSpacing: 0.5,
@@ -293,23 +261,19 @@ const makeStyles = (COLORS) => StyleSheet.create({
   },
   optionRowActive: { backgroundColor: COLORS.infoBg, borderRadius: RADIUS.sm, paddingHorizontal: SPACING.sm },
   optionText: { fontWeight: '600' },
-
   textAreaWrap: {
     backgroundColor: COLORS.surface, borderWidth: 1.5, borderColor: COLORS.border,
     borderRadius: RADIUS.md, padding: SPACING.md, minHeight: 190, ...SHADOW.card,
   },
   textArea:  { color: COLORS.ink, lineHeight: 22, flex: 1 },
   charCount: { color: COLORS.hint, textAlign: 'right', marginTop: 6 },
-
   errorText: { color: COLORS.scam, fontSize: 11, fontWeight: '600', marginTop: -SPACING.sm, marginBottom: SPACING.sm },
-
   submitBtn: {
     backgroundColor: COLORS.primary, borderRadius: RADIUS.md, paddingVertical: 15,
     alignItems: 'center', justifyContent: 'center', marginTop: SPACING.sm, ...SHADOW.card,
   },
   submitBtnDisabled: { backgroundColor: COLORS.border2 },
   submitBtnText:     { color: '#FFFFFF', fontWeight: '800', letterSpacing: 0.5 },
-
   footerNote: {
     flexDirection: 'row', alignItems: 'center', gap: SPACING.sm,
     marginTop: SPACING.lg, paddingTop: SPACING.md,
@@ -321,12 +285,21 @@ const makeStyles = (COLORS) => StyleSheet.create({
   },
   footerIcon: { fontSize: 15 },
   footerText: { color: COLORS.muted, lineHeight: 16, flex: 1 },
-
-  toast: {
-    position: 'absolute', top: 60, alignSelf: 'center',
-    backgroundColor: COLORS.surface, borderWidth: 1.5, borderColor: COLORS.border2,
-    borderRadius: RADIUS.md, paddingHorizontal: SPACING.lg, paddingVertical: SPACING.sm + 2,
-    ...SHADOW.card,
+  toastOverlay: {
+    position: 'absolute', top: 0, bottom: 0, left: 0, right: 0,
+    alignItems: 'center', justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.45)',
   },
-  toastText: { color: COLORS.ink, fontWeight: '800', letterSpacing: 0.5 },
+  toast: {
+    backgroundColor: COLORS.surface, borderWidth: 1.5, borderColor: COLORS.border2,
+    borderRadius: RADIUS.lg, paddingHorizontal: SPACING.xl, paddingVertical: SPACING.lg,
+    alignItems: 'center', minWidth: 260, ...SHADOW.card,
+  },
+  toastCheck: {
+    width: 56, height: 56, borderRadius: 28, backgroundColor: '#22C55E',
+    alignItems: 'center', justifyContent: 'center', marginBottom: SPACING.sm,
+  },
+  toastCheckText: { color: '#FFFFFF', fontSize: 30, fontWeight: '900', lineHeight: 34 },
+  toastText: { color: COLORS.ink, fontWeight: '800', letterSpacing: 0.5, textAlign: 'center' },
+  toastSub:  { color: COLORS.muted, marginTop: 4, textAlign: 'center' },
 });

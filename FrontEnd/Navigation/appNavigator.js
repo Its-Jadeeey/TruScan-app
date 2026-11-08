@@ -1,25 +1,21 @@
-// TruScan/FrontEnd/Navigation/AppNavigator.js
-// Drawer (hamburger sidebar) wrapping the bottom tab navigator — 4 tabs:
+// // TruScan/FrontEnd/Navigation/AppNavigator.js
+// Bottom tab navigator (no drawer) — 4 tabs:
 // Home, Reports, Education, Settings. Home swaps between ScanScreen and
 // SimpleModeScreen, and the whole tab bar re-themes, based on Simple Mode.
-
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-
 import ScanScreen       from '../Screens/scanScreen';
 import ReportScreen     from '../Screens/reportScreen';
 import DashboardScreen  from '../Screens/dashboardScreen';
 import SettingsScreen   from '../Screens/settingScreen';
 import SimpleModeScreen from '../Screens/simpleModeScreen';
-import SidebarMenu      from './SidebarMenu';
 import { useApp }       from '../Context/AppContext';
 import { getTheme }     from '../Service/theme';
-
 // SVG-free icon using Unicode / text — swap for react-native-vector-icons later
-function TabIcon({ name, focused, size = 20 }) {
+function TabIcon({ name, focused, size = 22, COLORS }) {
   const icons = {
     Home:      '🏠',
     Reports:   '🚩',
@@ -27,49 +23,65 @@ function TabIcon({ name, focused, size = 20 }) {
     Settings:  '⚙️',
   };
   return (
-    <Text style={{ fontSize: size, opacity: focused ? 1 : 0.55 }}>
-      {icons[name] || '●'}
-    </Text>
+    <View style={[styles.pill, focused && { backgroundColor: COLORS.border2 || COLORS.border }]}>
+      <Text style={{ fontSize: size, opacity: focused ? 1 : 0.6 }}>
+        {icons[name] || '●'}
+      </Text>
+    </View>
   );
 }
-
 // Home tab renders ScanScreen normally, or SimpleModeScreen when Simple Mode is on.
 function HomeRouter(props) {
   const { simpleMode } = useApp();
   return simpleMode ? <SimpleModeScreen {...props} /> : <ScanScreen {...props} />;
 }
-
 const Tab    = createBottomTabNavigator();
-const Drawer = createDrawerNavigator();
 
+// Custom floating pill tab bar (Instagram style). Fully controlled layout so
+// icons are centred and the area around the bar matches the screen background.
+function FloatingTabBar({ state, descriptors, navigation, COLORS }) {
+  const insets = useSafeAreaInsets();
+  return (
+    <View
+      style={{
+        backgroundColor: COLORS.background,
+        paddingHorizontal: 16,
+        paddingTop: 8,
+        paddingBottom: Math.max(insets.bottom, 12),
+      }}
+    >
+      <View style={[styles.bar, { backgroundColor: COLORS.surface, borderColor: COLORS.border }]}>
+        {state.routes.map((route, index) => {
+          const focused = state.index === index;
+          const onPress = () => {
+            const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
+            if (!focused && !event.defaultPrevented) navigation.navigate(route.name, route.params);
+          };
+          return (
+            <TouchableOpacity
+              key={route.key}
+              accessibilityRole="button"
+              accessibilityLabel={route.name}
+              accessibilityState={focused ? { selected: true } : {}}
+              onPress={onPress}
+              activeOpacity={0.7}
+              style={styles.item}
+            >
+              <TabIcon name={route.name} focused={focused} COLORS={COLORS} />
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
 function MainTabs() {
   const { simpleMode, lightMode } = useApp();
   const COLORS = getTheme(simpleMode, lightMode);
-
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarActiveTintColor:   COLORS.primary,
-        tabBarInactiveTintColor: COLORS.muted,
-        tabBarStyle: {
-          backgroundColor: COLORS.surface,
-          borderTopColor: COLORS.border,
-          borderTopWidth: 1,
-          paddingTop: 6,
-          paddingBottom: 10,
-          height: 64,
-          elevation: 8,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.3,
-          shadowRadius: 8,
-        },
-        tabBarLabelStyle: styles.tabLabel,
-        tabBarIcon: ({ focused }) => (
-          <TabIcon name={route.name} focused={focused} />
-        ),
-      })}
+      tabBar={(props) => <FloatingTabBar {...props} COLORS={COLORS} />}
+      screenOptions={{ headerShown: false }}
     >
       <Tab.Screen name="Home"      component={HomeRouter} />
       <Tab.Screen name="Reports"   component={ReportScreen} />
@@ -78,11 +90,9 @@ function MainTabs() {
     </Tab.Navigator>
   );
 }
-
 export default function AppNavigator() {
   const { loading, simpleMode, lightMode } = useApp();
   const COLORS = getTheme(simpleMode, lightMode);
-
   if (loading) {
     return (
       <View style={[styles.loader, { backgroundColor: COLORS.background }]}>
@@ -90,7 +100,6 @@ export default function AppNavigator() {
       </View>
     );
   }
-
   // Extend React Navigation's DarkTheme so screen transitions default to the
   // correct background (navy or purple) instead of flashing white.
   const NavTheme = {
@@ -104,33 +113,42 @@ export default function AppNavigator() {
       primary:    COLORS.primary,
     },
   };
-
   return (
-    <NavigationContainer theme={NavTheme}>
-      <Drawer.Navigator
-        drawerContent={(props) => <SidebarMenu {...props} />}
-        screenOptions={{
-          headerShown: false,
-          drawerStyle: { width: '78%', backgroundColor: COLORS.background },
-          overlayColor: 'rgba(0,0,0,0.55)',
-        }}
-      >
-        <Drawer.Screen name="MainTabs" component={MainTabs} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <View style={{ flex: 1, backgroundColor: COLORS.background }}>
+      <SafeAreaProvider style={{ backgroundColor: COLORS.background }}>
+        <NavigationContainer theme={NavTheme}>
+          <MainTabs />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </View>
   );
 }
-
 const styles = StyleSheet.create({
   loader: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  tabLabel: {
-    fontSize: 10,
-    fontWeight: '700',
-    marginTop: 2,
-    letterSpacing: 0.3,
+  bar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    height: 64,
+    borderRadius: 36,
+    borderWidth: 1,
+    paddingHorizontal: 6,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+  },
+  item: { flex: 1, height: 64, alignItems: 'center', justifyContent: 'center' },
+  pill: {
+    width: 64,
+    height: 46,
+    borderRadius: 23,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

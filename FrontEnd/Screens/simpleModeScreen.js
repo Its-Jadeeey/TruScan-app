@@ -1,7 +1,6 @@
-// TruScan/FrontEnd/Screens/simpleModeScreen.js
+//// TruScan/FrontEnd/Screens/simpleModeScreen.js
 // Simple Mode home screen — big colorful Message/Email/Link scan buttons,
 // purple theme. Rendered as the "Home" tab whenever Simple Mode is on.
-
 import React, { useState, useMemo } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
@@ -12,11 +11,8 @@ import { useApp }          from '../Context/AppContext';
 import { analyzeText }     from '../Service/analyzeService';
 import { addReport }       from '../Service/firestoreService';
 import { getTheme, SIMPLE_SCAN_BUTTONS, RADIUS, SPACING, SHADOW, getRiskColors } from '../Service/theme';
-
 const SCAN_TYPES = ['message', 'email', 'link'];
-
 // ─── BIG RESULT BANNER ────────────────────────────────────────────────────────
-
 function BigResultBanner({ result, styles, COLORS }) {
   if (!result) return null;
   const risk = getRiskColors(result.prediction, COLORS);
@@ -27,7 +23,6 @@ function BigResultBanner({ result, styles, COLORS }) {
     suspicious: { emoji: '⚡', headline: 'MAG-INGAT!',    detail: 'Ang mensaheng ito ay kahina-hinala. Huwag magbigay ng impormasyon.' },
     safe:       { emoji: '✅', headline: 'LIGTAS ITO',    detail: 'Ang mensaheng ito ay mukhang lehitimo. Palaging mag-ingat pa rin.' },
   }[result.prediction] || { emoji: '❓', headline: 'HINDI SIGURADO', detail: 'Hindi natukoy ang klase ng mensaheng ito.' };
-
   return (
     <View style={[styles.bigBanner, { backgroundColor: risk.bg, borderColor: risk.border }]}>
       <Text style={styles.bigEmoji}>{config.emoji}</Text>
@@ -40,30 +35,24 @@ function BigResultBanner({ result, styles, COLORS }) {
     </View>
   );
 }
-
 // ─── MAIN SCREEN ──────────────────────────────────────────────────────────────
-
 export default function SimpleModeScreen({ navigation }) {
   const [selectedType, setSelectedType] = useState(null);
   const [inputText, setInputText]       = useState('');
   const [result, setResult]             = useState(null);
   const [loading, setLoading]           = useState(false);
   const [reported, setReported]         = useState(false);
-
   // Theme: follows Light Mode even while Simple Mode is on
   const { lightMode } = useApp();
   const COLORS        = getTheme(true, lightMode);
   const SIMPLE_COLORS = COLORS;
   const styles        = useMemo(() => makeStyles(SIMPLE_COLORS), [lightMode]);
-
   const BIG = { xs: 15, sm: 18, base: 20, md: 23, lg: 28, xl: 34, xxl: 40 };
-
   const selectType = (type) => {
     setSelectedType(type);
     setResult(null);
     setReported(false);
   };
-
   const handleScan = async () => {
     if (!inputText.trim()) {
       Alert.alert('Walang Mensahe', 'Mangyaring i-paste ang mensahe bago mag-scan.', [{ text: 'OK' }]);
@@ -81,11 +70,9 @@ export default function SimpleModeScreen({ navigation }) {
       setLoading(false);
     }
   };
-
   const handleReport = async () => {
     if (!result || reported) return;
     const channelMap = { message: 'sms', email: 'email', link: 'link' };
-
     const res = await addReport({
       text: inputText,
       category: result.prediction,
@@ -105,16 +92,9 @@ export default function SimpleModeScreen({ navigation }) {
       Alert.alert('Error', 'Hindi ma-save ang report. Subukan ulit.');
     }
   };
-
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-
-        {/* Top bar */}
-        <TouchableOpacity onPress={() => navigation?.openDrawer?.()} activeOpacity={0.7} hitSlop={10} style={styles.menuBtn}>
-          <Text style={styles.menuIcon}>☰</Text>
-        </TouchableOpacity>
-
         {/* Brand */}
         <View style={styles.brandRow}>
           <View style={styles.brandBadge}>
@@ -123,26 +103,24 @@ export default function SimpleModeScreen({ navigation }) {
           <Text style={[styles.brand, { fontSize: BIG.lg }]}>TRUSCAN</Text>
         </View>
         <Text style={[styles.simpleLabel, { fontSize: BIG.md }]}>SIMPLE MODE</Text>
-
         {/* Three big scan buttons */}
-        <View style={styles.btnStack}>
+        <View style={[styles.btnStack, !selectedType && styles.btnStackFill]}>
           {SCAN_TYPES.map(type => {
             const cfg = SIMPLE_SCAN_BUTTONS[type];
             const active = selectedType === type;
             return (
               <TouchableOpacity
                 key={type}
-                style={[styles.scanTypeBtn, { backgroundColor: cfg.bg }, active && styles.scanTypeBtnActive]}
+                style={[styles.scanTypeBtn, !selectedType && styles.scanTypeBtnTall, { backgroundColor: cfg.bg }, active && styles.scanTypeBtnActive]}
                 onPress={() => selectType(type)}
                 activeOpacity={0.85}
               >
-                <Text style={styles.scanTypeIcon}>{cfg.icon}</Text>
-                <Text style={[styles.scanTypeLabel, { fontSize: BIG.base }]}>{cfg.label}</Text>
+                <Text style={[styles.scanTypeIcon, !selectedType && { fontSize: 32 }]}>{cfg.icon}</Text>
+                <Text style={[styles.scanTypeLabel, { fontSize: selectedType ? BIG.base : BIG.md }]}>{cfg.label}</Text>
               </TouchableOpacity>
             );
           })}
         </View>
-
         {/* Input + Scan — revealed once a type is picked */}
         {selectedType ? (
           <>
@@ -155,9 +133,7 @@ export default function SimpleModeScreen({ navigation }) {
               onChangeText={setInputText}
               textAlignVertical="top"
             />
-
             <BigResultBanner result={result} styles={styles} COLORS={COLORS} />
-
             <TouchableOpacity
               style={[styles.bigScanBtn, loading && styles.bigScanBtnDisabled]}
               onPress={handleScan}
@@ -169,7 +145,6 @@ export default function SimpleModeScreen({ navigation }) {
                 : <Text style={[styles.bigScanBtnText, { fontSize: BIG.md }]}>🔍  I-SCAN</Text>
               }
             </TouchableOpacity>
-
             {result && (
               <TouchableOpacity
                 style={[styles.reportBtn, reported && styles.reportBtnDone]}
@@ -197,16 +172,10 @@ export default function SimpleModeScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-
 // ─── STYLES ───────────────────────────────────────────────────────────────────
-
 const makeStyles = (SIMPLE_COLORS) => StyleSheet.create({
   safe:    { flex: 1, backgroundColor: SIMPLE_COLORS.background },
-  content: { padding: SPACING.lg, paddingBottom: 80 },
-
-  menuBtn:  { marginBottom: SPACING.md },
-  menuIcon: { fontSize: 22, color: SIMPLE_COLORS.ink, fontWeight: '700' },
-
+  content: { flexGrow: 1, padding: SPACING.lg, paddingBottom: SPACING.xl },
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: SPACING.sm, marginBottom: 4 },
   brandBadge: {
     width: 34, height: 34, borderRadius: 10, backgroundColor: SIMPLE_COLORS.navCard,
@@ -215,8 +184,9 @@ const makeStyles = (SIMPLE_COLORS) => StyleSheet.create({
   brandBadgeIcon: { fontSize: 16 },
   brand:       { color: SIMPLE_COLORS.ink, fontWeight: '800', letterSpacing: 1 },
   simpleLabel: { color: SIMPLE_COLORS.accentGreen, fontWeight: '800', marginBottom: SPACING.lg, letterSpacing: 0.5 },
-
   btnStack: { gap: SPACING.sm, marginBottom: SPACING.lg },
+  btnStackFill: { flex: 3, gap: SPACING.md },
+  scanTypeBtnTall: { flex: 1, minHeight: 84 },
   scanTypeBtn: {
     flexDirection: 'row', alignItems: 'center', gap: SPACING.sm,
     borderRadius: RADIUS.lg, paddingVertical: SPACING.md, paddingHorizontal: SPACING.lg,
@@ -225,22 +195,20 @@ const makeStyles = (SIMPLE_COLORS) => StyleSheet.create({
   scanTypeBtnActive: { borderWidth: 2, borderColor: SIMPLE_COLORS.ink },
   scanTypeIcon:  { fontSize: 20 },
   scanTypeLabel: { color: '#FFFFFF', fontWeight: '800', letterSpacing: 0.5 },
-
   hero: {
     borderRadius: RADIUS.lg, backgroundColor: SIMPLE_COLORS.surface,
     borderWidth: 1.5, borderColor: SIMPLE_COLORS.border,
-    padding: SPACING.xl, alignItems: 'center', marginTop: SPACING.md,
+    padding: SPACING.xl, alignItems: 'center', justifyContent: 'center', marginTop: SPACING.sm,
+    flex: 2, minHeight: 170,
   },
-  heroWarnIcon:  { fontSize: 34, marginBottom: SPACING.sm },
+  heroWarnIcon:  { fontSize: 44, marginBottom: SPACING.sm },
   heroCheckIcon: { fontSize: 24, marginTop: SPACING.sm },
   heroText:      { color: SIMPLE_COLORS.ink, fontWeight: '600', textAlign: 'center', lineHeight: 24 },
-
   textInput: {
     backgroundColor: SIMPLE_COLORS.surface, borderWidth: 2, borderColor: SIMPLE_COLORS.border2,
-    borderRadius: RADIUS.lg, padding: SPACING.lg, minHeight: 140,
+    borderRadius: RADIUS.lg, padding: SPACING.lg, minHeight: 140, flexGrow: 1,
     color: SIMPLE_COLORS.ink, lineHeight: 30, marginBottom: SPACING.md, ...SHADOW.card,
   },
-
   bigScanBtn: {
     backgroundColor: SIMPLE_COLORS.primary, borderRadius: RADIUS.lg,
     paddingVertical: SPACING.lg, alignItems: 'center', justifyContent: 'center',
@@ -248,14 +216,12 @@ const makeStyles = (SIMPLE_COLORS) => StyleSheet.create({
   },
   bigScanBtnDisabled: { backgroundColor: SIMPLE_COLORS.border2 },
   bigScanBtnText:     { color: '#FFFFFF', fontWeight: '900', letterSpacing: 0.5 },
-
   reportBtn: {
     padding: SPACING.md, borderRadius: RADIUS.lg,
     backgroundColor: SIMPLE_COLORS.navCard, alignItems: 'center', ...SHADOW.card,
   },
   reportBtnDone: { backgroundColor: '#1E5C48' },
   reportBtnText: { color: '#FFF', fontWeight: '700' },
-
   bigBanner: {
     borderRadius: RADIUS.lg, borderWidth: 2,
     padding: SPACING.xl, alignItems: 'center', marginBottom: SPACING.md, ...SHADOW.card,

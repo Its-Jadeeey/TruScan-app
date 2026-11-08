@@ -15,7 +15,7 @@ import {
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { db } from "./firebase-config.js";
-import { PATHS, adminDoc } from "./firestore-helpers.js";
+import { PATHS, adminDoc, riskOf, channelLabel, toDate, timeAgo, truncate, escapeHtml } from "./firestore-helpers.js";
 
 const CACHE_KEY = "ts-admin";
 
@@ -94,11 +94,62 @@ export async function refreshPendingBadge() {
     badge.hidden = n === 0;
     const btn = document.getElementById("notifBtn");
     if (btn) btn.setAttribute("aria-label", `${window.TS.t("Notifications")}: ${n} ${window.TS.t("Pending review")}`);
+    fillNotifPanel(snap.docs.map((d) => ({ id: d.id, ...d.data() })), n);
     return n;
   } catch (err) {
     console.warn("Could not count pending reports:", err);
+    const list = document.getElementById("notifList");
+    if (list) list.innerHTML = '<li class="notif-empty">Could not load notifications.</li>';
     return 0;
   }
+}
+
+// Fill the bell dropdown with basic information about pending reports.
+function fillNotifPanel(rows, total) {
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  const dayAgo = Date.now() - 24 * 3600 * 1000;
+  const time = (r) => toDate(r.timestamp)?.getTime() || 0;
+  set("nsPending", total >= 100 ? "99+" : String(total));
+  set("nsHigh", String(rows.filter((r) => riskOf(r) === "high").length));
+  set("nsToday", String(rows.filter((r) => time(r) >= dayAgo).length));
+
+  const list = document.getElementById("notifList");
+  if (!list) return;
+  const latest = rows.filter((r) => (r.text || "").trim()).sort((a, b) => time(b) - time(a)).slice(0, 5);
+  if (!latest.length) {
+    list.innerHTML = '<li class="notif-empty">You are all caught up. No pending reports.</li>';
+    return;
+  }
+  list.innerHTML = latest
+    .map((r) => {
+      const risk = riskOf(r);
+      return `<li><a class="notif-item" href="/reports?status=pending&case=${encodeURIComponent(r.id)}">
+        <span class="notif-dot risk-${risk}" aria-hidden="true"></span>
+        <span class="notif-body">
+          <span class="notif-text">${escapeHtml(truncate(r.text, 70))}</span>
+          <span class="notif-meta">${escapeHtml(channelLabel(r.channel))} &middot; ${escapeHtml(risk.charAt(0).toUpperCase() + risk.slice(1))} &middot; ${escapeHtml(timeAgo(r.timestamp))}</span>
+        </span>
+      </a></li>`;
+    })
+    .join("");
+}
+
+function setupBell() {
+  const btn = document.getElementById("notifBtn");
+  const panel = document.getElementById("notifPanel");
+  if (!btn || !panel) return;
+  const close = () => { panel.hidden = true; btn.setAttribute("aria-expanded", "false"); };
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = panel.hidden;
+    panel.hidden = !open;
+    btn.setAttribute("aria-expanded", String(open));
+    if (open) refreshPendingBadge();
+  });
+  document.addEventListener("click", (e) => { if (!panel.hidden && !panel.contains(e.target)) close(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  const refresh = document.getElementById("notifRefresh");
+  if (refresh) refresh.addEventListener("click", (e) => { e.stopPropagation(); refreshPendingBadge(); });
 }
 
 export async function initShell() {
@@ -109,8 +160,7 @@ export async function initShell() {
   window.TS.setLanguage(admin.language || "English");
   fillAdminChip(admin);
 
-  const bell = document.getElementById("notifBtn");
-  if (bell) bell.addEventListener("click", () => (window.location.href = "/reports?status=pending"));
+  setupBell();
   refreshPendingBadge();
   return admin;
 }

@@ -1,23 +1,20 @@
-// TruScan/FrontEnd/Screens/dashboardScreen.js
 // Education screen — LEARN / SCAM TYPES / TIPS segmented tabs, each a card list.
 // Re-themes to light or dark based on Light Mode.
-
 import React, { useState } from 'react';
 import {
   View, Text, ScrollView, StyleSheet, TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ScreenHeader from '../Components/ScreenHeader';
+import Chevron from '../Components/Chevron';
 import { useApp } from '../Context/AppContext';
 import { getTheme, RADIUS, SPACING, SHADOW } from '../Service/theme';
-
 // ─── CONTENT ──────────────────────────────────────────────────────────────────
-
 const TABS = [
   { key: 'learn',  label: 'Learn' },
   { key: 'types',  label: 'Scam Types' },
   { key: 'tips',   label: 'Tips' },
 ];
-
 const LEARN_ITEMS = [
   {
     icon: '🎣',
@@ -80,7 +77,6 @@ const LEARN_ITEMS = [
     ],
   },
 ];
-
 const SCAM_TYPE_ITEMS = [
   {
     icon: '💳',
@@ -143,7 +139,6 @@ const SCAM_TYPE_ITEMS = [
     ],
   },
 ];
-
 const TIP_ITEMS = [
   {
     icon: '🔒',
@@ -201,12 +196,9 @@ const TIP_ITEMS = [
     ],
   },
 ];
-
 const CONTENT = { learn: LEARN_ITEMS, types: SCAM_TYPE_ITEMS, tips: TIP_ITEMS };
-
 // ─── CARD ─────────────────────────────────────────────────────────────────────
-
-function EduCard({ item, expanded, onToggle, fontSize, styles }) {
+function EduCard({ item, expanded, onToggle, fontSize, styles, COLORS }) {
   return (
     <TouchableOpacity style={styles.card} onPress={onToggle} activeOpacity={0.8}>
       <View style={styles.cardIconWrap}>
@@ -220,7 +212,6 @@ function EduCard({ item, expanded, onToggle, fontSize, styles }) {
         >
           {item.sub}
         </Text>
-
         {expanded && item.body && (
           <View style={styles.bodyList}>
             {item.body.map((line, i) => (
@@ -232,41 +223,26 @@ function EduCard({ item, expanded, onToggle, fontSize, styles }) {
           </View>
         )}
       </View>
-      <Text style={styles.chevron}>{expanded ? '⌄' : '›'}</Text>
+      <View style={styles.chevWrap}><Chevron direction={expanded ? 'down' : 'right'} color={COLORS.muted} /></View>
     </TouchableOpacity>
   );
 }
-
 // ─── MAIN SCREEN ──────────────────────────────────────────────────────────────
-
 export default function DashboardScreen({ navigation }) {
   const { fontSize, simpleMode, lightMode } = useApp();
   const COLORS = getTheme(simpleMode, lightMode);
   const styles = makeStyles(COLORS);
-
   const [activeTab, setActiveTab] = useState('learn');
   const [expanded, setExpanded]   = useState(null);
-
   const changeTab = (key) => {
     setActiveTab(key);
     setExpanded(null);
   };
-
   const items = CONTENT[activeTab];
-
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       {/* Header */}
-      <View style={styles.header}>
-        {navigation?.canGoBack?.() && (
-          <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.7} hitSlop={10}>
-            <Text style={styles.backArrow}>←</Text>
-          </TouchableOpacity>
-        )}
-        <Text style={[styles.headerTitle, { fontSize: fontSize.sm }]}>EDUCATION</Text>
-        <View style={{ width: 20 }} />
-      </View>
-
+      <ScreenHeader title="EDUCATION" navigation={navigation} COLORS={COLORS} fontSize={fontSize} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Segmented tabs */}
         <View style={styles.tabRow}>
@@ -289,7 +265,6 @@ export default function DashboardScreen({ navigation }) {
             );
           })}
         </View>
-
         {/* Card list */}
         {items.map((item, i) => (
           <EduCard
@@ -299,18 +274,16 @@ export default function DashboardScreen({ navigation }) {
             onToggle={() => setExpanded(expanded === i ? null : i)}
             fontSize={fontSize}
             styles={styles}
+            COLORS={COLORS}
           />
         ))}
       </ScrollView>
     </SafeAreaView>
   );
 }
-
 // ─── STYLES ───────────────────────────────────────────────────────────────────
-
 const makeStyles = (COLORS) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: COLORS.background },
-
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: SPACING.lg, paddingVertical: SPACING.md,
@@ -318,9 +291,7 @@ const makeStyles = (COLORS) => StyleSheet.create({
   },
   backArrow:   { color: COLORS.ink, fontSize: 20, fontWeight: '700' },
   headerTitle: { color: COLORS.ink, fontWeight: '800', letterSpacing: 1 },
-
   content: { padding: SPACING.lg, paddingBottom: SPACING.xxl },
-
   tabRow: {
     flexDirection: 'row', gap: SPACING.sm, marginBottom: SPACING.lg,
   },
@@ -331,7 +302,6 @@ const makeStyles = (COLORS) => StyleSheet.create({
   },
   tabBtnActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
   tabLabel:     { fontWeight: '700', letterSpacing: 0.3 },
-
   card: {
     flexDirection: 'row', alignItems: 'flex-start', gap: SPACING.sm,
     backgroundColor: COLORS.surface, borderRadius: RADIUS.lg,
@@ -346,8 +316,7 @@ const makeStyles = (COLORS) => StyleSheet.create({
   cardIcon:  { fontSize: 19 },
   cardTitle: { color: COLORS.ink, fontWeight: '700', marginBottom: 3 },
   cardSub:   { color: COLORS.muted, lineHeight: 16 },
-  chevron:   { color: COLORS.muted, fontSize: 18, fontWeight: '600', marginLeft: 4, marginTop: 2 },
-
+  chevWrap:  { alignSelf: 'center' },
   bodyList: { marginTop: SPACING.sm, gap: 6 },
   bodyRow:  { flexDirection: 'row', gap: 6, alignItems: 'flex-start' },
   bodyBullet: { color: COLORS.primary, lineHeight: 18 },
