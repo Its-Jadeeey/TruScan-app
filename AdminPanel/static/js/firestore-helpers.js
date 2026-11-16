@@ -26,8 +26,44 @@ export const SCAM_TYPES = [
   "Lottery/Prize Scam",
   "Gambling/Betting Scam",
   "Subscription Scam",
+  "Online Shopping Scam",
+  "Romance Scam",
+  "Travel/Accommodation Scam",
+  "SIM Swap Scam",
+  "Charity/Donation Scam",
   "Miscellaneous Scam",
 ];
+
+// The mobile app's report categories -> the admin's scam types (so both count together).
+const REPORTER_CATEGORY_TO_TYPE = {
+  financial: "Banking Scam",
+  government: "Impersonation Scam",
+  delivery: "Courier/Delivery Scam",
+  job: "Job Scam",
+  lottery: "Lottery/Prize Scam",
+  shopping: "Online Shopping Scam",
+  investment: "Investment Scam",
+  phishing: "Phishing",
+  smishing: "Phishing",
+  romance: "Romance Scam",
+  impersonation: "Impersonation Scam",
+  loan: "Loan Scam",
+  travel: "Travel/Accommodation Scam",
+  simswap: "SIM Swap Scam",
+  charity: "Charity/Donation Scam",
+};
+
+// What the reporter chose in the app, expressed as an admin scam type (or null).
+export function reporterTypeOf(scan) {
+  return REPORTER_CATEGORY_TO_TYPE[scan?.scamCategory] || null;
+}
+
+// One category label per report, for the dashboard breakdown:
+// admin-confirmed type > reporter's choice > "Uncategorized".
+export function categoryOf(scan) {
+  if (scan?.status === "verified" && scan.finalLabel === "Not Scam") return "Not a scam";
+  return scan?.scamType || reporterTypeOf(scan) || "Uncategorized";
+}
 
 export const CHANNELS = { sms: "SMS", email: "Email", link: "Link" };
 
@@ -101,6 +137,40 @@ export function riskOf(scan) {
 export function channelLabel(channel) {
   const c = String(channel || "").toLowerCase();
   return CHANNELS[c] || capitalize(c) || "Unknown";
+}
+
+// Risk AFTER the admin's decision. The model's own risk (riskOf) is kept untouched
+// so "Model corrections" and accuracy still compare against what the model said.
+//  - verified "Not Scam"  -> low
+//  - verified "Scam"      -> the model's risk, but never below medium (admin confirmed it is a scam)
+//  - anything else        -> the model's risk
+export function effectiveRiskOf(scan) {
+  const model = riskOf(scan);
+  if (scan?.status === "verified" && scan.finalLabel) {
+    if (scan.finalLabel === "Not Scam") return "low";
+    return model === "low" || model === "safe" ? "high" : model;
+  }
+  return model;
+}
+
+// True when the admin's decision changed the risk shown (so we can note what the model said).
+export function riskChanged(scan) {
+  const norm = (r) => (r === "safe" ? "low" : r);
+  return norm(effectiveRiskOf(scan)) !== norm(riskOf(scan));
+}
+
+// "Scam" | "Safe" | model category (e.g. "suspicious"), after the admin's decision.
+export function effectiveCategory(scan) {
+  if (scan?.status === "verified" && scan.finalLabel) {
+    if (scan.finalLabel === "Not Scam") return "safe";
+    return scan.category === "safe" ? "scam" : scan.category;
+  }
+  return scan?.category;
+}
+
+// Still a threat? (model flagged it and the admin has not cleared it as Not Scam)
+export function isStillFlagged(scan) {
+  return isFlagged(scan) && !(scan.status === "verified" && scan.finalLabel === "Not Scam");
 }
 
 export function isFlagged(scan) {

@@ -1,5 +1,4 @@
 // TruScan/FrontEnd/Service/firestoreService.js
-
 import { db } from './firebase';
 import {
   collection, addDoc, getDocs, doc,
@@ -7,11 +6,8 @@ import {
   query, orderBy, limit, where,
   serverTimestamp, getDoc
 } from 'firebase/firestore';
-
 const COLLECTION = 'reported_scams';
-
 // ─── CREATE ──────────────────────────────────────────────────────────────────
-
 export async function addReport({
   text,
   category,
@@ -19,6 +15,10 @@ export async function addReport({
   mode = 'normal',
   source = 'mobile_app',
   mlPrediction = null,
+  type = null,              // report form type: 'sms' | 'email' | 'url'
+  scamCategory = null,      // report form category key, e.g. 'financial'
+  scamCategoryLabel = null, // human label of the category
+  remark = '',              // optional comment from the reporter
 }) {
   try {
     const data = {
@@ -28,6 +28,9 @@ export async function addReport({
       mode,
       source,
       mlPrediction,
+      ...(type ? { reportType: type } : {}),
+      ...(scamCategory ? { scamCategory, scamCategoryLabel: scamCategoryLabel || scamCategory } : {}),
+      ...((remark || '').trim() ? { remark: remark.trim().slice(0, 500) } : {}),
       status: 'pending',
       usedInTraining: false,
       timestamp: serverTimestamp(),
@@ -40,15 +43,12 @@ export async function addReport({
     return { success: false, error: error.message };
   }
 }
-
 // ─── READ ────────────────────────────────────────────────────────────────────
-
 export async function getReports({ status = null, category = null, limitCount = 50 } = {}) {
   try {
     let constraints = [orderBy('timestamp', 'desc'), limit(limitCount)];
     if (status)   constraints.push(where('status', '==', status));
     if (category) constraints.push(where('category', '==', category));
-
     const q = query(collection(db, COLLECTION), ...constraints);
     const snapshot = await getDocs(q);
     return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -57,13 +57,10 @@ export async function getReports({ status = null, category = null, limitCount = 
     return [];
   }
 }
-
 export function listenToReports(callback, { status = null, limitCount = 50 } = {}) {
   let constraints = [orderBy('timestamp', 'desc'), limit(limitCount)];
   if (status) constraints.push(where('status', '==', status));
-
   const q = query(collection(db, COLLECTION), ...constraints);
-
   return onSnapshot(
     q,
     snapshot => {
@@ -73,7 +70,6 @@ export function listenToReports(callback, { status = null, limitCount = 50 } = {
     error => console.error('[firestoreService] listenToReports error:', error)
   );
 }
-
 export async function getReportById(id) {
   try {
     const ref = doc(db, COLLECTION, id);
@@ -85,9 +81,7 @@ export async function getReportById(id) {
     return null;
   }
 }
-
 // ─── UPDATE ──────────────────────────────────────────────────────────────────
-
 export async function updateReport(id, fields) {
   try {
     const ref = doc(db, COLLECTION, id);
@@ -101,9 +95,7 @@ export async function updateReport(id, fields) {
     return { success: false, error: error.message };
   }
 }
-
 // ─── DELETE ──────────────────────────────────────────────────────────────────
-
 export async function deleteReport(id) {
   try {
     const ref = doc(db, COLLECTION, id);
@@ -114,9 +106,7 @@ export async function deleteReport(id) {
     return { success: false, error: error.message };
   }
 }
-
 // ─── STATS ───────────────────────────────────────────────────────────────────
-
 export async function getReportStats() {
   try {
     const snapshot = await getDocs(collection(db, COLLECTION));

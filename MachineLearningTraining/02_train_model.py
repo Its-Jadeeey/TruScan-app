@@ -1,4 +1,6 @@
 import os
+import json
+from datetime import datetime, timezone
 import joblib
 import pandas as pd
 
@@ -96,5 +98,20 @@ if classifier_size == 0:
     raise RuntimeError("scamClassifier.pkl is empty!")
 if vectorizer_size == 0:
     raise RuntimeError("vectorizer.pkl is empty!")
+
+# ============================================================
+# SAVE DATASET INFO (read by the admin dashboard via /model/info)
+# ============================================================
+DATASET_INFO_PATH = os.path.join(MODEL_DIR, "dataset_info.json")
+with open(DATASET_INFO_PATH, "w", encoding="utf-8") as f:
+    json.dump({
+        "dataset_size": int(len(df)),
+        "train_samples": int(len(X_train)),
+        "test_samples": int(len(X_test)),
+        "test_fraction": 0.30,
+        "class_counts": {str(k): int(v) for k, v in y.value_counts().items()},
+        "trained_at": datetime.now(timezone.utc).isoformat(),
+    }, f, indent=4)
+print(f"Saved dataset info: {DATASET_INFO_PATH}")
 
 print("\nTraining completed successfully!")

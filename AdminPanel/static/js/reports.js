@@ -23,6 +23,10 @@ import {
   capitalize,
   truncate,
   riskOf,
+  effectiveRiskOf,
+  riskChanged,
+  effectiveCategory,
+  reporterTypeOf,
   channelLabel,
   modelLabel,
   agreesWithModel,
@@ -127,7 +131,7 @@ function filteredScans() {
   const rows = allScans.filter((s) => {
     if (filters.status !== "all" && statusOf(s) !== filters.status) return false;
     if (filters.channel !== "all" && String(s.channel || "").toLowerCase() !== filters.channel) return false;
-    if (filters.risk !== "all" && riskOf(s) !== filters.risk) return false;
+    if (filters.risk !== "all" && effectiveRiskOf(s) !== filters.risk) return false;
     if (q && !(String(s.text || "").toLowerCase().includes(q) || s.id.toLowerCase().includes(q))) return false;
     return true;
   });
@@ -162,16 +166,17 @@ function renderCasesTable() {
   } else {
     body.innerHTML = slice
       .map((s) => {
-        const risk = riskOf(s);
+        const risk = effectiveRiskOf(s);
+        const note = riskChanged(s) ? `<span class="risk-note">${escapeHtml(t("Model"))}: ${escapeHtml(t(capitalize(riskOf(s))))}</span>` : "";
         const pending = statusOf(s) === "pending";
         return `
         <tr data-row-id="${escapeHtml(s.id)}" class="clickable-row">
           <td><code>${escapeHtml(s.id.slice(0, 8))}</code></td>
           <td class="msg-cell">${escapeHtml(truncate(s.text, 60))}</td>
           <td>${escapeHtml(channelLabel(s.channel))}</td>
-          <td>${escapeHtml(capitalize(s.category || ""))}</td>
+          <td>${escapeHtml(capitalize(effectiveCategory(s) || ""))}</td>
           <td>${escapeHtml(formatDate(s.timestamp))}</td>
-          <td><span class="risk-tag ${escapeHtml(risk)}">${escapeHtml(t(capitalize(risk)))}</span></td>
+          <td><span class="risk-tag ${escapeHtml(risk)}">${escapeHtml(t(capitalize(risk)))}</span>${note}</td>
           <td>${statusCell(s)}</td>
           <td><button type="button" class="btn-link" data-open="${escapeHtml(s.id)}">${escapeHtml(t(pending ? "Review" : "View"))}</button></td>
         </tr>`;
@@ -218,7 +223,7 @@ async function openCase(id) {
   const reviewed = st !== "pending";
   const defaultLabel = s.finalLabel || modelLabel(s);
   const typeOptions = SCAM_TYPES.map(
-    (x) => `<option value="${escapeHtml(x)}" ${x === (s.scamType || "Miscellaneous Scam") ? "selected" : ""}>${escapeHtml(x)}</option>`
+    (x) => `<option value="${escapeHtml(x)}" ${x === (s.scamType || reporterTypeOf(s) || "Miscellaneous Scam") ? "selected" : ""}>${escapeHtml(x)}</option>`
   ).join("");
 
   const html = `
@@ -228,10 +233,12 @@ async function openCase(id) {
       <div><dt>${escapeHtml(t("Reported from"))}</dt><dd>${s.mode === "simple" ? "Simple Mode" : "Standard"}</dd></div>
       <div><dt>${escapeHtml(t("Detected on"))}</dt><dd>${escapeHtml(formatDate(s.timestamp))} <span class="muted-note">(${escapeHtml(timeAgo(s.timestamp))})</span></dd></div>
       <div><dt>${escapeHtml(t("Status"))}</dt><dd>${statusCell(s)}</dd></div>
+      ${s.scamCategoryLabel ? `<div><dt>${escapeHtml(t("Reporter's category"))}</dt><dd>${escapeHtml(s.scamCategoryLabel)}</dd></div>` : ""}
     </dl>
 
     <h3 class="modal-h">${escapeHtml(t("Reported message"))}</h3>
     <pre class="case-text" tabindex="0">${escapeHtml(s.text || "")}</pre>
+    ${s.remark ? `<h3 class="modal-h">${escapeHtml(t("Reporter's remark"))}</h3><pre class="case-text" tabindex="0">${escapeHtml(s.remark)}</pre>` : ""}
 
     <h3 class="modal-h">${escapeHtml(t("Mobile app result"))}</h3>
     <div class="case-ml">
@@ -253,7 +260,7 @@ async function openCase(id) {
         ? `<div class="review-summary">
             <p>${statusCell(s)}${s.finalLabel ? ` · <strong>${escapeHtml(s.finalLabel)}</strong>${s.scamType ? ` · ${escapeHtml(s.scamType)}` : ""}` : ""}</p>
             ${s.reviewedBy ? `<p class="muted-note">${escapeHtml(t("Reviewed by"))} ${escapeHtml(s.reviewedBy)} · ${escapeHtml(formatDate(s.reviewedAt))}</p>` : ""}
-            ${s.adminNotes ? `<p class="admin-notes">${escapeHtml(s.adminNotes)}</p>` : ""}
+            ${s.adminNotes ? `<p class="admin-notes"><strong>${escapeHtml(t("Remarks"))}:</strong> ${escapeHtml(s.adminNotes)}</p>` : ""}
             <div class="modal-actions"><button type="button" class="btn btn-ghost" id="reopenBtn">${escapeHtml(t("Reopen case"))}</button></div>
            </div>`
         : `<form id="reviewForm" class="review-form">
@@ -265,8 +272,9 @@ async function openCase(id) {
             <label class="field-col"><span>${escapeHtml(t("Scam type"))}</span>
               <select id="scamType" class="input">${typeOptions}</select>
             </label>
-            <label class="field-col"><span>${escapeHtml(t("Notes (optional)"))}</span>
-              <textarea id="adminNotes" class="input" rows="2" maxlength="500"></textarea>
+            <label class="field-col"><span>${escapeHtml(t("Remarks"))} <span class="field-hint">— ${escapeHtml(t("optional when verifying, required when rejecting"))}</span></span>
+              <textarea id="adminNotes" class="input" rows="3" maxlength="500" placeholder="${escapeHtml(t("Why are you verifying or rejecting this report?"))}"></textarea>
+              <span class="field-error" id="remarkError" role="alert" hidden>${escapeHtml(t("A remark is required to reject a report. Please explain why."))}</span>
             </label>
             <div class="modal-actions">
               <button type="submit" class="btn btn-blue" autofocus>${escapeHtml(t("Verify — ready for training"))}</button>
@@ -312,18 +320,35 @@ async function openCase(id) {
       finalLabel,
       scamType,
       adminNotes: root.querySelector("#adminNotes").value.trim() || null,
-    }, "case_verified", { finalLabel, scamType });
+    }, "case_verified", { finalLabel, scamType, remark: root.querySelector("#adminNotes").value.trim() || null });
     dlg.close();
   });
 
+  const notesEl = root.querySelector("#adminNotes");
+  const remarkErr = root.querySelector("#remarkError");
+  notesEl.addEventListener("input", () => {
+    if (notesEl.value.trim()) {
+      remarkErr.hidden = true;
+      notesEl.classList.remove("invalid");
+    }
+  });
+
+  // Rejecting needs a remark (the reason); verifying keeps it optional.
   root.querySelector("#rejectBtn").addEventListener("click", async () => {
+    const remark = notesEl.value.trim();
+    if (!remark) {
+      remarkErr.hidden = false;
+      notesEl.classList.add("invalid");
+      notesEl.focus();
+      return;
+    }
     await saveReview(s, {
       status: "rejected",
       usedInTraining: false,
       finalLabel: null,
       scamType: null,
-      adminNotes: root.querySelector("#adminNotes").value.trim() || null,
-    }, "case_rejected", {});
+      adminNotes: remark,
+    }, "case_rejected", { remark });
     dlg.close();
   });
 }
@@ -416,12 +441,13 @@ function exportView() {
     return;
   }
   const csv = toCsv(
-    ["case_id", "text", "channel", "category", "risk", "confidence", "status", "final_label", "scam_type", "reviewed_by", "detected"],
+    ["case_id", "text", "channel", "category", "risk", "model_risk", "confidence", "status", "final_label", "scam_type", "reviewed_by", "detected"],
     rows.map((s) => [
       s.id,
       s.text,
       s.channel,
-      s.category,
+      effectiveCategory(s),
+      effectiveRiskOf(s),
       riskOf(s),
       s.mlPrediction?.confidence ?? "",
       statusOf(s),

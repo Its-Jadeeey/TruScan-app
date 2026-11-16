@@ -9,7 +9,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp }           from '../Context/AppContext';
 import { analyzeText }      from '../Service/analyzeService';
-import { addReport }        from '../Service/firestoreService';
+import { validateInput, isFlagged, goToReport, goToEducation } from '../Service/ScanHelpers';
+import SuspiciousCard    from '../Components/SuspiciousCard';
+import PasteboardBanner  from '../Components/PasteboardBanner';
+import { usePasteboardSuggestion } from '../Service/pasteboard';
+import { maybeShowScanAlert }      from '../Service/scanFeedback';
 import { getTheme, RADIUS, SPACING, SHADOW, getRiskColors } from '../Service/theme';
 // ─── INPUT TYPE TABS ──────────────────────────────────────────────────────────
 const INPUT_TABS = [
@@ -25,21 +29,22 @@ const PLACEHOLDERS = {
 const MAX_CHARS = 5000;
 // ─── HOW IT WORKS ─────────────────────────────────────────────────────────────
 const STEPS = [
-  { num: '1', title: 'Analyze', icon: '🤖', desc: 'We scan content using AI and rule-based engine.' },
+  { num: '1', title: 'Analyze', icon: '🤖', desc: 'We scan content using linear-SVM with TF-IDF features.' },
   { num: '2', title: 'Detect',  icon: '🚩', desc: 'We identify scam patterns and risk indicators.' },
   { num: '3', title: 'Explain', icon: '🛡️', desc: 'You get a clear result with explanation and tips.' },
 ];
 // ─── RESULT BANNER ─────────────────────────────────────────────────────────────
 function RiskBanner({ result, fontSize, COLORS, styles }) {
   if (!result) return null;
-  const isScam = result.prediction === 'scam';
-  const risk = getRiskColors(isScam ? 'scam' : 'safe', COLORS);
+  const kind = ['scam', 'suspicious'].includes(result.prediction) ? result.prediction : 'safe';
+  const isScam = kind !== 'safe';
+  const risk = getRiskColors(kind, COLORS);
   return (
     <View style={[styles.riskBanner, { backgroundColor: risk.bg, borderColor: risk.border }]}>
       <View style={styles.riskHeader}>
         <View style={[styles.riskIcon, { backgroundColor: risk.bg, borderColor: risk.border }]}>
           <Text style={[styles.riskIconText, { color: risk.text, fontSize: fontSize.md }]}>
-            {isScam ? '⚠️' : '✓'}
+            {kind === 'scam' ? '⚠️' : kind === 'suspicious' ? '⚡' : '✓'}
           </Text>
         </View>
         <View style={{ flex: 1 }}>
@@ -47,7 +52,7 @@ function RiskBanner({ result, fontSize, COLORS, styles }) {
             Analysis Result
           </Text>
           <Text style={[styles.riskVerdict, { color: risk.text, fontSize: fontSize.lg }]}>
-            {isScam ? 'SCAM DETECTED' : 'LOOKS SAFE'}
+            {kind === 'scam' ? 'SCAM DETECTED' : kind === 'suspicious' ? 'SUSPICIOUS' : 'LOOKS SAFE'}
           </Text>
           <Text style={[styles.riskSub, { fontSize: fontSize.xs }]}>
             Confidence: {result.confidence}% • ML Model (SVM)
@@ -68,7 +73,7 @@ function RiskBanner({ result, fontSize, COLORS, styles }) {
         )}
       </View>
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { fontSize: fontSize.xs }]}>Bakit {isScam ? 'Scam' : 'Ligtas'} Ito?</Text>
+        <Text style={[styles.sectionTitle, { fontSize: fontSize.xs }]}>Bakit {kind === 'scam' ? 'Scam' : kind === 'suspicious' ? 'Kahina-hinala' : 'Ligtas'} Ito?</Text>
         <View style={styles.whyBox}>
           <Text style={[styles.whyText, { fontSize: fontSize.sm }]}>{result.explanation}</Text>
         </View>
@@ -112,26 +117,35 @@ function buildWhyText(result) {
 }
 // ─── MAIN SCREEN ──────────────────────────────────────────────────────────────
 export default function ScanScreen({ navigation }) {
-  const { fontSize, simpleMode, lightMode } = useApp();
+  const { fontSize, simpleMode, lightMode, scanAlerts, autoScanPasteboard } = useApp();
   const COLORS = getTheme(simpleMode, lightMode);
   const styles = makeStyles(COLORS);
   const [activeTab, setActiveTab]   = useState('message');
   const [inputText, setInputText]   = useState('');
   const [result, setResult]         = useState(null);
   const [loading, setLoading]       = useState(false);
-  const [reported, setReported]     = useState(false);
   const scrollRef = useRef(null);
-  const handleScan = async () => {
-    if (!inputText.trim()) {
-      Alert.alert('Walang laman', 'I-paste muna ang mensahe bago mag-scan.');
+  const { suggestion, dismiss, accept } = usePasteboardSuggestion(autoScanPasteboard, inputText);
+
+  // text/tab default to what is on screen; the pasteboard banner passes its own.
+  const handleScan = async (textArg, tabArg) => {
+    const text = typeof textArg === 'string' ? textArg : inputText;
+    const tab  = typeof tabArg  === 'string' ? tabArg  : activeTab;
+    const check = validateInput(tab, text);
+    if (!check.ok) {
+      Alert.alert('Cannot scan', check.en);
       return;
     }
     setLoading(true);
     setResult(null);
-    setReported(false);
     try {
-      const data = await analyzeText(inputText);
+      const data = await analyzeText(text);
       setResult(data);
+      maybeShowScanAlert({
+        enabled: scanAlerts, result: data, lang: 'en',
+        onReport: () => goToReport(navigation, { text: text.trim(), tab, result: data }),
+        onLearn:  () => goToEducation(navigation, 'types'),
+      });
       setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 300);
     } catch (e) {
       Alert.alert('Error', 'Hindi makapag-analyze. Subukan ulit.');
@@ -139,32 +153,24 @@ export default function ScanScreen({ navigation }) {
       setLoading(false);
     }
   };
-  const handleReport = async () => {
-    if (!result || reported) return;
-    const channelMap = { message: 'sms', email: 'email', link: 'link' };
-    const res = await addReport({
-      text: inputText,
-      category: result.prediction,
-      channel: channelMap[activeTab] || 'sms',
-      mode: 'normal',
-      source: 'mobile_app',
-      mlPrediction: {
-        riskLevel: (result.risk_level || 'medium').toLowerCase(),
-        confidence: result.confidence,
-        reasons: result.indicators?.top_features || result.indicators?.keywords || [],
-      },
-    });
-    if (res.success) {
-      setReported(true);
-      Alert.alert('Salamat!', 'Nai-report na ang mensahe sa community database.');
-    } else {
-      Alert.alert('Error', 'Hindi ma-save ang report. Subukan ulit.');
-    }
+  // Any edit to the input makes the old result stale: clear it so the button goes back to SCAN.
+  const onChangeInput = (txt) => {
+    setInputText(txt);
+    if (result) setResult(null);
   };
+  const scanSuggestion = () => {
+    const sug = accept();
+    if (!sug) return;
+    setActiveTab(sug.tab);
+    setInputText(sug.text);
+    handleScan(sug.text, sug.tab);
+  };
+
+  const reportIt = () => goToReport(navigation, { text: inputText.trim(), tab: activeTab, result });
+  const flagged = isFlagged(result);
   const changeTab = (key) => {
     setActiveTab(key);
     setResult(null);
-    setReported(false);
   };
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -174,6 +180,10 @@ export default function ScanScreen({ navigation }) {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        <PasteboardBanner
+          suggestion={suggestion} COLORS={COLORS} fs={fontSize} lang="en"
+          onScan={scanSuggestion} onDismiss={dismiss}
+        />
         {/* Headline */}
         <Text style={[styles.headline, { fontSize: fontSize.xxl }]}>
           Detect Scams.{'\n'}Protect Yourself.
@@ -209,7 +219,7 @@ export default function ScanScreen({ navigation }) {
             placeholder={PLACEHOLDERS[activeTab]}
             placeholderTextColor={COLORS.hint}
             value={inputText}
-            onChangeText={setInputText}
+            onChangeText={onChangeInput}
             textAlignVertical="top"
           />
           <Text style={[styles.charCount, { fontSize: fontSize.xs }]}>
@@ -219,7 +229,7 @@ export default function ScanScreen({ navigation }) {
         {/* Scan Now button */}
         <TouchableOpacity
           style={[styles.scanBtn, loading && styles.scanBtnDisabled]}
-          onPress={handleScan}
+          onPress={() => handleScan()}
           disabled={loading}
           activeOpacity={0.85}
         >
@@ -227,23 +237,27 @@ export default function ScanScreen({ navigation }) {
             ? <ActivityIndicator color="#FFFFFF" size="small" />
             : (
               <>
-                <Text style={styles.scanBtnIcon}>🛡️</Text>
-                <Text style={[styles.scanBtnText, { fontSize: fontSize.base }]}>SCAN NOW</Text>
+                <Text style={styles.scanBtnIcon}>{result ? '🔄' : '🛡️'}</Text>
+                <Text style={[styles.scanBtnText, { fontSize: fontSize.base }]}>{result ? 'RESCAN' : 'SCAN NOW'}</Text>
               </>
             )
           }
         </TouchableOpacity>
         {/* Result */}
         <RiskBanner result={result} fontSize={fontSize} COLORS={COLORS} styles={styles} />
-        {result && (
-          <TouchableOpacity
-            style={[styles.reportBtn, reported && styles.reportBtnDone]}
-            onPress={handleReport}
-            disabled={reported}
-            activeOpacity={0.8}
-          >
+        {flagged && (
+          <SuspiciousCard
+            COLORS={COLORS}
+            fs={fontSize}
+            lang="en"
+            onReport={reportIt}
+            onLearn={() => goToEducation(navigation, 'types')}
+          />
+        )}
+        {result && !flagged && (
+          <TouchableOpacity style={styles.reportBtn} onPress={reportIt} activeOpacity={0.8}>
             <Text style={[styles.reportBtnText, { fontSize: fontSize.sm }]}>
-              {reported ? '✓ Nai-report na! Salamat.' : 'I-report sa Community Database'}
+              Think this is wrong? Report it anyway
             </Text>
           </TouchableOpacity>
         )}

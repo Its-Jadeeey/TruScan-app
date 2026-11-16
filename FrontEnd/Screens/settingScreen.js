@@ -248,7 +248,7 @@ export default function SettingsScreen({ navigation }) {
         <View style={styles.card}>
           <SettingRow
             icon="🔔" label="Scan Alerts"
-            sub={scanAlerts ? 'Showing alerts after each scan' : 'Alerts muted'}
+            sub={scanAlerts ? 'Pop-up warning when a scan finds a scam' : 'Alerts muted'}
             fontSize={fontSize} styles={styles}
             right={
               <Switch
@@ -267,7 +267,7 @@ export default function SettingsScreen({ navigation }) {
         <View style={styles.card}>
           <SettingRow
             icon="📋" label="Auto-scan Pasteboard"
-            sub={autoScanPasteboard ? 'Suggests scanning copied text automatically' : 'Off'}
+            sub={autoScanPasteboard ? 'Offers to scan text you just copied' : 'Off'}
             fontSize={fontSize} styles={styles}
             right={
               <Switch

@@ -1,5 +1,5 @@
 // Shared by dashboard / reports / settings:
-//   - who is logged in (session + Firestore profile)
+//   - who is logged in (Firebase Authentication + Firestore profile)
 //   - sidebar chip, theme + language from the saved profile, pending badge
 //   - audit log writer
 //   - calls to the ML backend (/analyze, /model/info, /health)
@@ -14,7 +14,11 @@ import {
   limit,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
-import { db } from "./firebase-config.js";
+import {
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import { db, auth } from "./firebase-config.js";
 import { PATHS, adminDoc, riskOf, channelLabel, toDate, timeAgo, truncate, escapeHtml } from "./firestore-helpers.js";
 
 const CACHE_KEY = "ts-admin";
@@ -40,26 +44,60 @@ export function updateAdminCache(partial) {
   }
 }
 
-export async function getAdmin() {
-  const cached = readAdminCache();
-  if (cached && cached.username) return cached;
+// Resolves with the signed-in Firebase user (or null) once Firebase has restored the session.
+function waitForUser() {
+  return new Promise((resolve) => {
+    const off = onAuthStateChanged(auth, (u) => { off(); resolve(u); });
+  });
+}
 
-  const res = await fetch("/api/auth/me", { credentials: "same-origin" });
-  if (!res.ok) {
+function clearAdminCache() {
+  try { sessionStorage.removeItem(CACHE_KEY); } catch (e) {}
+}
+
+// End the server's session cookie. Without this, a leftover cookie would make the server
+// bounce /login -> /dashboard while the browser bounces /dashboard -> /login (redirect loop).
+async function endServerSession() {
+  try { await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" }); } catch (e) {}
+}
+
+export async function getAdmin() {
+  const user = await waitForUser();
+  if (!user) {
+    clearAdminCache();
+    await endServerSession();
     window.location.href = "/login";
     return null;
   }
-  const { username } = await res.json();
 
-  let profile = {};
+  const cached = readAdminCache();
+  if (cached && cached.uid === user.uid && cached.username) return cached;
+
+  // Only accounts marked admin (BackEnd/make_admin.py) may use the panel.
+  const token = await user.getIdTokenResult();
+  if (token.claims.admin !== true) {
+    clearAdminCache();
+    await signOut(auth);
+    await endServerSession();
+    window.location.href = "/login?denied=1";
+    return null;
+  }
+
+  // Profile: the admins/* document whose email matches this account.
+  // (Keeps the existing admins/admin profile; falls back to a default.)
+  const fallbackName = (user.email || "admin").split("@")[0];
+  let username = fallbackName;
+  let profile = { fullName: user.displayName || fallbackName, email: user.email || "" };
   try {
-    const snap = await getDoc(doc(db, ...adminDoc(username)));
-    if (snap.exists()) {
-      const d = snap.data();
-      // never keep the password in the browser cache
+    const snap = await getDocs(
+      query(collection(db, PATHS.admins), where("email", "==", user.email), limit(1))
+    );
+    if (!snap.empty) {
+      const d = snap.docs[0].data();
+      username = snap.docs[0].id;
       profile = {
-        fullName: d.fullName || "",
-        email: d.email || "",
+        fullName: d.fullName || fallbackName,
+        email: d.email || user.email || "",
         phone: d.phone || "",
         role: d.role || "Administrator",
         lightMode: !!d.lightMode,
@@ -69,7 +107,21 @@ export async function getAdmin() {
   } catch (err) {
     console.warn("Could not read admin profile:", err);
   }
-  return updateAdminCache({ username, role: "Administrator", language: "English", ...profile });
+  return updateAdminCache({ uid: user.uid, username, role: "Administrator", language: "English", ...profile });
+}
+
+// Log out = sign out of Firebase, then back to the login page.
+function setupLogout() {
+  const old = document.getElementById("logoutBtn");
+  if (!old) return;
+  const btn = old.cloneNode(true); // drops the old click handler (server-session logout)
+  old.replaceWith(btn);
+  btn.addEventListener("click", async () => {
+    clearAdminCache();
+    await endServerSession();
+    try { await signOut(auth); } catch (e) {}
+    window.location.href = "/login";
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -159,6 +211,7 @@ export async function initShell() {
   window.TS.applyTheme(admin.lightMode ? "light" : "dark");
   window.TS.setLanguage(admin.language || "English");
   fillAdminChip(admin);
+  setupLogout();
 
   setupBell();
   refreshPendingBadge();

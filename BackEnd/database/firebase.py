@@ -1,11 +1,10 @@
 # TruScan/BackEnd/database/firebase.py
 # Firebase Admin SDK — connects FastAPI backend to Firestore
-
 import firebase_admin
 from firebase_admin import credentials, firestore
 import os
 
-# ─── INITIALIZE ───────────────────────────────────────────────────────────────
+# INITIALIZE 
 
 def initialize_firebase():
     """
@@ -24,7 +23,7 @@ def initialize_firebase():
             print("⚠️  serviceAccountKey.json not found — Firebase not initialized")
             print("    Download it from Firebase Console → Project Settings → Service Accounts")
 
-# ─── GET DATABASE ─────────────────────────────────────────────────────────────
+# GET DATABASE 
 
 def get_db():
     """

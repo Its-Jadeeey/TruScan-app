@@ -15,10 +15,12 @@ import {
   escapeHtml,
   capitalize,
   truncate,
-  riskOf,
+  effectiveRiskOf,
   channelLabel,
   isFlagged,
+  isStillFlagged,
   agreesWithModel,
+  categoryOf,
 } from "./firestore-helpers.js";
 import { initShell, fetchModelInfo } from "./admin-core.js";
 
@@ -89,7 +91,11 @@ function inRange(scan) {
   if (range === "all") return true;
   const d = toDate(scan.timestamp);
   if (!d) return false;
-  return Date.now() - d.getTime() <= Number(range) * 86400000;
+  // Whole calendar days (same window the timeline draws), so counts and chart always agree.
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  start.setDate(start.getDate() - (Number(range) - 1));
+  return d.getTime() >= start.getTime();
 }
 
 function render() {
@@ -103,6 +109,7 @@ function render() {
   renderMetrics(scans);
   renderTimeline(scans);
   renderBreakdown(scans);
+  renderCategories(scans);
   renderFlaggedScams(scans);
   renderRiskIndicators(scans);
 }
@@ -168,7 +175,7 @@ function renderTimeline(scans) {
     const d = toDate(s.timestamp);
     if (!d) continue;
     const c = counts[dayKey(d)];
-    if (c) isFlagged(s) ? c.flagged++ : c.safe++;
+    if (c) isStillFlagged(s) ? c.flagged++ : c.safe++;
   }
 
   const peak = Math.max(1, ...keys.map((k) => counts[k.key].flagged + counts[k.key].safe));
@@ -195,7 +202,7 @@ function renderTimeline(scans) {
     const tip = `${k.date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}: ${c.flagged} ${t("Flagged").toLowerCase()}, ${c.safe} ${t("Safe").toLowerCase()}`;
     if (c.flagged + c.safe > 0) {
       svg += `<g><title>${escapeHtml(tip)}</title>`;
-      if (c.safe) svg += `<rect x="${x}" y="${y(c.safe + c.flagged) + hF}" width="${barW}" height="${hS}" rx="2" class="bar-safe"/>`;
+      if (c.safe) svg += `<rect x="${x}" y="${y(c.safe + c.flagged)}" width="${barW}" height="${hS}" rx="2" class="bar-safe"/>`;
       if (c.flagged) svg += `<rect x="${x}" y="${y(c.flagged)}" width="${barW}" height="${hF}" rx="2" class="bar-flagged"/>`;
       svg += `</g>`;
     }
@@ -242,7 +249,7 @@ function renderBreakdown(scans) {
 
   const rk = { high: 0, medium: 0, low: 0 };
   for (const s of scans) {
-    const r = riskOf(s);
+    const r = effectiveRiskOf(s);
     rk[r === "safe" ? "low" : r]++;
   }
   bars($("riskBars"), [
@@ -253,11 +260,58 @@ function renderBreakdown(scans) {
 }
 
 // ---------------------------------------------------------------------------
+// Scam category breakdown: number and percentage of reports per category
+// ---------------------------------------------------------------------------
+function renderCategories(scans) {
+  const panel = $("categoryPanel");
+  const total = scans.length;
+  if (total === 0) {
+    panel.innerHTML = `<p class="empty-note">${escapeHtml(t("No reports in this period."))}</p>`;
+    return;
+  }
+  const tally = {};
+  for (const s of scans) {
+    const c = categoryOf(s);
+    tally[c] = (tally[c] || 0) + 1;
+  }
+  const rows = Object.entries(tally).sort((a, b) => {
+    // "Uncategorized" always last, otherwise biggest first
+    if (a[0] === "Uncategorized") return 1;
+    if (b[0] === "Uncategorized") return -1;
+    return b[1] - a[1] || a[0].localeCompare(b[0]);
+  });
+  const categorized = total - (tally["Uncategorized"] || 0);
+  const maxPct = Math.max(...rows.map(([, n]) => n / total));
+
+  panel.innerHTML = `
+    <div class="cat-grid">
+      ${rows
+        .map(([label, n]) => {
+          const share = (n / total) * 100;
+          const width = Math.max(2, Math.round(((n / total) / maxPct) * 100));
+          const muted = label === "Uncategorized" || label === "Not a scam";
+          return `
+            <div class="cat-row" title="${escapeHtml(label)}: ${n} (${share.toFixed(1)}%)">
+              <span class="cat-name">${escapeHtml(label === "Uncategorized" ? t("Uncategorized") : label)}</span>
+              <span class="dist-track"><span class="dist-fill ${muted ? "fill-muted" : ""}" style="width:${width}%"></span></span>
+              <span class="cat-count">${n}</span>
+              <span class="cat-pct">${share.toFixed(1)}%</span>
+            </div>`;
+        })
+        .join("")}
+    </div>
+    <p class="muted-note cat-foot">
+      ${total} ${escapeHtml(t("Total Reports").toLowerCase())} · ${categorized} ${escapeHtml(t("categorized"))}.
+      ${escapeHtml(t("Category = admin-confirmed type, otherwise the type the reporter chose in the app."))}
+    </p>`;
+}
+
+// ---------------------------------------------------------------------------
 // Recent flagged + indicators
 // ---------------------------------------------------------------------------
 function renderFlaggedScams(scans) {
   const list = $("flaggedList");
-  const flagged = scans.filter(isFlagged).slice(0, 5);
+  const flagged = scans.filter(isStillFlagged).slice(0, 5);
 
   if (flagged.length === 0) {
     list.innerHTML = `<p class="empty-note">${escapeHtml(t("No flagged scams yet."))}</p>`;
@@ -266,7 +320,7 @@ function renderFlaggedScams(scans) {
 
   list.innerHTML = flagged
     .map((s) => {
-      const risk = riskOf(s);
+      const risk = effectiveRiskOf(s);
       const title = `${capitalize(s.category)} · ${channelLabel(s.channel)}`;
       return `
         <div class="flagged-item clickable" data-case="${escapeHtml(s.id)}" tabindex="0" role="link">
@@ -333,6 +387,14 @@ async function loadModelPanel() {
   const pct = (v) => (typeof v === "number" ? `${(v * 100).toFixed(1)}%` : "—");
   const trained = res.data.trained_at ? new Date(res.data.trained_at).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" }) : "—";
   const th = res.data.thresholds || {};
+  const ds = res.data.dataset || {};
+  const dsSize = typeof ds.size === "number" ? `${ds.estimated ? "≈ " : ""}${ds.size.toLocaleString()}` : "—";
+  const dsSub =
+    typeof ds.train === "number" && typeof ds.test === "number"
+      ? `${ds.train.toLocaleString()} ${t("train")} · ${ds.test.toLocaleString()} ${t("test")}`
+      : ds.estimated
+      ? t("estimated, re-run 02_train_model.py for exact")
+      : "";
 
   panel.innerHTML = `
     <div class="model-grid">
@@ -340,9 +402,10 @@ async function loadModelPanel() {
       <div class="stat"><span class="stat-label">${escapeHtml(t("Precision"))}</span><span class="stat-value">${pct(m.precision)}</span></div>
       <div class="stat"><span class="stat-label">${escapeHtml(t("Recall"))}</span><span class="stat-value">${pct(m.recall)}</span></div>
       <div class="stat"><span class="stat-label">${escapeHtml(t("F1 Score"))}</span><span class="stat-value">${pct(m.f1_score)}</span></div>
+      <div class="stat stat-wide"><span class="stat-label">${escapeHtml(t("Total dataset size"))}</span><span class="stat-value">${escapeHtml(dsSize)}</span>${dsSub ? `<span class="stat-sub">${escapeHtml(dsSub)}</span>` : ""}</div>
     </div>
     <p class="muted-note model-meta">
       ${escapeHtml(res.data.model || "")} · ${m.test_samples ?? "—"} test messages · trained ${escapeHtml(trained)}
-      ${th.high != null ? ` · High ≥ ${Math.round(th.high * 100)}% · Medium ≥ ${Math.round(th.low * 100)}% · Low < ${Math.round(th.low * 100)}%` : ""}
+      ${th.high != null ? ` · High ≥ ${Math.round(th.high * 100)}% · Medium ≥ ${Math.round(th.low * 100)}%` : ""}
     </p>`;
 }

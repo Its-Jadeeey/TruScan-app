@@ -4,7 +4,10 @@
 // no bundler in front of them.
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
+// These values are public by design (they identify the project, they are not secrets).
+// What actually protects the data is the Firestore rules + the admin sign-in.
 const firebaseConfig = {
   apiKey: "AIzaSyBByUnFiVg7or2e98uA5BIg_TpBPWEN5nk",
   authDomain: "truscanv2.firebaseapp.com",
@@ -18,3 +21,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
+export const auth = getAuth(app);

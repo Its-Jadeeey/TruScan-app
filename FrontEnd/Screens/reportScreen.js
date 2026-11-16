@@ -1,6 +1,6 @@
 // "Report a Scam" form — type + category dropdowns, message field, submit toast.
 // Re-themes to light or dark based on Light Mode.
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
   StyleSheet, Modal, FlatList, Animated, ActivityIndicator, Alert,
@@ -97,16 +97,30 @@ function useToast() {
   return { visible, opacity, show };
 }
 // ─── MAIN SCREEN ──────────────────────────────────────────────────────────────
-export default function ReportScreen({ navigation }) {
+export default function ReportScreen({ navigation, route }) {
   const { fontSize, simpleMode, lightMode } = useApp();
   const COLORS = getTheme(simpleMode, lightMode);
   const styles = makeStyles(COLORS);
   const [type, setType]         = useState(null);
   const [category, setCategory] = useState(null);
   const [text, setText]         = useState('');
+  const [remark, setRemark]     = useState('');
+  const [prefill, setPrefill]   = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors]     = useState({});
   const toast = useToast();
+  // Pre-fill from a scan result (sent by the Scan / Simple Mode screens)
+  useEffect(() => {
+    const p = route?.params?.prefill;
+    if (!p) return;
+    setPrefill(p);
+    setType(p.type || null);
+    setCategory(p.category || null);
+    setText(p.text || '');
+    setRemark('');
+    setErrors({});
+    navigation?.setParams?.({ prefill: undefined });
+  }, [route?.params?.nonce]);
   const validate = () => {
     const e = {};
     if (!type) e.type = true;
@@ -118,12 +132,18 @@ export default function ReportScreen({ navigation }) {
   const handleSubmit = async () => {
     if (!validate()) return;
     setSubmitting(true);
+    const catLabel = CATEGORIES.find(c => c.key === category)?.label || category;
     const res = await addReport({
       text,
-      category: 'scam',
+      category: prefill?.prediction || 'scam',
+      channel: { sms: 'sms', email: 'email', url: 'link' }[type] || 'sms',
       type,
       scamCategory: category,
-      source: 'report_form',
+      scamCategoryLabel: catLabel,
+      remark,
+      mode: simpleMode ? 'simple' : 'normal',
+      source: prefill ? 'scan_recommendation' : 'report_form',
+      mlPrediction: prefill?.ml || null,
     });
     setSubmitting(false);
     if (res.success) {
@@ -131,6 +151,8 @@ export default function ReportScreen({ navigation }) {
       setType(null);
       setCategory(null);
       setText('');
+      setRemark('');
+      setPrefill(null);
       setErrors({});
     } else {
       Alert.alert('Error', 'Could not submit the report. Please try again.');
@@ -145,6 +167,13 @@ export default function ReportScreen({ navigation }) {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        {prefill && (
+          <View style={styles.prefillNote}>
+            <Text style={[styles.prefillText, { fontSize: fontSize.xs }]}>
+              ✨ Filled in from your scan. You can change anything before submitting.
+            </Text>
+          </View>
+        )}
         {/* Type */}
         <Dropdown
           label="TYPE"
@@ -189,6 +218,26 @@ export default function ReportScreen({ navigation }) {
           styles={styles}
         />
         {errors.category && <Text style={styles.errorText}>Please select a category.</Text>}
+        {/* Remark */}
+        <View style={styles.fieldWrap}>
+          <Text style={[styles.fieldLabel, { fontSize: fontSize.xs }]}>REMARK (OPTIONAL)</Text>
+          <View style={[styles.textAreaWrap, { minHeight: 110 }]}>
+            <TextInput
+              style={[styles.textArea, { fontSize: fontSize.sm }]}
+              multiline
+              maxLength={500}
+              placeholder="Add details that help us understand: who sent it, what they asked for, did you lose money..."
+              placeholderTextColor={COLORS.hint}
+              value={remark}
+              onChangeText={setRemark}
+              textAlignVertical="top"
+            />
+            <Text style={[styles.charCount, { fontSize: fontSize.xs }]}>{remark.length}/500</Text>
+          </View>
+          <Text style={[styles.remarkHint, { fontSize: fontSize.xs }]}>
+            Please don't include your own passwords, OTPs or card numbers.
+          </Text>
+        </View>
         {/* Submit */}
         <TouchableOpacity
           style={[styles.submitBtn, submitting && styles.submitBtnDisabled]}
@@ -285,6 +334,12 @@ const makeStyles = (COLORS) => StyleSheet.create({
   },
   footerIcon: { fontSize: 15 },
   footerText: { color: COLORS.muted, lineHeight: 16, flex: 1 },
+  prefillNote: {
+    backgroundColor: COLORS.infoBg, borderWidth: 1.5, borderColor: COLORS.infoBorder,
+    borderRadius: RADIUS.md, paddingHorizontal: SPACING.md, paddingVertical: 10, marginBottom: SPACING.md,
+  },
+  prefillText: { color: COLORS.ink, lineHeight: 17 },
+  remarkHint:  { color: COLORS.hint, marginTop: 6 },
   toastOverlay: {
     position: 'absolute', top: 0, bottom: 0, left: 0, right: 0,
     alignItems: 'center', justifyContent: 'center',

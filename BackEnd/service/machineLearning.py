@@ -26,10 +26,7 @@ HIGH_RISK_THRESHOLD = 0.80   # >= this        -> HIGH   (scam)
 LOW_RISK_THRESHOLD  = 0.35   # below this      -> LOW    (safe); in between -> MEDIUM
 
 
-# ============================================================
-# EXACT PREPROCESSING MATCH WITH 01_preprocess.py
-# (copy of clean_text(); change both files together)
-# ============================================================
+
 def preprocess(text: str) -> str:
     text = str(text).lower()
 
@@ -58,21 +55,27 @@ def preprocess(text: str) -> str:
     return ' '.join(tokens)
 
 
-# ── Load Model ───────────────────────────────────────────────
+# Load Model (cached: the .pkl files are read once, not on every request)
+_MODEL_CACHE = None
+
 def load_model():
+    global _MODEL_CACHE
+    if _MODEL_CACHE is not None:
+        return _MODEL_CACHE
     try:
         model = joblib.load(MODEL_PATH)
         vectorizer = joblib.load(VECTORIZER_PATH)
         label_encoder = None
         if os.path.exists(LABEL_PATH):
             label_encoder = joblib.load(LABEL_PATH)
-        return model, vectorizer, label_encoder
+        _MODEL_CACHE = (model, vectorizer, label_encoder)
+        return _MODEL_CACHE
     except Exception as e:
         print(f"Error loading model files: {e}")
         return None, None, None
 
 
-# ── Predict ──────────────────────────────────────────────────
+#  Predict 
 def predict(text: str) -> dict | None:
     model, vectorizer, label_encoder = load_model()
 
@@ -123,7 +126,7 @@ _KEYWORD_LABELS = {
     "otp":            "Requests a one-time PIN (OTP)",
     "password":       "Requests a password or login credentials",
     "click":          "Contains a call-to-action link",
-    "url":            "Contains a link",
+    "url":            "Contains a suspicious link",
     "gcash":          "References a financial/eWallet account",
     "maya":           "References a financial/eWallet account",
     "bank":           "References a bank account",

@@ -1,6 +1,6 @@
 // Education screen — LEARN / SCAM TYPES / TIPS segmented tabs, each a card list.
 // Re-themes to light or dark based on Light Mode.
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, StyleSheet, TouchableOpacity,
 } from 'react-native';
@@ -228,12 +228,20 @@ function EduCard({ item, expanded, onToggle, fontSize, styles, COLORS }) {
   );
 }
 // ─── MAIN SCREEN ──────────────────────────────────────────────────────────────
-export default function DashboardScreen({ navigation }) {
+export default function DashboardScreen({ navigation, route }) {
   const { fontSize, simpleMode, lightMode } = useApp();
   const COLORS = getTheme(simpleMode, lightMode);
   const styles = makeStyles(COLORS);
   const [activeTab, setActiveTab] = useState('learn');
   const [expanded, setExpanded]   = useState(null);
+  // Opened from a scan result: jump to the requested tab
+  useEffect(() => {
+    const tab = route?.params?.tab;
+    if (tab && ['learn', 'types', 'tips'].includes(tab)) {
+      setActiveTab(tab);
+      setExpanded(null);
+    }
+  }, [route?.params?.nonce]);
   const changeTab = (key) => {
     setActiveTab(key);
     setExpanded(null);

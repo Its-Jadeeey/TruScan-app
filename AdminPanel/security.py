@@ -1,18 +1,14 @@
 """
 Cookie-based session handling for the TruScan admin panel.
 
-Hardened version of the demo file:
-  * passwords are verified against a scrypt hash (stdlib, no new packages)
-  * credentials come from environment variables, not source code
+Admins now sign in with Firebase Authentication (see routes/auth.py -> /api/auth/firebase).
+After the Firebase token is verified, this module creates the server session cookie.
+
   * sessions expire (8 h absolute) and are capped in number
   * failed logins are rate-limited per IP
-  * the old function names still exist, so routes/auth.py and main.py keep working
-
-Set these before starting uvicorn (PowerShell):
-    $env:TRUSCAN_ADMIN_USER = "admin"
-    $env:TRUSCAN_ADMIN_HASH = "<output of: python make_hash.py>"
-If TRUSCAN_ADMIN_HASH is not set, it falls back to the old demo login
-(admin / admin123) and prints a warning, so nothing breaks while you migrate.
+  * the old username/password login (scrypt hash) still works ONLY if you set
+    TRUSCAN_ADMIN_HASH. The built-in demo login (admin / admin123) is OFF unless you
+    explicitly set TRUSCAN_ALLOW_DEMO=1 (local testing only - never on a public server).
 """
 import base64
 import hashlib
@@ -53,18 +49,23 @@ _HASH = os.environ.get("TRUSCAN_ADMIN_HASH")
 
 if _HASH:
     ADMIN_USER = {"username": _USER}               # no plaintext password anywhere
-else:
-    print("[security] WARNING: TRUSCAN_ADMIN_HASH not set - using demo login admin/admin123")
+elif os.environ.get("TRUSCAN_ALLOW_DEMO") == "1":
+    print("[security] WARNING: demo login admin/admin123 is ENABLED (TRUSCAN_ALLOW_DEMO=1). Local testing only.")
     ADMIN_USER = {"username": _USER, "password": "admin123"}
+else:
+    # No password login at all: admins sign in with Firebase Authentication.
+    ADMIN_USER = {"username": _USER}
 
 
 def authenticate(username: str, password: str) -> bool:
-    """Constant-time credential check. Use this in the login route."""
+    """Constant-time credential check for the legacy username/password login."""
     user_ok = hmac.compare_digest(username.encode(), ADMIN_USER["username"].encode())
     if _HASH:
         pw_ok = _verify_hash(password, _HASH)
-    else:
+    elif ADMIN_USER.get("password"):
         pw_ok = hmac.compare_digest(password.encode(), ADMIN_USER["password"].encode())
+    else:
+        pw_ok = False
     return user_ok and pw_ok
 
 

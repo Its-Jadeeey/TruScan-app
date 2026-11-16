@@ -89,14 +89,14 @@ code {
 .swatch-good { background: var(--good); }
 .timeline svg { width: 100%; height: auto; display: block; }
 .timeline .grid { stroke: var(--line); stroke-width: 1; }
-.timeline .axis { fill: var(--text-faint); font-size: 10px; font-family: var(--font-body); }
+.timeline .axis { fill: var(--text-muted); font-size: 10px; font-family: var(--font-body); }
 .timeline .bar-flagged { fill: var(--bad); }
 .timeline .bar-safe { fill: var(--good); }
 
 .breakdown-panel { display: flex; flex-direction: column; gap: 6px; }
 .mini-title {
   margin: 4px 0 2px; font-size: 0.68rem; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--text-faint); font-weight: 600;
+  text-transform: uppercase; color: var(--text-muted); font-weight: 600;
 }
 .dist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
 .dist-row { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; }
@@ -164,7 +164,7 @@ select.input option { color: #14213f; background: #fff; }
   padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 0.8rem;
 }
 .log-list li:last-child { border-bottom: none; }
-.log-time { color: var(--text-faint); font-size: 0.7rem; white-space: nowrap; }
+.log-time { color: var(--text-muted); font-size: 0.7rem; white-space: nowrap; }
 
 /* ---- Dialog ---- */
 body.modal-open { overflow: hidden; }
@@ -199,7 +199,7 @@ body.modal-open { overflow: hidden; }
 .doc-list li { margin-bottom: 6px; }
 
 .case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin: 0; }
-.case-grid dt { font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+.case-grid dt { font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
 .case-grid dd { margin: 2px 0 0; font-size: 0.84rem; }
 .case-text {
   margin: 0; padding: 12px 14px; background: var(--fill-1); border: 1px solid var(--line);
@@ -365,7 +365,7 @@ html[data-theme="light"] .sidebar .admin-chip-role { color: #a9bde6; }
 .notif-stats span { font-size: 0.66rem; color: var(--text-muted); }
 .notif-sub {
   padding: 4px 16px 6px; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--text-faint); font-weight: 600; border-top: 1px solid var(--line); padding-top: 10px;
+  color: var(--text-muted); font-weight: 600; border-top: 1px solid var(--line); padding-top: 10px;
 }
 .notif-list { list-style: none; margin: 0; padding: 0 8px 6px; max-height: 280px; overflow-y: auto; }
 .notif-item {
@@ -389,3 +389,29 @@ html[data-theme="light"] .notif-foot { color: #1f6fd0; }
 
 /* Settings columns: first label in each column sits flush at the top */
 .settings-col > .section-label:first-child { margin-top: 0; }
+
+
+/* ---- Scam category breakdown ---- */
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 10px 32px; }
+.cat-row { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; min-width: 0; }
+.cat-name { width: 170px; flex: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-primary); }
+.cat-row .dist-track { flex: 1; }
+.cat-count { width: 34px; text-align: right; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.cat-pct { width: 54px; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.dist-fill.fill-muted { background: var(--text-muted); }
+.cat-foot { margin: 14px 0 0; }
+@media (max-width: 520px) { .cat-grid { grid-template-columns: 1fr; } .cat-name { width: 120px; } }
+
+/* ---- Model performance: dataset tile ---- */
+.stat-wide { grid-column: span 2; }
+.stat-sub { font-size: 0.7rem; color: var(--text-muted); }
+
+/* ---- Review remarks ---- */
+.field-error { color: var(--bad); font-size: 0.74rem; font-weight: 600; }
+.field-error[hidden] { display: none; }
+.field-hint { color: var(--text-muted); font-size: 0.7rem; }
+.input.invalid { border-color: var(--bad); box-shadow: 0 0 0 2px rgba(255, 138, 131, 0.25); }
+.req-star { color: var(--bad); }
+
+/* Note under a risk tag when the admin's decision changed it */
+.risk-note { display: block; margin-top: 3px; font-size: 0.62rem; color: var(--text-muted); letter-spacing: 0.02em; }

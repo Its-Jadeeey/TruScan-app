@@ -9,7 +9,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp }          from '../Context/AppContext';
 import { analyzeText }     from '../Service/analyzeService';
-import { addReport }       from '../Service/firestoreService';
+import { validateInput, isFlagged, goToReport, goToEducation } from '../Service/ScanHelpers';
+import SuspiciousCard   from '../Components/SuspiciousCard';
+import PasteboardBanner from '../Components/PasteboardBanner';
+import { usePasteboardSuggestion } from '../Service/pasteboard';
+import { maybeShowScanAlert }      from '../Service/scanFeedback';
 import { getTheme, SIMPLE_SCAN_BUTTONS, RADIUS, SPACING, SHADOW, getRiskColors } from '../Service/theme';
 const SCAN_TYPES = ['message', 'email', 'link'];
 // ─── BIG RESULT BANNER ────────────────────────────────────────────────────────
@@ -41,9 +45,8 @@ export default function SimpleModeScreen({ navigation }) {
   const [inputText, setInputText]       = useState('');
   const [result, setResult]             = useState(null);
   const [loading, setLoading]           = useState(false);
-  const [reported, setReported]         = useState(false);
   // Theme: follows Light Mode even while Simple Mode is on
-  const { lightMode } = useApp();
+  const { lightMode, scanAlerts, autoScanPasteboard } = useApp();
   const COLORS        = getTheme(true, lightMode);
   const SIMPLE_COLORS = COLORS;
   const styles        = useMemo(() => makeStyles(SIMPLE_COLORS), [lightMode]);
@@ -51,50 +54,55 @@ export default function SimpleModeScreen({ navigation }) {
   const selectType = (type) => {
     setSelectedType(type);
     setResult(null);
-    setReported(false);
   };
-  const handleScan = async () => {
-    if (!inputText.trim()) {
-      Alert.alert('Walang Mensahe', 'Mangyaring i-paste ang mensahe bago mag-scan.', [{ text: 'OK' }]);
+  // Editing the input makes the old result stale
+  const onChangeInput = (txt) => {
+    setInputText(txt);
+    if (result) setResult(null);
+  };
+  const { suggestion, dismiss, accept } = usePasteboardSuggestion(autoScanPasteboard, inputText);
+
+  const handleScan = async (textArg, typeArg) => {
+    const text = typeof textArg === 'string' ? textArg : inputText;
+    const type = typeof typeArg === 'string' ? typeArg : selectedType;
+    const check = validateInput(type, text);
+    if (!check.ok) {
+      Alert.alert('Hindi ma-scan', check.fil, [{ text: 'OK' }]);
       return;
     }
     setLoading(true);
     setResult(null);
-    setReported(false);
     try {
-      const data = await analyzeText(inputText);
+      const data = await analyzeText(text);
       setResult(data);
+      maybeShowScanAlert({
+        enabled: scanAlerts, result: data, lang: 'fil',
+        onReport: () => goToReport(navigation, { text: text.trim(), tab: type, result: data }),
+        onLearn:  () => goToEducation(navigation, 'types'),
+      });
     } catch {
       Alert.alert('Error', 'Hindi makapag-analyze. Subukan ulit.');
     } finally {
       setLoading(false);
     }
   };
-  const handleReport = async () => {
-    if (!result || reported) return;
-    const channelMap = { message: 'sms', email: 'email', link: 'link' };
-    const res = await addReport({
-      text: inputText,
-      category: result.prediction,
-      channel: channelMap[selectedType] || 'sms',
-      mode: 'simple',
-      source: 'mobile_app',
-      mlPrediction: {
-        riskLevel: (result.risk_level || 'medium').toLowerCase(),
-        confidence: result.confidence,
-        reasons: result.indicators?.top_features || result.indicators?.keywords || [],
-      },
-    });
-    if (res.success) {
-      setReported(true);
-      Alert.alert('Salamat!', 'Nai-report na ang mensahe.');
-    } else {
-      Alert.alert('Error', 'Hindi ma-save ang report. Subukan ulit.');
-    }
+  const scanSuggestion = () => {
+    const sug = accept();
+    if (!sug) return;
+    setSelectedType(sug.tab);
+    setInputText(sug.text);
+    handleScan(sug.text, sug.tab);
   };
+
+  const reportIt = () => goToReport(navigation, { text: inputText.trim(), tab: selectedType, result });
+  const flagged = isFlagged(result);
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <PasteboardBanner
+          suggestion={suggestion} COLORS={COLORS} fs={BIG} lang="fil"
+          onScan={scanSuggestion} onDismiss={dismiss}
+        />
         {/* Brand */}
         <View style={styles.brandRow}>
           <View style={styles.brandBadge}>
@@ -130,31 +138,33 @@ export default function SimpleModeScreen({ navigation }) {
               placeholder="Pindutin dito at i-paste ang mensahe..."
               placeholderTextColor={SIMPLE_COLORS.hint}
               value={inputText}
-              onChangeText={setInputText}
+              onChangeText={onChangeInput}
               textAlignVertical="top"
             />
             <BigResultBanner result={result} styles={styles} COLORS={COLORS} />
             <TouchableOpacity
               style={[styles.bigScanBtn, loading && styles.bigScanBtnDisabled]}
-              onPress={handleScan}
+              onPress={() => handleScan()}
               disabled={loading}
               activeOpacity={0.85}
             >
               {loading
                 ? <ActivityIndicator color="#FFF" size="large" />
-                : <Text style={[styles.bigScanBtnText, { fontSize: BIG.md }]}>🔍  I-SCAN</Text>
+                : <Text style={[styles.bigScanBtnText, { fontSize: BIG.md }]}>{result ? '🔄  I-SCAN ULIT' : '🔍  I-SCAN'}</Text>
               }
             </TouchableOpacity>
-            {result && (
-              <TouchableOpacity
-                style={[styles.reportBtn, reported && styles.reportBtnDone]}
-                onPress={handleReport}
-                disabled={reported}
-                activeOpacity={0.85}
-              >
-                <Text style={[styles.reportBtnText, { fontSize: BIG.base }]}>
-                  {reported ? '✓ Nai-report na! Salamat.' : '📢  I-report sa Komunidad'}
-                </Text>
+            {flagged && (
+              <SuspiciousCard
+                COLORS={COLORS}
+                fs={BIG}
+                lang="fil"
+                onReport={reportIt}
+                onLearn={() => goToEducation(navigation, 'types')}
+              />
+            )}
+            {result && !flagged && (
+              <TouchableOpacity style={styles.reportBtn} onPress={reportIt} activeOpacity={0.85}>
+                <Text style={[styles.reportBtnText, { fontSize: BIG.sm }]}>Mali ba ito? I-report pa rin</Text>
               </TouchableOpacity>
             )}
           </>

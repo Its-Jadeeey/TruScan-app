@@ -44,3 +44,8 @@ AdminPanel/**/__pycache__/
 
 venv/
 .venv/
+
+# Firebase keys / secrets
+*firebase-adminsdk*.json
+*serviceAccount*.json
+[Ss]ecrets/
