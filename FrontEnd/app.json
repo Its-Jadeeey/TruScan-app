@@ -4,12 +4,21 @@
     "slug": "truscan",
     "version": "1.0.0",
     "orientation": "portrait",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "android": {
       "package": "com.nexusdev.truscan"
     },
     "ios": {
       "bundleIdentifier": "com.nexusdev.truscan"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "73b155eb-83e6-4945-a446-dac5b0db2a5e"
+      }
     }
   }
 }
