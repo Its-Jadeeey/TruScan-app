@@ -195,7 +195,8 @@
   // Backend (ML API) address: same host as this page, port 8001, unless
   // overridden from Settings > System Status.
   // ---------------------------------------------------------------------
-  function defaultApiBase() {
+ function defaultApiBase() {
+    if (window.TS_API_BASE) return window.TS_API_BASE;
     return location.protocol + "//" + location.hostname + ":8001";
   }
   function apiBase() {

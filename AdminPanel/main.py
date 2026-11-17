@@ -1,10 +1,4 @@
-"""
-TruScan Admin Panel — FastAPI backend.
-
-Run with:
-    uvicorn main:app --reload
-Then open http://127.0.0.1:8000/
-"""
+import os
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -21,6 +15,9 @@ app = FastAPI(title="TruScan Admin API")
 
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
+
+API_BASE = os.environ.get("TRUSCAN_API_BASE", "").rstrip("/")
+templates.env.globals["api_base"] = API_BASE
 
 app.include_router(auth.router)
 
