@@ -1,5 +1,3 @@
-# TruScan/BackEnd/models/schema.py
-
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any
 
@@ -18,7 +16,7 @@ class ReportRequest(BaseModel):
     class Config:
         populate_by_name = True
 
-# ── Response Models ─────────────────────────────────────────
+# Response Models 
 
 class ScanResponse(BaseModel):
     prediction:  str        # 'scam' | 'suspicious' | 'safe'
@@ -27,7 +25,7 @@ class ScanResponse(BaseModel):
     risk_level:  str        # 'HIGH' | 'MEDIUM' | 'LOW'
     scam_type:   str        # e.g. 'FINANCIAL_EWALLET'
     indicators:  dict
-    source:      str        # 'ml_model' | 'rule_engine'
+    source:      str        # 'ml_model'
     explanation: str
 
 class ReportResponse(BaseModel):

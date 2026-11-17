@@ -1,6 +1,5 @@
 # TruScan/BackEnd/routes/report.py
 # POST /report — saves a scam report to Firestore
-
 from fastapi import APIRouter, HTTPException
 from models.schema import ReportRequest, ReportResponse
 from database.firebase import get_db
