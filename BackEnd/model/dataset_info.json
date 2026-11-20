@@ -1,11 +1,11 @@
 {
-    "dataset_size": 1758,
-    "train_samples": 1230,
-    "test_samples": 528,
+    "dataset_size": 1785,
+    "train_samples": 1249,
+    "test_samples": 536,
     "test_fraction": 0.3,
     "class_counts": {
-        "scam": 1070,
-        "not scam": 688
+        "scam": 1080,
+        "not scam": 705
     },
-    "trained_at": "2026-11-13T11:27:01.266817+00:00"
+    "trained_at": "2026-11-19T23:33:11.730208+00:00"
 }
