@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp }           from '../Context/AppContext';
 import { analyzeText }      from '../Service/analyzeService';
+import { getScanned, rememberScan } from '../Service/scanCache';
 import { validateInput, isFlagged, goToReport, goToEducation } from '../Service/ScanHelpers';
 import SuspiciousCard    from '../Components/SuspiciousCard';
 import PasteboardBanner  from '../Components/PasteboardBanner';
@@ -136,10 +137,17 @@ export default function ScanScreen({ navigation }) {
       Alert.alert('Cannot scan', check.en);
       return;
     }
+    const cached = getScanned(text);
+    if (cached) {
+      setResult(cached);
+      Alert.alert('Already scanned', 'You already scanned this message. Showing the previous result.');
+      return;
+    }
     setLoading(true);
     setResult(null);
     try {
       const data = await analyzeText(text);
+      rememberScan(text, data);
       setResult(data);
       maybeShowScanAlert({
         enabled: scanAlerts, result: data, lang: 'en',
@@ -166,6 +174,7 @@ export default function ScanScreen({ navigation }) {
     handleScan(sug.text, sug.tab);
   };
 
+  const scanAnother = () => { setInputText(''); setResult(null); };
   const reportIt = () => goToReport(navigation, { text: inputText.trim(), tab: activeTab, result });
   const flagged = isFlagged(result);
   const changeTab = (key) => {
@@ -229,7 +238,7 @@ export default function ScanScreen({ navigation }) {
         {/* Scan Now button */}
         <TouchableOpacity
           style={[styles.scanBtn, loading && styles.scanBtnDisabled]}
-          onPress={() => handleScan()}
+          onPress={result ? scanAnother : () => handleScan()}
           disabled={loading}
           activeOpacity={0.85}
         >
@@ -238,7 +247,7 @@ export default function ScanScreen({ navigation }) {
             : (
               <>
                 <Text style={styles.scanBtnIcon}>{result ? '🔄' : '🛡️'}</Text>
-                <Text style={[styles.scanBtnText, { fontSize: fontSize.base }]}>{result ? 'RESCAN' : 'SCAN NOW'}</Text>
+                <Text style={[styles.scanBtnText, { fontSize: fontSize.base }]}>{result ? 'SCAN ANOTHER' : 'SCAN NOW'}</Text>
               </>
             )
           }

@@ -2,12 +2,15 @@
 # POST /report: the ONLY way the mobile app saves a scam report.
 # The backend validates the input, runs the model itself, and writes to
 # Firestore with the Admin SDK. The app has no direct database access.
+import hashlib
+import re
 import threading
 import time
 from collections import defaultdict, deque
 
 from fastapi import APIRouter, HTTPException, Request
 from google.cloud import firestore
+from google.cloud.firestore_v1.base_query import FieldFilter
 
 from database.firebase import get_db
 from models.schema import ReportRequest, ReportResponse
@@ -60,6 +63,11 @@ def _allow(ip: str) -> bool:
         return True
 
 
+def _text_hash(text: str) -> str:
+    normalized = re.sub(r"\s+", " ", text.strip().lower())
+    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+
+
 @router.post("/", response_model=ReportResponse)
 def report(request: Request, body: ReportRequest):
     if not _allow(_client_ip(request)):
@@ -68,6 +76,19 @@ def report(request: Request, body: ReportRequest):
     text = body.text.strip()
     if len(text) < 5:
         raise HTTPException(status_code=400, detail="Text too short to report.")
+
+    # Reject a message that was already reported (same text, ignoring case/spacing).
+    text_hash = _text_hash(text)
+    try:
+        dup = (
+            get_db().collection("reported_scams")
+            .where(filter=FieldFilter("textHash", "==", text_hash))
+            .limit(1).get()
+        )
+    except Exception:
+        dup = []
+    if dup:
+        raise HTTPException(status_code=409, detail="This message was already reported.")
 
     # The model result is computed here, never trusted from the phone.
     result = predict(text)
@@ -79,6 +100,7 @@ def report(request: Request, body: ReportRequest):
 
     doc = {
         "text": text,
+        "textHash": text_hash,
         "category": prediction,
         "channel": body.channel,
         "mode": body.mode,

@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp }          from '../Context/AppContext';
 import { analyzeText }     from '../Service/analyzeService';
+import { getScanned, rememberScan } from '../Service/scanCache';
 import { validateInput, isFlagged, goToReport, goToEducation } from '../Service/ScanHelpers';
 import SuspiciousCard   from '../Components/SuspiciousCard';
 import PasteboardBanner from '../Components/PasteboardBanner';
@@ -70,10 +71,17 @@ export default function SimpleModeScreen({ navigation }) {
       Alert.alert('Hindi ma-scan', check.fil, [{ text: 'OK' }]);
       return;
     }
+    const cached = getScanned(text);
+    if (cached) {
+      setResult(cached);
+      Alert.alert('Na-scan na', 'Na-scan mo na ito. Ipinapakita ang nakaraang resulta.');
+      return;
+    }
     setLoading(true);
     setResult(null);
     try {
       const data = await analyzeText(text);
+      rememberScan(text, data);
       setResult(data);
       maybeShowScanAlert({
         enabled: scanAlerts, result: data, lang: 'fil',
@@ -94,6 +102,7 @@ export default function SimpleModeScreen({ navigation }) {
     handleScan(sug.text, sug.tab);
   };
 
+  const scanAnother = () => { setInputText(''); setResult(null); };
   const reportIt = () => goToReport(navigation, { text: inputText.trim(), tab: selectedType, result });
   const flagged = isFlagged(result);
   return (
@@ -144,13 +153,13 @@ export default function SimpleModeScreen({ navigation }) {
             <BigResultBanner result={result} styles={styles} COLORS={COLORS} />
             <TouchableOpacity
               style={[styles.bigScanBtn, loading && styles.bigScanBtnDisabled]}
-              onPress={() => handleScan()}
+              onPress={result ? scanAnother : () => handleScan()}
               disabled={loading}
               activeOpacity={0.85}
             >
               {loading
                 ? <ActivityIndicator color="#FFF" size="large" />
-                : <Text style={[styles.bigScanBtnText, { fontSize: BIG.md }]}>{result ? '🔄  I-SCAN ULIT' : '🔍  I-SCAN'}</Text>
+                : <Text style={[styles.bigScanBtnText, { fontSize: BIG.md }]}>{result ? '➕  BAGONG SCAN' : '🔍  I-SCAN'}</Text>
               }
             </TouchableOpacity>
             {flagged && (

@@ -150,6 +150,8 @@ export default function ReportScreen({ navigation, route }) {
     setRemark('');
     setPrefill(null);
     setErrors({});
+  } else if (res.duplicate) {
+    Alert.alert('Already reported', 'This message has already been reported. Thank you!');
   } else if (res.rateLimited) {
     Alert.alert('Too many reports', 'You have sent several reports recently. Please try again in a few minutes.');
   } else {
