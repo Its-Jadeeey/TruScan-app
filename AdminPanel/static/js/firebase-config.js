@@ -1,7 +1,3 @@
-// Firebase initialization for the browser (ES module).
-// Mirrors services/firebase.js, but imports from the Firebase CDN instead of
-// the npm 'firebase' package, since these pages are plain static files with
-// no bundler in front of them.
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";

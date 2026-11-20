@@ -376,7 +376,7 @@ async function loadModelPanel() {
     panel.innerHTML = `
       <div class="model-offline">
         <p><strong>${escapeHtml(t("Offline"))}</strong> — ${escapeHtml(window.TS.apiBase())}</p>
-        <p class="muted-note">Start the backend (<code>uvicorn main:app --host 0.0.0.0 --port 8001</code>) and make sure <code>routes/model_info.py</code> is installed.</p>
+                <p class="muted-note">The backend may be waking up (free hosting). Wait about a minute, then press Refresh.</p>
         <button type="button" class="btn btn-ghost btn-sm" id="retryModel">${escapeHtml(t("Refresh"))}</button>
       </div>`;
     $("retryModel").addEventListener("click", loadModelPanel);
