@@ -1,22 +1,25 @@
+from typing import Literal, Optional
 from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
+
 
 class ScanRequest(BaseModel):
     text:    str
     user_id: Optional[str] = "anonymous"
 
+
 class ReportRequest(BaseModel):
-    text:          str
-    category:      str
-    channel:       Optional[str] = "sms"
-    mode:          Optional[str] = "normal"
-    source:        Optional[str] = "mobile_app"
-    ml_prediction: Optional[Dict[str, Any]] = Field(default=None, alias="mlPrediction")
+    text:         str = Field(min_length=5, max_length=5000)
+    channel:      Literal["sms", "email", "link"] = "sms"
+    type:         Optional[Literal["sms", "email", "url"]] = None
+    scamCategory: Optional[Literal[
+        "financial", "government", "delivery", "job", "lottery", "shopping",
+        "investment", "phishing", "smishing", "romance", "impersonation",
+        "loan", "travel", "simswap", "charity",
+    ]] = None
+    remark:       str = Field(default="", max_length=500)
+    mode:         Literal["normal", "simple"] = "normal"
+    source:       Literal["mobile_app", "scan_recommendation", "report_form"] = "mobile_app"
 
-    class Config:
-        populate_by_name = True
-
-# Response Models 
 
 class ScanResponse(BaseModel):
     prediction:  str        # 'scam' | 'suspicious' | 'safe'
@@ -27,6 +30,7 @@ class ScanResponse(BaseModel):
     indicators:  dict
     source:      str        # 'ml_model'
     explanation: str
+
 
 class ReportResponse(BaseModel):
     success: bool

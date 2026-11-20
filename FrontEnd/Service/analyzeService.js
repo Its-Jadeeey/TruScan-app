@@ -11,7 +11,7 @@ const API_BASE_URL =
   process.env.EXPO_PUBLIC_API_URL ||
   (__DEV__ && devHost ? `http://${devHost}:8001` : LIVE_API_URL);
 
-const client = axios.create({
+export const client = axios.create({
   baseURL: API_BASE_URL,
   // The free Render backend can take ~50 s to wake up after being idle.
   timeout: 60000,

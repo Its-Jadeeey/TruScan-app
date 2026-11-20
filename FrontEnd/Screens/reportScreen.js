@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../Components/ScreenHeader';
 import Chevron from '../Components/Chevron';
 import { useApp }    from '../Context/AppContext';
-import { addReport } from '../Service/firestoreService';
+import { addReport } from '../Service/reportService';
 import { getTheme, RADIUS, SPACING, SHADOW } from '../Service/theme';
 const MAX_CHARS = 5000;
 const TYPES = [
@@ -130,34 +130,32 @@ export default function ReportScreen({ navigation, route }) {
     return Object.keys(e).length === 0;
   };
   const handleSubmit = async () => {
-    if (!validate()) return;
-    setSubmitting(true);
-    const catLabel = CATEGORIES.find(c => c.key === category)?.label || category;
-    const res = await addReport({
-      text,
-      category: prefill?.prediction || 'scam',
-      channel: { sms: 'sms', email: 'email', url: 'link' }[type] || 'sms',
-      type,
-      scamCategory: category,
-      scamCategoryLabel: catLabel,
-      remark,
-      mode: simpleMode ? 'simple' : 'normal',
-      source: prefill ? 'scan_recommendation' : 'report_form',
-      mlPrediction: prefill?.ml || null,
-    });
-    setSubmitting(false);
-    if (res.success) {
-      toast.show();
-      setType(null);
-      setCategory(null);
-      setText('');
-      setRemark('');
-      setPrefill(null);
-      setErrors({});
-    } else {
-      Alert.alert('Error', 'Could not submit the report. Please try again.');
-    }
-  };
+  if (!validate()) return;
+  setSubmitting(true);
+  const res = await addReport({
+    text,
+    channel: { sms: 'sms', email: 'email', url: 'link' }[type] || 'sms',
+    type,
+    scamCategory: category,
+    remark,
+    mode: simpleMode ? 'simple' : 'normal',
+    source: prefill ? 'scan_recommendation' : 'report_form',
+  });
+  setSubmitting(false);
+  if (res.success) {
+    toast.show();
+    setType(null);
+    setCategory(null);
+    setText('');
+    setRemark('');
+    setPrefill(null);
+    setErrors({});
+  } else if (res.rateLimited) {
+    Alert.alert('Too many reports', 'You have sent several reports recently. Please try again in a few minutes.');
+  } else {
+    Alert.alert('Error', 'Could not submit the report. Please try again.');
+  }
+};
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       {/* Header */}
