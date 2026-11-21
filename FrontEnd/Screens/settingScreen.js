@@ -14,70 +14,26 @@ import ScreenHeader from '../Components/ScreenHeader';
 import Chevron from '../Components/Chevron';
 import { useApp } from '../Context/AppContext';
 import { getTheme, RADIUS, SPACING, SHADOW } from '../Service/theme';
+import { useLang } from '../Service/i18n';
+import { SETTINGS_CONTENT } from '../Service/settingsContent';
 
 const LANGUAGES = [
   { code: 'en', label: 'English' },
   { code: 'tl', label: 'Tagalog' },
 ];
 
-const FAQS = [
-  {
-    q: 'How does TruScan detect scams?',
-    a: 'TruScan combines a machine learning model with keyword pattern matching to analyze messages for common Filipino scam indicators — urgency phrases, OTP requests, suspicious short links, and more.',
-  },
-  {
-    q: 'Is my scanned message stored or shared?',
-    a: 'No. A message you scan is only sent to the analysis engine to get a result. It is never saved anywhere unless you choose to submit it as a report to the community database.',
-  },
-  {
-    q: 'What should I do if I get a SCAM result?',
-    a: "Don't click any links, don't share personal or financial information, and consider blocking the sender. You can also report it from the Reports tab to help protect others.",
-  },
-  {
-    q: 'Can TruScan scan images or screenshots?',
-    a: 'Not yet — TruScan currently analyzes pasted text only (SMS content, email content, or a link). Screenshot scanning may be added in a future update.',
-  },
-  {
-    q: 'Why did a safe-looking message get flagged?',
-    a: 'The detection engine errs on the side of caution, so borderline messages may be marked suspicious even if they turn out to be fine. If you believe a result is wrong, you can report it for review.',
-  },
-];
-
-const PRIVACY_TEXT = `TruScan does not collect personally identifiable information.
-
-All scam reports submitted to the community database are anonymized before saving — phone numbers, emails, and account numbers found in reported messages are automatically stripped out.
-
-Message text you scan (but don't report) is sent only to the analysis engine to produce a result and is not stored.
-
-We do not sell or share any data with third parties. Community report data is used solely to improve scam detection accuracy and to warn other users about active scam patterns.`;
-
-const TERMS_TEXT = `By using TruScan, you agree to use the app responsibly and to submit reports in good faith to help protect the community.
-
-TruScan provides scam-likelihood analysis as a helpful guide, not a guarantee. Always use your own judgment before acting on a message, and verify anything financial through official channels.
-
-Submitting false or malicious reports, or attempting to disrupt the service, may result in restricted access.
-
-TruScan is provided "as is" without warranty of any kind. The developers are not liable for losses resulting from scams that were not detected, or from decisions made based on app results.`;
-
-const ABOUT_TEXT = `TruScan v1.1.0
-
-A Mobile Application Intrusion Detection System for Scam and Phishing in the Filipino Context.
-
-Developed as a thesis project. Uses a machine learning model combined with keyword analysis to detect Taglish scam patterns across SMS, email, and links.
-
-Tech stack: React Native, FastAPI + Scikit-learn, Firebase Firestore.`;
-
 // ─── GENERIC INFO MODAL (Privacy / Terms / About) ────────────────────────────
 
 function InfoModal({ visible, onClose, title, text, COLORS, fontSize }) {
   const styles = makeModalStyles(COLORS);
+  const { t: tr, lang } = useLang();
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <SafeAreaView style={styles.modalSafe}>
         <View style={styles.modalHeader}>
           <Text style={[styles.modalTitle, { fontSize: fontSize.md }]}>{title}</Text>
           <TouchableOpacity onPress={onClose} hitSlop={10}>
-            <Text style={[styles.modalClose, { fontSize: fontSize.base }]}>Close</Text>
+            <Text style={[styles.modalClose, { fontSize: fontSize.base }]}>{tr('set.close')}</Text>
           </TouchableOpacity>
         </View>
         <ScrollView contentContainerStyle={styles.modalBody}>
@@ -92,20 +48,21 @@ function InfoModal({ visible, onClose, title, text, COLORS, fontSize }) {
 
 function FaqModal({ visible, onClose, COLORS, fontSize }) {
   const styles = makeModalStyles(COLORS);
+  const { t: tr, lang } = useLang();
   const [openIndex, setOpenIndex] = useState(null);
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <SafeAreaView style={styles.modalSafe}>
         <View style={styles.modalHeader}>
-          <Text style={[styles.modalTitle, { fontSize: fontSize.md }]}>Help Center</Text>
+          <Text style={[styles.modalTitle, { fontSize: fontSize.md }]}>{tr('set.help')}</Text>
           <TouchableOpacity onPress={onClose} hitSlop={10}>
-            <Text style={[styles.modalClose, { fontSize: fontSize.base }]}>Close</Text>
+            <Text style={[styles.modalClose, { fontSize: fontSize.base }]}>{tr('set.close')}</Text>
           </TouchableOpacity>
         </View>
         <ScrollView contentContainerStyle={styles.modalBody}>
-          <Text style={[styles.faqIntro, { fontSize: fontSize.xs }]}>FREQUENTLY ASKED QUESTIONS</Text>
-          {FAQS.map((item, i) => {
+          <Text style={[styles.faqIntro, { fontSize: fontSize.xs }]}>{tr('set.faqTitle')}</Text>
+          {SETTINGS_CONTENT[lang].faqs.map((item, i) => {
             const open = openIndex === i;
             return (
               <TouchableOpacity
@@ -123,7 +80,7 @@ function FaqModal({ visible, onClose, COLORS, fontSize }) {
             );
           })}
           <Text style={[styles.faqFooter, { fontSize: fontSize.xs }]}>
-            Still need help? Email truscan@email.com and we'll get back to you.
+            {tr('set.faqFooter')}
           </Text>
         </ScrollView>
       </SafeAreaView>
@@ -135,11 +92,12 @@ function FaqModal({ visible, onClose, COLORS, fontSize }) {
 
 function LanguageModal({ visible, onClose, value, onSelect, COLORS, fontSize }) {
   const styles = makeModalStyles(COLORS);
+  const { t: tr, lang } = useLang();
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <TouchableOpacity style={styles.sheetOverlay} activeOpacity={1} onPress={onClose}>
         <View style={styles.sheet}>
-          <Text style={[styles.sheetTitle, { fontSize: fontSize.sm }]}>LANGUAGE</Text>
+          <Text style={[styles.sheetTitle, { fontSize: fontSize.sm }]}>{tr('set.langTitle')}</Text>
           <FlatList
             data={LANGUAGES}
             keyExtractor={l => l.code}
@@ -195,6 +153,7 @@ export default function SettingsScreen({ navigation }) {
     scanAlerts, toggleScanAlerts,
     autoScanPasteboard, toggleAutoScanPasteboard,
   } = useApp();
+  const { t: tr, lang } = useLang();
 
   const COLORS = getTheme(simpleMode, lightMode);
   const styles = makeStyles(COLORS);
@@ -210,22 +169,22 @@ export default function SettingsScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       {/* Header */}
-      <ScreenHeader title="SETTINGS" navigation={navigation} COLORS={COLORS} fontSize={fontSize} />
+      <ScreenHeader title={tr('set.header')} navigation={navigation} COLORS={COLORS} fontSize={fontSize} />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
 
         {/* ── APP PREFERENCES ── */}
-        <Text style={[styles.sectionHeader, { fontSize: fontSize.xs }]}>APP PREFERENCES</Text>
+        <Text style={[styles.sectionHeader, { fontSize: fontSize.xs }]}>{tr('set.prefs')}</Text>
         <View style={styles.card}>
           <SettingRow
-            icon="🛡️" label={simpleMode ? 'Normal Mode' : 'Simple Mode'}
-            sub={simpleMode ? 'Advance view for everyone...' : 'Easy view for everyone...'}
+            icon="🛡️" label={simpleMode ? tr('set.normalMode') : tr('set.simpleMode')}
+            sub={simpleMode ? tr('set.normalSub') : tr('set.simpleSub')}
             fontSize={fontSize} showBorder styles={styles}
             onPress={() => { toggleSimpleMode(); navigation?.navigate?.('Home'); }}
             right={<Chevron color={COLORS.muted} />}
           />
           <SettingRow
-            icon="🌓" label="Light Mode" fontSize={fontSize} showBorder styles={styles}
+            icon="🌓" label={tr('set.light')} fontSize={fontSize} showBorder styles={styles}
             right={
               <Switch
                 value={lightMode}
@@ -237,18 +196,18 @@ export default function SettingsScreen({ navigation }) {
             }
           />
           <SettingRow
-            icon="🌐" label="Language" sub={currentLangLabel} fontSize={fontSize} styles={styles}
+            icon="🌐" label={tr('set.language')} sub={currentLangLabel} fontSize={fontSize} styles={styles}
             onPress={() => setShowLanguage(true)}
             right={<Chevron color={COLORS.muted} />}
           />
         </View>
 
         {/* ── NOTIFICATION SETTINGS ── */}
-        <Text style={[styles.sectionHeader, { fontSize: fontSize.xs }]}>NOTIFICATION SETTINGS</Text>
+        <Text style={[styles.sectionHeader, { fontSize: fontSize.xs }]}>{tr('set.notif')}</Text>
         <View style={styles.card}>
           <SettingRow
-            icon="🔔" label="Scan Alerts"
-            sub={scanAlerts ? 'Pop-up warning when a scan finds a scam' : 'Alerts muted'}
+            icon="🔔" label={tr('set.alerts')}
+            sub={scanAlerts ? tr('set.alertsOn') : tr('set.alertsOff')}
             fontSize={fontSize} styles={styles}
             right={
               <Switch
@@ -263,11 +222,11 @@ export default function SettingsScreen({ navigation }) {
         </View>
 
         {/* ── PRIVACY & SECURITY ── */}
-        <Text style={[styles.sectionHeader, { fontSize: fontSize.xs }]}>PRIVACY & SECURITY</Text>
+        <Text style={[styles.sectionHeader, { fontSize: fontSize.xs }]}>{tr('set.privacySec')}</Text>
         <View style={styles.card}>
           <SettingRow
-            icon="📋" label="Auto-scan Pasteboard"
-            sub={autoScanPasteboard ? 'Offers to scan text you just copied' : 'Off'}
+            icon="📋" label={tr('set.paste')}
+            sub={autoScanPasteboard ? tr('set.pasteOn') : tr('set.pasteOff')}
             fontSize={fontSize} styles={styles}
             right={
               <Switch
@@ -282,29 +241,29 @@ export default function SettingsScreen({ navigation }) {
         </View>
 
         {/* ── SUPPORT ── */}
-        <Text style={[styles.sectionHeader, { fontSize: fontSize.xs }]}>SUPPORT</Text>
+        <Text style={[styles.sectionHeader, { fontSize: fontSize.xs }]}>{tr('set.support')}</Text>
         <View style={styles.card}>
           <SettingRow
-            icon="🎧" label="Help Center" sub="FAQs and how-tos" fontSize={fontSize} styles={styles}
+            icon="🎧" label={tr('set.help')} sub={tr('set.helpSub')} fontSize={fontSize} styles={styles}
             onPress={() => setShowHelp(true)}
             right={<Chevron color={COLORS.muted} />}
           />
           <SettingRow
-            icon="🔒" label="Privacy Policy" fontSize={fontSize} styles={styles}
+            icon="🔒" label={tr('set.privacy')} fontSize={fontSize} styles={styles}
             onPress={() => setShowPrivacy(true)}
             right={<Chevron color={COLORS.muted} />}
           />
           <SettingRow
-            icon="📄" label="Terms of Service" fontSize={fontSize} styles={styles}
+            icon="📄" label={tr('set.terms')} fontSize={fontSize} styles={styles}
             onPress={() => setShowTerms(true)}
             right={<Chevron color={COLORS.muted} />}
           />
         </View>
 
         {/* ── ABOUT ── */}
-        <Text style={[styles.sectionHeader, { fontSize: fontSize.xs }]}>ABOUT</Text>
+        <Text style={[styles.sectionHeader, { fontSize: fontSize.xs }]}>{tr('set.about')}</Text>
         <TouchableOpacity style={styles.aboutBtn} onPress={() => setShowAbout(true)} activeOpacity={0.8}>
-          <Text style={[styles.aboutBtnText, { fontSize: fontSize.sm }]}>ABOUT TRUSCAN (v1.1)</Text>
+          <Text style={[styles.aboutBtnText, { fontSize: fontSize.sm }]}>{tr('set.aboutBtn')}</Text>
         </TouchableOpacity>
 
       </ScrollView>
@@ -317,15 +276,15 @@ export default function SettingsScreen({ navigation }) {
       <FaqModal visible={showHelp} onClose={() => setShowHelp(false)} COLORS={COLORS} fontSize={fontSize} />
       <InfoModal
         visible={showPrivacy} onClose={() => setShowPrivacy(false)}
-        title="Privacy Policy" text={PRIVACY_TEXT} COLORS={COLORS} fontSize={fontSize}
+        title={tr('set.privacy')} text={SETTINGS_CONTENT[lang].privacy} COLORS={COLORS} fontSize={fontSize}
       />
       <InfoModal
         visible={showTerms} onClose={() => setShowTerms(false)}
-        title="Terms of Service" text={TERMS_TEXT} COLORS={COLORS} fontSize={fontSize}
+        title={tr('set.terms')} text={SETTINGS_CONTENT[lang].terms} COLORS={COLORS} fontSize={fontSize}
       />
       <InfoModal
         visible={showAbout} onClose={() => setShowAbout(false)}
-        title="About TruScan" text={ABOUT_TEXT} COLORS={COLORS} fontSize={fontSize}
+        title={tr('set.aboutTitle')} text={SETTINGS_CONTENT[lang].about} COLORS={COLORS} fontSize={fontSize}
       />
     </SafeAreaView>
   );

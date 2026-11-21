@@ -21,24 +21,24 @@ export function looksLikeEmail(text) {
 export function validateInput(kind, text) {
   const t = (text || '').trim();
   if (!t) {
-    return { ok: false, en: 'Paste something to scan first.', fil: 'I-paste muna ang gusto mong i-scan.' };
+    return { ok: false, en: 'Paste something to scan first.', fil: 'Maglagay muna ng susuriin.' };
   }
   if (kind === 'link' && !looksLikeLink(t)) {
     return {
       ok: false,
       en: 'That does not look like a link. Paste only the URL (for example https://example.com or bit.ly/abc123). For a text, use the Message tab.',
-      fil: 'Hindi ito mukhang link. I-paste lang ang URL (hal. https://example.com o bit.ly/abc123). Para sa text, gamitin ang Message.',
+      fil: 'Hindi ito mukhang link. Ilagay lamang ang URL (hal. https://example.com o bit.ly/abc123). Para sa teksto, gamitin ang tab na Mensahe.',
     };
   }
   if (kind === 'email' && !looksLikeEmail(t)) {
     return {
       ok: false,
       en: 'That does not look like an email. Include the sender or recipient address (it must contain "@", like name@example.com).',
-      fil: 'Hindi ito mukhang email. Isama ang email address ng nagpadala (dapat may "@", hal. name@example.com).',
+      fil: 'Hindi ito mukhang email. Isama ang email address ng nagpadala o tatanggap (dapat may "@", hal. name@example.com).',
     };
   }
   if (t.length < 5) {
-    return { ok: false, en: 'Text is too short to analyze.', fil: 'Masyadong maikli para ma-analyze.' };
+    return { ok: false, en: 'Text is too short to analyze.', fil: 'Masyadong maikli para masuri.' };
   }
   return { ok: true };
 }

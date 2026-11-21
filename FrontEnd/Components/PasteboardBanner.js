@@ -7,7 +7,7 @@ import { RADIUS, SPACING } from '../Service/theme';
 const COPY = {
   en:  { title: 'Copied text detected', scan: 'Scan it', dismiss: 'Dismiss',
          tab: { message: 'Message', email: 'Email', link: 'Link' } },
-  fil: { title: 'May nakopyang teksto', scan: 'I-scan', dismiss: 'Isara',
+  fil: { title: 'May nakopyang teksto', scan: 'Suriin', dismiss: 'Isara',
          tab: { message: 'Mensahe', email: 'Email', link: 'Link' } },
 };
 

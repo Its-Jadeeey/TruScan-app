@@ -10,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp }           from '../Context/AppContext';
 import { analyzeText }      from '../Service/analyzeService';
 import { getScanned, rememberScan } from '../Service/scanCache';
+import { useLang } from '../Service/i18n';
 import { validateInput, isFlagged, goToReport, goToEducation } from '../Service/ScanHelpers';
 import SuspiciousCard    from '../Components/SuspiciousCard';
 import PasteboardBanner  from '../Components/PasteboardBanner';
@@ -36,6 +37,7 @@ const STEPS = [
 ];
 // ─── RESULT BANNER ─────────────────────────────────────────────────────────────
 function RiskBanner({ result, fontSize, COLORS, styles }) {
+  const { t: tr, ind } = useLang();
   if (!result) return null;
   const kind = ['scam', 'suspicious'].includes(result.prediction) ? result.prediction : 'safe';
   const isScam = kind !== 'safe';
@@ -50,13 +52,13 @@ function RiskBanner({ result, fontSize, COLORS, styles }) {
         </View>
         <View style={{ flex: 1 }}>
           <Text style={[styles.riskLabel, { color: risk.text, fontSize: fontSize.xs }]}>
-            Analysis Result
+            {tr('res.title')}
           </Text>
           <Text style={[styles.riskVerdict, { color: risk.text, fontSize: fontSize.lg }]}>
-            {kind === 'scam' ? 'SCAM DETECTED' : kind === 'suspicious' ? 'SUSPICIOUS' : 'LOOKS SAFE'}
+            {tr(kind === 'scam' ? 'res.scam' : kind === 'suspicious' ? 'res.suspicious' : 'res.safe')}
           </Text>
           <Text style={[styles.riskSub, { fontSize: fontSize.xs }]}>
-            Confidence: {result.confidence}% • ML Model (SVM)
+            {tr('res.confidence', { n: result.confidence })}
           </Text>
         </View>
       </View>
@@ -64,19 +66,19 @@ function RiskBanner({ result, fontSize, COLORS, styles }) {
         <View style={[styles.confFill, { width: `${result.confidence}%`, backgroundColor: risk.text }]} />
       </View>
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { fontSize: fontSize.xs }]}>Detected Indicators</Text>
+        <Text style={[styles.sectionTitle, { fontSize: fontSize.xs }]}>{tr('res.indicators')}</Text>
         {result.indicators?.top_features?.length > 0 ? (
           result.indicators.top_features.map((label, i) => (
-            <IndicatorRow key={`f${i}`} text={label} dot={isScam ? 'red' : 'green'} COLORS={COLORS} styles={styles} />
+            <IndicatorRow key={`f${i}`} text={ind(label)} dot={isScam ? 'red' : 'green'} COLORS={COLORS} styles={styles} />
           ))
         ) : (
-          <IndicatorRow text={isScam ? "Suspicious scam patterns detected" : "Walang suspicious na indicators"} dot={isScam ? 'red' : 'green'} COLORS={COLORS} styles={styles} />
+          <IndicatorRow text={isScam ? tr('res.noIndScam') : tr('res.noIndSafe')} dot={isScam ? 'red' : 'green'} COLORS={COLORS} styles={styles} />
         )}
       </View>
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { fontSize: fontSize.xs }]}>Bakit {kind === 'scam' ? 'Scam' : kind === 'suspicious' ? 'Kahina-hinala' : 'Ligtas'} Ito?</Text>
+        <Text style={[styles.sectionTitle, { fontSize: fontSize.xs }]}>{tr(kind === 'scam' ? 'res.whyScam' : kind === 'suspicious' ? 'res.whySuspicious' : 'res.whySafe')}</Text>
         <View style={styles.whyBox}>
-          <Text style={[styles.whyText, { fontSize: fontSize.sm }]}>{result.explanation}</Text>
+          <Text style={[styles.whyText, { fontSize: fontSize.sm }]}>{tr(kind === 'scam' ? 'res.explainScam' : kind === 'suspicious' ? 'res.explainSuspicious' : 'res.explainSafe', { n: result.risk_score ?? result.confidence })}</Text>
         </View>
       </View>
     </View>
@@ -101,24 +103,10 @@ function IndicatorRow({ text, dot, tag, COLORS, styles }) {
     </View>
   );
 }
-function buildWhyText(result) {
-  if (result.source === 'ml_model' && result.explanation) {
-    return result.explanation;
-  }
-  if (result.prediction === 'safe') {
-    return 'Walang suspicious na pattern ang nakita. Ang mensaheng ito ay mukhang lehitimo. Palaging mag-ingat — kapag may duda, makipag-ugnayan sa opisyal na channel.';
-  }
-  if (result.indicators?.domains?.length > 0) {
-    return `Phishing URL detected: Ang "${result.indicators.domains[0]}" ay hindi official na domain. Huwag i-click ang link na ito.`;
-  }
-  if (result.indicators?.urgency?.length > 0) {
-    return `Urgency pressure tactic: Ang salitang "${result.indicators.urgency[0]}" ay dinisenyo para mapilitan kang kumilos nang walang pag-iisip — classic manipulation technique ito.`;
-  }
-  return 'Multiple suspicious keywords ang natukoy. Huwag ibahagi ang iyong personal o financial na impormasyon sa sinumang nagpadala ng mensaheng ito.';
-}
 // ─── MAIN SCREEN ──────────────────────────────────────────────────────────────
 export default function ScanScreen({ navigation }) {
   const { fontSize, simpleMode, lightMode, scanAlerts, autoScanPasteboard } = useApp();
+  const { t: tr, copyLang } = useLang();
   const COLORS = getTheme(simpleMode, lightMode);
   const styles = makeStyles(COLORS);
   const [activeTab, setActiveTab]   = useState('message');
@@ -134,13 +122,13 @@ export default function ScanScreen({ navigation }) {
     const tab  = typeof tabArg  === 'string' ? tabArg  : activeTab;
     const check = validateInput(tab, text);
     if (!check.ok) {
-      Alert.alert('Cannot scan', check.en);
+      Alert.alert(tr('scan.cannot'), check[copyLang]);
       return;
     }
     const cached = getScanned(text);
     if (cached) {
       setResult(cached);
-      Alert.alert('Already scanned', 'You already scanned this message. Showing the previous result.');
+      Alert.alert(tr('scan.alreadyTitle'), tr('scan.alreadyBody'));
       return;
     }
     setLoading(true);
@@ -150,13 +138,13 @@ export default function ScanScreen({ navigation }) {
       rememberScan(text, data);
       setResult(data);
       maybeShowScanAlert({
-        enabled: scanAlerts, result: data, lang: 'en',
+        enabled: scanAlerts, result: data, lang: copyLang,
         onReport: () => goToReport(navigation, { text: text.trim(), tab, result: data }),
         onLearn:  () => goToEducation(navigation, 'types'),
       });
       setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 300);
     } catch (e) {
-      Alert.alert('Error', 'Hindi makapag-analyze. Subukan ulit.');
+      Alert.alert(tr('scan.errorTitle'), tr('scan.errorBody'));
     } finally {
       setLoading(false);
     }
@@ -190,15 +178,15 @@ export default function ScanScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
       >
         <PasteboardBanner
-          suggestion={suggestion} COLORS={COLORS} fs={fontSize} lang="en"
+          suggestion={suggestion} COLORS={COLORS} fs={fontSize} lang={copyLang}
           onScan={scanSuggestion} onDismiss={dismiss}
         />
         {/* Headline */}
         <Text style={[styles.headline, { fontSize: fontSize.xxl }]}>
-          Detect Scams.{'\n'}Protect Yourself.
+          {tr('scan.headline')}
         </Text>
         <Text style={[styles.subhead, { fontSize: fontSize.sm }]}>
-          Paste any suspicious message, email or link and let TruScan analyze it for you.
+          {tr('scan.subhead')}
         </Text>
         {/* Input type tabs */}
         <View style={styles.tabRow}>
@@ -213,7 +201,7 @@ export default function ScanScreen({ navigation }) {
               >
                 <Text style={styles.tabIcon}>{t.icon}</Text>
                 <Text style={[styles.tabLabel, { color: active ? COLORS.primary : COLORS.muted }]}>
-                  {t.label}
+                  {tr('tab.' + t.key)}
                 </Text>
               </TouchableOpacity>
             );
@@ -225,7 +213,7 @@ export default function ScanScreen({ navigation }) {
             style={[styles.textInput, { fontSize: fontSize.base }]}
             multiline
             maxLength={MAX_CHARS}
-            placeholder={PLACEHOLDERS[activeTab]}
+            placeholder={tr('ph.' + activeTab)}
             placeholderTextColor={COLORS.hint}
             value={inputText}
             onChangeText={onChangeInput}
@@ -247,7 +235,7 @@ export default function ScanScreen({ navigation }) {
             : (
               <>
                 <Text style={styles.scanBtnIcon}>{result ? '🔄' : '🛡️'}</Text>
-                <Text style={[styles.scanBtnText, { fontSize: fontSize.base }]}>{result ? 'SCAN ANOTHER' : 'SCAN NOW'}</Text>
+                <Text style={[styles.scanBtnText, { fontSize: fontSize.base }]}>{result ? tr('scan.another') : tr('scan.now')}</Text>
               </>
             )
           }
@@ -258,7 +246,7 @@ export default function ScanScreen({ navigation }) {
           <SuspiciousCard
             COLORS={COLORS}
             fs={fontSize}
-            lang="en"
+            lang={copyLang}
             onReport={reportIt}
             onLearn={() => goToEducation(navigation, 'types')}
           />
@@ -266,20 +254,20 @@ export default function ScanScreen({ navigation }) {
         {result && !flagged && (
           <TouchableOpacity style={styles.reportBtn} onPress={reportIt} activeOpacity={0.8}>
             <Text style={[styles.reportBtnText, { fontSize: fontSize.sm }]}>
-              Think this is wrong? Report it anyway
+              {tr('scan.wrong')}
             </Text>
           </TouchableOpacity>
         )}
         {/* How it works */}
-        <Text style={[styles.howTitle, { fontSize: fontSize.sm }]}>How it works</Text>
+        <Text style={[styles.howTitle, { fontSize: fontSize.sm }]}>{tr('scan.how')}</Text>
         <View style={styles.stepsRow}>
           {STEPS.map(s => (
             <View key={s.num} style={styles.stepCard}>
               <View style={styles.stepIconWrap}>
                 <Text style={styles.stepIcon}>{s.icon}</Text>
               </View>
-              <Text style={[styles.stepTitle, { fontSize: fontSize.xs }]}>{s.num}. {s.title}</Text>
-              <Text style={[styles.stepDesc, { fontSize: 10 }]}>{s.desc}</Text>
+              <Text style={[styles.stepTitle, { fontSize: fontSize.xs }]}>{s.num}. {tr('scan.step' + s.num)}</Text>
+              <Text style={[styles.stepDesc, { fontSize: 10 }]}>{tr('scan.step' + s.num + 'd')}</Text>
             </View>
           ))}
         </View>

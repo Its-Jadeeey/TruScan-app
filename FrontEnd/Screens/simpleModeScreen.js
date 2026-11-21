@@ -10,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp }          from '../Context/AppContext';
 import { analyzeText }     from '../Service/analyzeService';
 import { getScanned, rememberScan } from '../Service/scanCache';
+import { useLang } from '../Service/i18n';
 import { validateInput, isFlagged, goToReport, goToEducation } from '../Service/ScanHelpers';
 import SuspiciousCard   from '../Components/SuspiciousCard';
 import PasteboardBanner from '../Components/PasteboardBanner';
@@ -19,22 +20,25 @@ import { getTheme, SIMPLE_SCAN_BUTTONS, RADIUS, SPACING, SHADOW, getRiskColors }
 const SCAN_TYPES = ['message', 'email', 'link'];
 // ─── BIG RESULT BANNER ────────────────────────────────────────────────────────
 function BigResultBanner({ result, styles, COLORS }) {
+  const { t: tr } = useLang();
   if (!result) return null;
   const risk = getRiskColors(result.prediction, COLORS);
-  const config = {
-    scam:       { emoji: '⚠️', headline: 'SCAM ITO!',    detail: 'Huwag tumugon. Huwag mag-click ng link. Huwag magpadala ng pera.' },
-    phishing:   { emoji: '⚠️', headline: 'PHISHING ITO!', detail: 'Huwag tumugon. Huwag mag-click ng link. Huwag magpadala ng pera.' },
-    smishing:   { emoji: '⚠️', headline: 'SMISHING ITO!', detail: 'Huwag tumugon. Huwag mag-click ng link. Huwag magpadala ng pera.' },
-    suspicious: { emoji: '⚡', headline: 'MAG-INGAT!',    detail: 'Ang mensaheng ito ay kahina-hinala. Huwag magbigay ng impormasyon.' },
-    safe:       { emoji: '✅', headline: 'LIGTAS ITO',    detail: 'Ang mensaheng ito ay mukhang lehitimo. Palaging mag-ingat pa rin.' },
-  }[result.prediction] || { emoji: '❓', headline: 'HINDI SIGURADO', detail: 'Hindi natukoy ang klase ng mensaheng ito.' };
+  const rows = {
+    scam:       ['⚠️', 'simple.scamHead',       'simple.scamDetail'],
+    phishing:   ['⚠️', 'simple.phishingHead',   'simple.scamDetail'],
+    smishing:   ['⚠️', 'simple.smishingHead',   'simple.scamDetail'],
+    suspicious: ['⚡', 'simple.suspiciousHead', 'simple.suspiciousDetail'],
+    safe:       ['✅', 'simple.safeHead',       'simple.safeDetail'],
+  };
+  const row = rows[result.prediction] || ['❓', 'simple.unsureHead', 'simple.unsureDetail'];
+  const config = { emoji: row[0], headline: tr(row[1]), detail: tr(row[2]) };
   return (
     <View style={[styles.bigBanner, { backgroundColor: risk.bg, borderColor: risk.border }]}>
       <Text style={styles.bigEmoji}>{config.emoji}</Text>
       <Text style={[styles.bigHeadline, { color: risk.text }]}>{config.headline}</Text>
       <Text style={[styles.bigDetail, { color: risk.text }]}>{config.detail}</Text>
       <View style={styles.confRow}>
-        <Text style={[styles.confLabel, { color: risk.text }]}>Katiyakan:</Text>
+        <Text style={[styles.confLabel, { color: risk.text }]}>{tr('simple.confidence')}</Text>
         <Text style={[styles.confValue, { color: risk.text }]}>{result.confidence}%</Text>
       </View>
     </View>
@@ -48,6 +52,7 @@ export default function SimpleModeScreen({ navigation }) {
   const [loading, setLoading]           = useState(false);
   // Theme: follows Light Mode even while Simple Mode is on
   const { lightMode, scanAlerts, autoScanPasteboard } = useApp();
+  const { t: tr, copyLang } = useLang();
   const COLORS        = getTheme(true, lightMode);
   const SIMPLE_COLORS = COLORS;
   const styles        = useMemo(() => makeStyles(SIMPLE_COLORS), [lightMode]);
@@ -68,13 +73,13 @@ export default function SimpleModeScreen({ navigation }) {
     const type = typeof typeArg === 'string' ? typeArg : selectedType;
     const check = validateInput(type, text);
     if (!check.ok) {
-      Alert.alert('Hindi ma-scan', check.fil, [{ text: 'OK' }]);
+      Alert.alert(tr('scan.cannot'), check[copyLang], [{ text: tr('alert.ok') }]);
       return;
     }
     const cached = getScanned(text);
     if (cached) {
       setResult(cached);
-      Alert.alert('Na-scan na', 'Na-scan mo na ito. Ipinapakita ang nakaraang resulta.');
+      Alert.alert(tr('scan.alreadyTitle'), tr('scan.alreadyBody'));
       return;
     }
     setLoading(true);
@@ -84,12 +89,12 @@ export default function SimpleModeScreen({ navigation }) {
       rememberScan(text, data);
       setResult(data);
       maybeShowScanAlert({
-        enabled: scanAlerts, result: data, lang: 'fil',
+        enabled: scanAlerts, result: data, lang: copyLang,
         onReport: () => goToReport(navigation, { text: text.trim(), tab: type, result: data }),
         onLearn:  () => goToEducation(navigation, 'types'),
       });
     } catch {
-      Alert.alert('Error', 'Hindi makapag-analyze. Subukan ulit.');
+      Alert.alert(tr('scan.errorTitle'), tr('scan.errorBody'));
     } finally {
       setLoading(false);
     }
@@ -109,7 +114,7 @@ export default function SimpleModeScreen({ navigation }) {
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <PasteboardBanner
-          suggestion={suggestion} COLORS={COLORS} fs={BIG} lang="fil"
+          suggestion={suggestion} COLORS={COLORS} fs={BIG} lang={copyLang}
           onScan={scanSuggestion} onDismiss={dismiss}
         />
         {/* Brand */}
@@ -119,7 +124,7 @@ export default function SimpleModeScreen({ navigation }) {
           </View>
           <Text style={[styles.brand, { fontSize: BIG.lg }]}>TRUSCAN</Text>
         </View>
-        <Text style={[styles.simpleLabel, { fontSize: BIG.md }]}>SIMPLE MODE</Text>
+        <Text style={[styles.simpleLabel, { fontSize: BIG.md }]}>{tr('simple.label')}</Text>
         {/* Three big scan buttons */}
         <View style={[styles.btnStack, !selectedType && styles.btnStackFill]}>
           {SCAN_TYPES.map(type => {
@@ -133,7 +138,7 @@ export default function SimpleModeScreen({ navigation }) {
                 activeOpacity={0.85}
               >
                 <Text style={[styles.scanTypeIcon, !selectedType && { fontSize: 32 }]}>{cfg.icon}</Text>
-                <Text style={[styles.scanTypeLabel, { fontSize: selectedType ? BIG.base : BIG.md }]}>{cfg.label}</Text>
+                <Text style={[styles.scanTypeLabel, { fontSize: selectedType ? BIG.base : BIG.md }]}>{tr('simple.' + type)}</Text>
               </TouchableOpacity>
             );
           })}
@@ -144,7 +149,7 @@ export default function SimpleModeScreen({ navigation }) {
             <TextInput
               style={[styles.textInput, { fontSize: BIG.base }]}
               multiline
-              placeholder="Pindutin dito at i-paste ang mensahe..."
+              placeholder={tr('simple.placeholder')}
               placeholderTextColor={SIMPLE_COLORS.hint}
               value={inputText}
               onChangeText={onChangeInput}
@@ -159,21 +164,21 @@ export default function SimpleModeScreen({ navigation }) {
             >
               {loading
                 ? <ActivityIndicator color="#FFF" size="large" />
-                : <Text style={[styles.bigScanBtnText, { fontSize: BIG.md }]}>{result ? '➕  BAGONG SCAN' : '🔍  I-SCAN'}</Text>
+                : <Text style={[styles.bigScanBtnText, { fontSize: BIG.md }]}>{result ? tr('simple.another') : tr('simple.scan')}</Text>
               }
             </TouchableOpacity>
             {flagged && (
               <SuspiciousCard
                 COLORS={COLORS}
                 fs={BIG}
-                lang="fil"
+                lang={copyLang}
                 onReport={reportIt}
                 onLearn={() => goToEducation(navigation, 'types')}
               />
             )}
             {result && !flagged && (
               <TouchableOpacity style={styles.reportBtn} onPress={reportIt} activeOpacity={0.85}>
-                <Text style={[styles.reportBtnText, { fontSize: BIG.sm }]}>Mali ba ito? I-report pa rin</Text>
+                <Text style={[styles.reportBtnText, { fontSize: BIG.sm }]}>{tr('simple.wrong')}</Text>
               </TouchableOpacity>
             )}
           </>
@@ -182,7 +187,7 @@ export default function SimpleModeScreen({ navigation }) {
           <View style={styles.hero}>
             <Text style={styles.heroWarnIcon}>⚠️</Text>
             <Text style={[styles.heroText, { fontSize: BIG.sm }]}>
-              Press the button to scan a message, email, or link.
+              {tr('simple.hero')}
             </Text>
             <Text style={styles.heroCheckIcon}>✔️</Text>
           </View>

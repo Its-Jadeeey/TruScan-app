@@ -11,9 +11,9 @@ const COPY = {
     report: 'Report it', learn: 'Learn more', ok: 'OK',
   },
   fil: {
-    scam:       { title: '⚠️ SCAM ITO!',        body: 'Mukhang scam ito. Huwag tumugon, mag-click ng link, o magpadala ng pera.' },
+    scam:       { title: '⚠️ PANLOLOKO ITO!',   body: 'Mukhang panloloko ito. Huwag tumugon, pindutin ang link, o magpadala ng pera.' },
     suspicious: { title: '⚡ Mag-ingat!',        body: 'Kahina-hinala ito. Huwag magbigay ng personal na impormasyon.' },
-    report: 'I-report', learn: 'Alamin', ok: 'OK',
+    report: 'Iulat', learn: 'Alamin', ok: 'Sige',
   },
 };
 

@@ -1,6 +1,7 @@
 // "Report a Scam" form — type + category dropdowns, message field, submit toast.
 // Re-themes to light or dark based on Light Mode.
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
   StyleSheet, Modal, FlatList, Animated, ActivityIndicator, Alert,
@@ -10,14 +11,15 @@ import ScreenHeader from '../Components/ScreenHeader';
 import Chevron from '../Components/Chevron';
 import { useApp }    from '../Context/AppContext';
 import { addReport } from '../Service/reportService';
+import { useLang } from '../Service/i18n';
 import { getTheme, RADIUS, SPACING, SHADOW } from '../Service/theme';
 const MAX_CHARS = 5000;
-const TYPES = [
+const TYPE_DEFS = [
   { key: 'sms',   label: 'SMS Messages' },
   { key: 'email', label: 'Email Extensions' },
   { key: 'url',   label: 'URL/ Website Links' },
 ];
-const CATEGORIES = [
+const CAT_DEFS = [
   { key: 'financial',    label: 'Financial & eWallet' },
   { key: 'government',   label: 'Government Impersonation' },
   { key: 'delivery',     label: 'Delivery Courier' },
@@ -99,6 +101,9 @@ function useToast() {
 // ─── MAIN SCREEN ──────────────────────────────────────────────────────────────
 export default function ReportScreen({ navigation, route }) {
   const { fontSize, simpleMode, lightMode } = useApp();
+  const { t: tr } = useLang();
+  const typeOptions = TYPE_DEFS.map(o => ({ key: o.key, label: tr('type.' + o.key) }));
+  const catOptions  = CAT_DEFS.map(o => ({ key: o.key, label: tr('cat.' + o.key) }));
   const COLORS = getTheme(simpleMode, lightMode);
   const styles = makeStyles(COLORS);
   const [type, setType]         = useState(null);
@@ -109,6 +114,16 @@ export default function ReportScreen({ navigation, route }) {
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors]     = useState({});
   const toast = useToast();
+  // Clear the whole form (also used when leaving the page, so it is fresh next time)
+  const resetForm = () => {
+    setType(null);
+    setCategory(null);
+    setText('');
+    setRemark('');
+    setPrefill(null);
+    setErrors({});
+  };
+  useFocusEffect(useCallback(() => () => resetForm(), []));
   // Pre-fill from a scan result (sent by the Scan / Simple Mode screens)
   useEffect(() => {
     const p = route?.params?.prefill;
@@ -144,24 +159,19 @@ export default function ReportScreen({ navigation, route }) {
   setSubmitting(false);
   if (res.success) {
     toast.show();
-    setType(null);
-    setCategory(null);
-    setText('');
-    setRemark('');
-    setPrefill(null);
-    setErrors({});
+    resetForm();
   } else if (res.duplicate) {
-    Alert.alert('Already reported', 'This message has already been reported. Thank you!');
+    Alert.alert(tr('rep.dupTitle'), tr('rep.dupBody'));
   } else if (res.rateLimited) {
-    Alert.alert('Too many reports', 'You have sent several reports recently. Please try again in a few minutes.');
+    Alert.alert(tr('rep.rateTitle'), tr('rep.rateBody'));
   } else {
-    Alert.alert('Error', 'Could not submit the report. Please try again.');
+    Alert.alert(tr('rep.errTitle'), tr('rep.errBody'));
   }
 };
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       {/* Header */}
-      <ScreenHeader title="REPORT A SCAM" navigation={navigation} COLORS={COLORS} fontSize={fontSize} />
+      <ScreenHeader title={tr('rep.header')} navigation={navigation} COLORS={COLORS} fontSize={fontSize} />
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
@@ -170,31 +180,31 @@ export default function ReportScreen({ navigation, route }) {
         {prefill && (
           <View style={styles.prefillNote}>
             <Text style={[styles.prefillText, { fontSize: fontSize.xs }]}>
-              ✨ Filled in from your scan. You can change anything before submitting.
+              {tr('rep.prefill')}
             </Text>
           </View>
         )}
         {/* Type */}
         <Dropdown
-          label="TYPE"
-          placeholder="Select type"
+          label={tr('rep.type')}
+          placeholder={tr('rep.typePh')}
           value={type}
-          options={TYPES}
+          options={typeOptions}
           onSelect={setType}
           fontSize={fontSize}
           COLORS={COLORS}
           styles={styles}
         />
-        {errors.type && <Text style={styles.errorText}>Please select a type.</Text>}
+        {errors.type && <Text style={styles.errorText}>{tr('rep.typeErr')}</Text>}
         {/* Message */}
         <View style={styles.fieldWrap}>
-          <Text style={[styles.fieldLabel, { fontSize: fontSize.xs }]}>MESSAGE/CONTENT</Text>
+          <Text style={[styles.fieldLabel, { fontSize: fontSize.xs }]}>{tr('rep.msg')}</Text>
           <View style={styles.textAreaWrap}>
             <TextInput
               style={[styles.textArea, { fontSize: fontSize.base }]}
               multiline
               maxLength={MAX_CHARS}
-              placeholder="Paste your message here..."
+              placeholder={tr('rep.msgPh')}
               placeholderTextColor={COLORS.hint}
               value={text}
               onChangeText={setText}
@@ -204,29 +214,29 @@ export default function ReportScreen({ navigation, route }) {
               {text.length}/{MAX_CHARS}
             </Text>
           </View>
-          {errors.text && <Text style={styles.errorText}>Message can't be empty.</Text>}
+          {errors.text && <Text style={styles.errorInline}>{tr('rep.msgErr')}</Text>}
         </View>
         {/* Category */}
         <Dropdown
-          label="CATEGORY"
-          placeholder="Select category"
+          label={tr('rep.cat')}
+          placeholder={tr('rep.catPh')}
           value={category}
-          options={CATEGORIES}
+          options={catOptions}
           onSelect={setCategory}
           fontSize={fontSize}
           COLORS={COLORS}
           styles={styles}
         />
-        {errors.category && <Text style={styles.errorText}>Please select a category.</Text>}
+        {errors.category && <Text style={styles.errorText}>{tr('rep.catErr')}</Text>}
         {/* Remark */}
         <View style={styles.fieldWrap}>
-          <Text style={[styles.fieldLabel, { fontSize: fontSize.xs }]}>REMARK (OPTIONAL)</Text>
+          <Text style={[styles.fieldLabel, { fontSize: fontSize.xs }]}>{tr('rep.remark')}</Text>
           <View style={[styles.textAreaWrap, { minHeight: 110 }]}>
             <TextInput
               style={[styles.textArea, { fontSize: fontSize.sm }]}
               multiline
               maxLength={500}
-              placeholder="Add details that help us understand: who sent it, what they asked for, did you lose money..."
+              placeholder={tr('rep.remarkPh')}
               placeholderTextColor={COLORS.hint}
               value={remark}
               onChangeText={setRemark}
@@ -235,7 +245,7 @@ export default function ReportScreen({ navigation, route }) {
             <Text style={[styles.charCount, { fontSize: fontSize.xs }]}>{remark.length}/500</Text>
           </View>
           <Text style={[styles.remarkHint, { fontSize: fontSize.xs }]}>
-            Please don't include your own passwords, OTPs or card numbers.
+            {tr('rep.remarkHint')}
           </Text>
         </View>
         {/* Submit */}
@@ -247,7 +257,7 @@ export default function ReportScreen({ navigation, route }) {
         >
           {submitting
             ? <ActivityIndicator color="#FFFFFF" size="small" />
-            : <Text style={[styles.submitBtnText, { fontSize: fontSize.base }]}>SUBMIT REPORT</Text>
+            : <Text style={[styles.submitBtnText, { fontSize: fontSize.base }]}>{tr('rep.submit')}</Text>
           }
         </TouchableOpacity>
         {/* Footer note */}
@@ -256,7 +266,7 @@ export default function ReportScreen({ navigation, route }) {
             <Text style={styles.footerIcon}>🛡️</Text>
           </View>
           <Text style={[styles.footerText, { fontSize: fontSize.xs }]}>
-            Your report helps keep others safe.{'\n'}Thank you!
+            {tr('rep.footer')}
           </Text>
         </View>
       </ScrollView>
@@ -265,8 +275,8 @@ export default function ReportScreen({ navigation, route }) {
         <Animated.View pointerEvents="none" style={[styles.toastOverlay, { opacity: toast.opacity }]}>
           <View style={styles.toast}>
             <View style={styles.toastCheck}><Text style={styles.toastCheckText}>✓</Text></View>
-            <Text style={[styles.toastText, { fontSize: fontSize.base }]}>REPORT SUBMITTED!</Text>
-            <Text style={[styles.toastSub, { fontSize: fontSize.xs }]}>Thank you for helping keep others safe.</Text>
+            <Text style={[styles.toastText, { fontSize: fontSize.base }]}>{tr('rep.toast')}</Text>
+            <Text style={[styles.toastSub, { fontSize: fontSize.xs }]}>{tr('rep.toastSub')}</Text>
           </View>
         </Animated.View>
       )}
@@ -316,7 +326,8 @@ const makeStyles = (COLORS) => StyleSheet.create({
   },
   textArea:  { color: COLORS.ink, lineHeight: 22, flex: 1 },
   charCount: { color: COLORS.hint, textAlign: 'right', marginTop: 6 },
-  errorText: { color: COLORS.scam, fontSize: 11, fontWeight: '600', marginTop: -SPACING.sm, marginBottom: SPACING.sm },
+  errorInline: { color: COLORS.scam, fontSize: 11, fontWeight: '600', marginTop: 6 },
+  errorText: { color: COLORS.scam, fontSize: 11, fontWeight: '600', marginTop: -SPACING.sm, marginBottom: SPACING.md },
   submitBtn: {
     backgroundColor: COLORS.primary, borderRadius: RADIUS.md, paddingVertical: 15,
     alignItems: 'center', justifyContent: 'center', marginTop: SPACING.sm, ...SHADOW.card,

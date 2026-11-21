@@ -13,9 +13,9 @@ const COPY = {
   },
   fil: {
     title: 'Kahina-hinala ito',
-    body: 'Inirerekomenda naming i-report ito para maprotektahan ang iba. Awtomatikong mapupunan ang uri at kategorya, at maaari kang magdagdag ng remark.',
-    report: 'I-report ito',
-    learn: 'Alamin kung paano makilala ang scam',
+    body: 'Inirerekomenda naming iulat ito para maprotektahan ang iba. Awtomatikong mapupunan ang uri at kategorya, at maaari kang magdagdag ng puna.',
+    report: 'Iulat ito',
+    learn: 'Alamin kung paano makilala ang panloloko',
   },
 };
 
