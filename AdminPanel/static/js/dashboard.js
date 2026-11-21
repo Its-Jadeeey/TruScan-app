@@ -25,7 +25,7 @@ import {
 import { initShell, fetchModelInfo } from "./admin-core.js";
 
 // Bounded recent window keeps this fast and needs no composite indexes.
-// Fine while scan volume is low; swap for aggregation queries / a rollup doc later.
+// Fine while report volume is low; swap for aggregation queries / a rollup doc later.
 const SAMPLE_SIZE = 500;
 const REFRESH_MS = 60000;
 

@@ -7,8 +7,9 @@ import re
 import threading
 import time
 from collections import defaultdict, deque
+from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Header, HTTPException, Request
 from google.cloud import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter
 
@@ -37,9 +38,12 @@ SCAM_CATEGORY_LABELS = {
     "charity": "Charity Donations",
 }
 
-# Simple per-IP rate limit (in memory; resets when the server restarts).
-RATE_LIMIT = 10     # reports allowed ...
-RATE_WINDOW = 600   # ... per 10 minutes, per IP
+# Simple in-memory rate limit (resets when the server restarts).
+# Each app install sends a random X-Device-Id, so the limit is per device even on
+# shared Wi-Fi. A larger per-IP limit is kept as a backstop against fake device IDs.
+RATE_LIMIT = 10     # reports allowed per device ...
+IP_LIMIT = 60       # ... and per network address (all devices behind it) ...
+RATE_WINDOW = 600   # ... per 10 minutes
 _hits = defaultdict(deque)
 _lock = threading.Lock()
 
@@ -51,13 +55,13 @@ def _client_ip(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
-def _allow(ip: str) -> bool:
+def _allow(key: str, limit: int) -> bool:
     now = time.time()
     with _lock:
-        hits = _hits[ip]
+        hits = _hits[key]
         while hits and now - hits[0] > RATE_WINDOW:
             hits.popleft()
-        if len(hits) >= RATE_LIMIT:
+        if len(hits) >= limit:
             return False
         hits.append(now)
         return True
@@ -69,8 +73,14 @@ def _text_hash(text: str) -> str:
 
 
 @router.post("/", response_model=ReportResponse)
-def report(request: Request, body: ReportRequest):
-    if not _allow(_client_ip(request)):
+def report(request: Request, body: ReportRequest, x_device_id: Optional[str] = Header(default=None)):
+    ip = _client_ip(request)
+    device = (x_device_id or "").strip()[:64]
+    if device:
+        allowed = _allow(f"dev:{device}", RATE_LIMIT) and _allow(f"ip:{ip}", IP_LIMIT)
+    else:  # older app versions send no device ID
+        allowed = _allow(f"ip:{ip}", RATE_LIMIT)
+    if not allowed:
         raise HTTPException(status_code=429, detail="Too many reports. Please try again later.")
 
     text = body.text.strip()

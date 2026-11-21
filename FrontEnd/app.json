@@ -4,17 +4,34 @@
     "slug": "truscan",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./Assets/icon.png",
+    "userInterfaceStyle": "dark",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
     "android": {
-      "package": "com.nexusdev.truscan"
+      "package": "com.nexusdev.truscan",
+      "adaptiveIcon": {
+        "foregroundImage": "./Assets/adaptive-icon.png",
+        "backgroundColor": "#0A1220"
+      }
     },
     "ios": {
       "bundleIdentifier": "com.nexusdev.truscan"
     },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./Assets/splash-icon.png",
+          "imageWidth": 220,
+          "resizeMode": "contain",
+          "backgroundColor": "#0A1220"
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "73b155eb-83e6-4945-a446-dac5b0db2a5e"

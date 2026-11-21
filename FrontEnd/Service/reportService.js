@@ -1,5 +1,6 @@
 import { client } from './analyzeService';
 import { wasReported, rememberReport } from './scanCache';
+import { getDeviceId } from './deviceId';
 
 export async function addReport({
   text, channel = 'sms', mode = 'normal', source = 'mobile_app',
@@ -7,11 +8,12 @@ export async function addReport({
 }) {
   try {
     if (wasReported(text)) return { success: false, duplicate: true };
+    const deviceId = await getDeviceId();
     const res = await client.post('/report/', {
       text: (text || '').trim(),
       channel, mode, source, type, scamCategory,
       remark: (remark || '').trim().slice(0, 500),
-    });
+    }, { headers: { 'X-Device-Id': deviceId } });
     if (res.data?.success) rememberReport(text);
     return { success: !!res.data?.success, id: res.data?.id };
   } catch (error) {
