@@ -201,7 +201,22 @@ function setupBell() {
   document.addEventListener("click", (e) => { if (!panel.hidden && !panel.contains(e.target)) close(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
   const refresh = document.getElementById("notifRefresh");
-  if (refresh) refresh.addEventListener("click", (e) => { e.stopPropagation(); refreshPendingBadge(); });
+  if (refresh) refresh.addEventListener("click", async (e) => {
+    e.stopPropagation();
+    if (refresh.disabled) return;
+    refresh.disabled = true;
+    refresh.classList.add("spinning");
+    const started = Date.now();
+    await refreshPendingBadge();
+    // Keep the spinner visible long enough to notice, then show when it was updated.
+    const wait = Math.max(0, 600 - (Date.now() - started));
+    setTimeout(() => {
+      refresh.classList.remove("spinning");
+      refresh.disabled = false;
+      const sub = document.getElementById("notifSub");
+      if (sub) sub.textContent = "Updated " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    }, wait);
+  });
 }
 
 export async function initShell() {

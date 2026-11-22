@@ -27,3 +27,14 @@
 {% block content %}{% endblock %}
 </body>
 </html>
+
+<style>
+  /* Fixed sidebar and top bar: only the page content scrolls (desktop) */
+  @media (min-width: 761px) {
+    html, body.app-body { height: 100% !important; min-height: 0 !important; overflow: hidden !important; }
+    .app-shell { height: 100vh !important; height: 100dvh !important; min-height: 0 !important; overflow: hidden !important; }
+    .sidebar { height: 100% !important; min-height: 0 !important; position: relative !important; overflow-y: auto !important; }
+    .main { height: 100% !important; overflow-y: auto !important; }
+    .topbar { position: sticky !important; top: 0; z-index: 20; }
+  }
+</style>

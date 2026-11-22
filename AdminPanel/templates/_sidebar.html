@@ -1,3 +1,46 @@
+<style>
+
+/* ---- Modern sidebar ---- */
+.sidebar { border-right: 1px solid rgba(255,255,255,0.06); box-shadow: 6px 0 28px rgba(0,0,0,0.28); }
+.sidenav { gap: 8px; margin-top: 22px; }
+.sidenav-link {
+  gap: 12px; padding: 8px 12px 8px 8px; border-radius: 14px;
+  color: #c3d1f2; font-weight: 500; letter-spacing: 0.01em;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+.nav-ico-wrap {
+  width: 34px; height: 34px; border-radius: 10px; flex: none;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,0.07);
+  transition: background 0.18s ease;
+}
+.nav-ico { width: 20px; height: 20px; opacity: 1; }
+.sidenav-link:hover { background: rgba(255,255,255,0.07); color: #ffffff; transform: translateX(2px); }
+.sidenav-link:hover .nav-ico-wrap { background: rgba(255,255,255,0.13); }
+.sidenav-link.active {
+  background: linear-gradient(135deg, #3d6feb 0%, #5b8cff 100%);
+  color: #ffffff; font-weight: 600;
+  box-shadow: 0 8px 22px rgba(61, 111, 235, 0.45);
+  transform: none;
+}
+.sidenav-link.active .nav-ico-wrap { background: rgba(255,255,255,0.22); }
+.sidenav-link:focus-visible { outline: 2px solid #9fb8ff; outline-offset: 2px; }
+
+.sidebar .logout-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px; line-height: 1; font-size: 0.85rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 12px; padding: 10px;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.sidebar .logout-btn svg { width: 17px; height: 17px; }
+.sidebar .logout-btn:hover { background: rgba(239,68,68,0.14); border-color: rgba(239,68,68,0.55); color: #ffb4ae; }
+.admin-chip { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 10px 12px; }
+
+.sidebar .logout-btn svg { flex: none; display: block; }
+.sidenav-link > span:last-child { line-height: 1; }
+.admin-chip > div { min-width: 0; }
+</style>
 <a class="skip-link" href="#mainContent" data-i18n="Skip to content">Skip to content</a>
 <aside class="sidebar">
   <div class="sidebar-top">
@@ -11,22 +54,25 @@
 
     <nav class="sidenav" aria-label="Main">
       <a href="/dashboard" class="sidenav-link {% if active == 'dashboard' %}active{% endif %}" {% if active == 'dashboard' %}aria-current="page"{% endif %}>
-        <svg viewBox="0 0 24 24" class="nav-ico" aria-hidden="true"><path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6V11h-6v9Zm0-16v5h6V4h-6Z" fill="currentColor"/></svg>
+        <span class="nav-ico-wrap"><svg width="20" height="20" viewBox="0 0 24 24" class="nav-ico" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></span>
         <span data-i18n="Dashboard">Dashboard</span>
       </a>
       <a href="/reports" class="sidenav-link {% if active == 'reports' %}active{% endif %}" {% if active == 'reports' %}aria-current="page"{% endif %}>
-        <svg viewBox="0 0 24 24" class="nav-ico" aria-hidden="true"><path d="M5 3h14a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm2 6h10v2H7V9Zm0 4h10v2H7v-2Zm0-8h6v2H7V5Z" fill="currentColor"/></svg>
+        <span class="nav-ico-wrap"><svg width="20" height="20" viewBox="0 0 24 24" class="nav-ico" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/></svg></span>
         <span data-i18n="Reports">Reports</span>
       </a>
       <a href="/settings" class="sidenav-link {% if active == 'settings' %}active{% endif %}" {% if active == 'settings' %}aria-current="page"{% endif %}>
-        <svg viewBox="0 0 24 24" class="nav-ico" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm8.9 3.1-1.6-.3a7.1 7.1 0 0 0-.6-1.5l1-1.3a1 1 0 0 0-.1-1.3l-1.3-1.3a1 1 0 0 0-1.3-.1l-1.3 1a7.1 7.1 0 0 0-1.5-.6l-.3-1.6A1 1 0 0 0 13 3.1h-2a1 1 0 0 0-1 .9l-.3 1.6a7.1 7.1 0 0 0-1.5.6l-1.3-1a1 1 0 0 0-1.3.1L4.3 6.6a1 1 0 0 0-.1 1.3l1 1.3a7.1 7.1 0 0 0-.6 1.5l-1.6.3a1 1 0 0 0-.9 1v2a1 1 0 0 0 .9 1l1.6.3c.15.53.36 1.03.6 1.5l-1 1.3a1 1 0 0 0 .1 1.3l1.3 1.3a1 1 0 0 0 1.3.1l1.3-1c.47.24.97.45 1.5.6l.3 1.6a1 1 0 0 0 1 .9h2a1 1 0 0 0 1-.9l.3-1.6c.53-.15 1.03-.36 1.5-.6l1.3 1a1 1 0 0 0 1.3-.1l1.3-1.3a1 1 0 0 0 .1-1.3l-1-1.3c.24-.47.45-.97.6-1.5l1.6-.3a1 1 0 0 0 .9-1v-2a1 1 0 0 0-.9-1Z" fill="currentColor"/></svg>
+        <span class="nav-ico-wrap"><svg width="20" height="20" viewBox="0 0 24 24" class="nav-ico" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
         <span data-i18n="Settings">Settings</span>
       </a>
     </nav>
   </div>
 
   <div class="sidebar-bottom">
-    <button id="logoutBtn" class="logout-btn" type="button" data-i18n="Log out">Log out</button>
+    <button id="logoutBtn" class="logout-btn" type="button">
+      <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+      <span data-i18n="Log out">Log out</span>
+    </button>
     <div class="admin-chip">
       {% include "_logo.html" with context %}
       <div>
@@ -36,3 +82,15 @@
     </div>
   </div>
 </aside>
+<script>
+/* Fill the admin chip before first paint so it does not flicker from "Admin / TruScan HQ" to the real name. */
+(function () {
+  try {
+    var a = JSON.parse(sessionStorage.getItem("ts-admin") || "null");
+    if (!a) return;
+    var n = document.getElementById("adminChipName"), r = document.getElementById("adminChipRole");
+    if (n) n.textContent = a.fullName || a.username || "Admin";
+    if (r) r.textContent = a.role || "Administrator";
+  } catch (e) {}
+})();
+</script>
